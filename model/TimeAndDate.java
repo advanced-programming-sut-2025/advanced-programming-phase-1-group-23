@@ -3,9 +3,12 @@ package model;
 public class TimeAndDate {
     private int hour;
     private int day;
-    private int season;
-    private String[] seasonsName = {"Spring", "Summer", "Autumn", "Winter"};
-    private String[] daysName = {"Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
+    private final String[] daysName = {"Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
+
+    public TimeAndDate(int hour, int day) {
+        this.hour = hour;
+        this.day = day;
+    }
 
     public void increaseHour() {
     }

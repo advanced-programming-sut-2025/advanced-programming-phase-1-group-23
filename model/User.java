@@ -6,27 +6,11 @@ public class User {
     private String username;
     private String nickname;
     private String password;
-    private String gender;
     private String email;
-    private ArrayList<String> craftingRecipes;
-    private boolean sleep;
-    private int energy;
-
-    public boolean isSleep() {
-        return sleep;
-    }
-
-    public void setSleep(boolean sleep) {
-        this.sleep = sleep;
-    }
-
-    public int getEnergy() {
-        return energy;
-    }
-
-    public void setEnergy(int energy) {
-        this.energy = energy;
-    }
+    private final String gender;
+    private int maxScore;
+    private int numberOfGamesPlayed;
+    private boolean isPlaying;
 
     public User(String username, String nickname, String password, String gender, String email) {
         this.username = username;
@@ -34,9 +18,9 @@ public class User {
         this.password = password;
         this.gender = gender;
         this.email = email;
-        craftingRecipes = new ArrayList<>();
-        sleep = false;
-        energy = 0;
+        this.maxScore = 0;
+        this.numberOfGamesPlayed = 0;
+        this.isPlaying = false;
     }
 
     public String getNickname() {
@@ -67,10 +51,6 @@ public class User {
         return gender;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -79,11 +59,27 @@ public class User {
         this.email = email;
     }
 
-    public ArrayList<String> getCraftingRecipes() {
-        return craftingRecipes;
+    public int getMaxScore() {
+        return maxScore;
     }
 
-    public void setCraftingRecipes(ArrayList<String> craftingRecipes) {
-        this.craftingRecipes = craftingRecipes;
+    public void setMaxScore(int maxScore) {
+        this.maxScore = maxScore;
+    }
+
+    public int getNumberOfGamesPlayed() {
+        return numberOfGamesPlayed;
+    }
+
+    public void increaseNumberOfGamesPlayed() {
+        this.numberOfGamesPlayed++;
+    }
+
+    public boolean isPlaying() {
+        return isPlaying;
+    }
+
+    public void setPlaying(boolean playing) {
+        isPlaying = playing;
     }
 }

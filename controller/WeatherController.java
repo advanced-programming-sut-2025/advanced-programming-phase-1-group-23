@@ -14,5 +14,4 @@ public class WeatherController extends ControllersController{
     public Result cheatWeather(String command){
 
     }
-
 }

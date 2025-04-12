@@ -1,6 +1,8 @@
 package model;
 
 
+import model.Maps.Position;
+
 public class Weather {
 
     public Position LocationOfLightning(){
