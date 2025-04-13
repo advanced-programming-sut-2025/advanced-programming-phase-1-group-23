@@ -1,6 +1,6 @@
 package controller;
 
-import model.Result;
+import model.Basics.Result;
 
 public class FarmingController extends ControllersController{
     public Result plantingSeeds(String command){

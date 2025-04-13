@@ -1,8 +1,6 @@
 package controller;
 
-import model.Result;
-
-import java.util.ResourceBundle;
+import model.Basics.Result;
 
 public class LogoutController extends ControllersController {
     public Result logout(String command){

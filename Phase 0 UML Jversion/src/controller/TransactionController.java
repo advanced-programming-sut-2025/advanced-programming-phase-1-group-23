@@ -1,6 +1,6 @@
 package controller;
 
-import model.Result;
+import model.Basics.Result;
 
 public class TransactionController extends ControllersController {
     public Result showProducts(String command) {

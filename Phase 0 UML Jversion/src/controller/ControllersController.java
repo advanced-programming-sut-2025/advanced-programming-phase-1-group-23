@@ -1,6 +1,6 @@
 package controller;
 
-import model.Result;
+import model.Basics.Result;
 
 public class ControllersController {
     public Result getMenu(String command) {

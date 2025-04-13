@@ -1,6 +1,6 @@
 package controller;
 
-import model.Result;
+import model.Basics.Result;
 
 public class CookingController extends ControllersController {
     public Result selectionCategoryFromRefrigerator(String command) {

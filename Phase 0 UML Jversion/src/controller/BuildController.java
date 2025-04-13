@@ -1,6 +1,6 @@
 package controller;
 
-import model.Result;
+import model.Basics.Result;
 
 public class BuildController extends ControllersController{
     public Result greenHouseBuilding(String command){
@@ -12,6 +12,10 @@ public class BuildController extends ControllersController{
     }
 
     public Result buildBuilding(String command){
+
+    }
+
+    public Result buildingMachine(String command){
 
     }
 }

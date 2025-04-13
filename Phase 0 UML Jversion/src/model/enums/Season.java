@@ -1,7 +1,6 @@
 package model.enums;
 
 import model.Seasons.*;
-import model.Weather;
 
 public enum Season {
     Spring(new Spring()),

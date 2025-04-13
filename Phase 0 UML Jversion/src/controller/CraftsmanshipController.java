@@ -1,6 +1,6 @@
 package controller;
 
-import model.Result;
+import model.Basics.Result;
 
 public class CraftsmanshipController extends ControllersController{
     public Result getCraftsmanship(String command) {

@@ -1,6 +1,6 @@
 package controller;
 
-import model.Result;
+import model.Basics.Result;
 
 public class FriendshipController extends ControllersController {
     public Result friendship(String command) {

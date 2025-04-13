@@ -1,6 +1,6 @@
 package controller;
 
-import model.Result;
+import model.Basics.Result;
 
 public class TurnController extends ControllersController {
     public Result newGame(String command) {

@@ -1,6 +1,6 @@
 package controller;
 
-import model.Result;
+import model.Basics.Result;
 
 public class ProfileController extends ControllersController {
     public Result changeUsername(String command) {

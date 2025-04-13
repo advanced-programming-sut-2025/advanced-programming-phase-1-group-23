@@ -1,6 +1,6 @@
 package controller;
 
-import model.Result;
+import model.Basics.Result;
 
 public class NPCcontroller extends ControllersController{
     public Result giftNPC(String command){

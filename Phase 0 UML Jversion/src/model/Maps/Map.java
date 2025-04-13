@@ -1,5 +1,7 @@
 package model.Maps;
 
+import model.Naturals.Tree;
+
 import java.util.ArrayList;
 
 public class Map {
@@ -9,6 +11,7 @@ public class Map {
     private final ArrayList<Area> rivers = new ArrayList<>();
     private final ArrayList<Area> quarries = new ArrayList<>();
     private final ArrayList<Area> barns = new ArrayList<>();
+    private final ArrayList<Tree> trees = new ArrayList<>();
 
     public Tile[][] getTiles() {
         return tiles;
@@ -33,6 +36,8 @@ public class Map {
     public ArrayList<Area> getBarns() {
         return barns;
     }
+
+    public ArrayList<Tile> gegtTiles(Area area) {};
 
     public void addBarn(Area barn) {
         this.barns.add(barn);

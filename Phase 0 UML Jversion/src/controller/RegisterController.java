@@ -1,7 +1,7 @@
 package controller;
 
-import model.Result;
-import model.User;
+import model.Basics.Result;
+import model.Basics.User;
 
 public class RegisterController extends ControllersController {
     public Result register(String command) {

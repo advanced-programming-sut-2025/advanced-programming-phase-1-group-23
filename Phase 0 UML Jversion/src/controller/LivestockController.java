@@ -1,6 +1,6 @@
 package controller;
 
-import model.Result;
+import model.Basics.Result;
 
 public class LivestockController extends ControllersController{
     public Result buyAnimals(String command){

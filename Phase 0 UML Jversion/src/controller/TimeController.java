@@ -1,6 +1,6 @@
 package controller;
 
-import model.Result;
+import model.Basics.Result;
 
 public class TimeController extends ControllersController{
     public Result time(String command){

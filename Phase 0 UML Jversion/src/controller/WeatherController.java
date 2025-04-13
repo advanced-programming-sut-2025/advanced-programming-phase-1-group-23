@@ -1,6 +1,6 @@
 package controller;
 
-import model.Result;
+import model.Basics.Result;
 
 public class WeatherController extends ControllersController{
     public Result weather(String command){
@@ -16,6 +16,10 @@ public class WeatherController extends ControllersController{
     }
 
     public Result setWeather(String command){
+
+    }
+
+    public Result lighting(String command){
 
     }
 }
