@@ -7,7 +7,7 @@ public class TransactionController extends ControllersController {
 
     }
 
-    public Result showAvaliableProducts(String command) {
+    public Result showAvailableProducts(String command) {
 
     }
 
