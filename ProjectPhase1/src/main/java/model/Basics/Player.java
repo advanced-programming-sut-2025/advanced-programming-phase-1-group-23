@@ -4,6 +4,7 @@ package model.Basics;
 import model.NPC.NPCs;
 import model.Maps.Maps;
 import model.Objects.Energy;
+import model.Objects.Inventory;
 import model.Objects.Tool;
 
 import java.util.ArrayList;
@@ -14,18 +15,17 @@ import java.util.Map;
 public class Player {
     private final model.Basics.User user;
     private final Maps farm;
-    private int farmingSkill;
-    private int miningSkill;
-    private int foragingSkill;
-    private int fishingSkill;
+    private int farmingSkill=0;
+    private int miningSkill=0;
+    private int foragingSkill=0;
+    private int fishingSkill=0;
     private Energy energy;
-    private final HashMap<Tool,Integer> inventory;
+    private Inventory inventory;
     private Map<NPCs, Integer> friendships;
-    private boolean isDiedYesterday;
     private boolean isFainted=false;
 
-    public Player(model.Basics.User user, Maps farm, int farmingSkill, int miningSkill, int foragingSkill,
-                  int fishingSkill, Energy energy, HashMap<Tool,Integer> inventory, Map<NPCs, Integer> friendships) {
+    public Player(User user, Maps farm, int farmingSkill, int miningSkill, int foragingSkill,
+                  int fishingSkill, Energy energy, Map<NPCs, Integer> friendships) {
         this.user = user;
         this.farm = farm;
         this.farmingSkill = farmingSkill;
@@ -33,9 +33,9 @@ public class Player {
         this.foragingSkill = foragingSkill;
         this.fishingSkill = fishingSkill;
         this.energy = energy;
-        this.inventory = inventory;
         this.friendships = friendships;
     }
+
 
     public User getUser() {
         return user;
@@ -87,5 +87,37 @@ public class Player {
 
     public boolean isFainted() {
         return isFainted;
+    }
+
+    public int returnFishingLevel(){
+        if (fishingSkill<150)return 0;
+        else if (fishingSkill<250 )return 1;
+        else if (fishingSkill<350)return 2;
+        else if (fishingSkill<450)return 3;
+        else return 4;
+    }
+
+    public int returnFarmingLevel(){
+        if (farmingSkill<150)return 0;
+        else if (farmingSkill<250)return 1;
+        else if (farmingSkill<350) return 2;
+        else if (farmingSkill<450) return 3;
+        else return 4;
+    }
+
+    public int returnMiningLevel(){
+        if (miningSkill<150)return 0;
+        else if (miningSkill<250) return 1;
+        else if (miningSkill<350) return 2;
+        else if (miningSkill<450) return 3;
+        else return 4;
+    }
+
+    public int returnForagingLevel(){
+        if (foragingSkill<150) return 0;
+        else if (foragingSkill<250) return 1;
+        else if (foragingSkill<350) return 2;
+        else if (foragingSkill<450) return 3;
+        else return 4;
     }
 }

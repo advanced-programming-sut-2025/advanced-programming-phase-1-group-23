@@ -18,7 +18,6 @@ public class Energy {
         return maxEnergy;
     }
 
-
     public int getAmount() {
         return amount;
     }
