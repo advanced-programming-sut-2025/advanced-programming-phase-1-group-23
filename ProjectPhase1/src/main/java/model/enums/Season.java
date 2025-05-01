@@ -1,24 +1,19 @@
 package model.enums;
 
-import model.Seasons.*;
 
 public enum Season {
-    Spring(new Spring()),
-    Summer(new Summer()),
-    Autumn(new Autumn()),
-    Winter(new Winter());
+    SPRING("Spring"),
+    SUMMER("Summer"),
+    AUTUMN("Autumn"),
+    WINTER("Winter");
 
-    private final AppSeason season;
+    private final String name;
 
-    Season(AppSeason season) {
-        this.season = season;
+    Season(String name) {
+        this.name = name;
     }
 
-    public void WeatherForecast() {
-        this.season.WeatherForecast();
-    }
-
-    public void Fishing() {
-        this.season.Fishing();
+    public String toString() {
+        return name;
     }
 }

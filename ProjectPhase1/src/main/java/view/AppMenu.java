@@ -3,5 +3,5 @@ package view;
 import java.util.Scanner;
 
 public interface AppMenu {
-    public abstract void check(Scanner scanner);
+    public void check(Scanner scanner);
 }

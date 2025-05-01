@@ -2,9 +2,6 @@ package controller;
 
 import model.Basics.Result;
 
-
-import java.util.Map;
-
 public class InventoryFunctionsController extends ControllersController{
     public Result showInventory(String command) {
 
