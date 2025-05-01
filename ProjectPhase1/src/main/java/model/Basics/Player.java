@@ -4,7 +4,10 @@ package model.Basics;
 import model.NPC.NPCs;
 import model.Maps.Maps;
 import model.Objects.Energy;
+import model.Objects.Inventory;
 import model.Objects.Tool;
+import model.enums.ToolLevel;
+import model.enums.ToolType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,13 +22,14 @@ public class Player {
     private int foragingSkill;
     private int fishingSkill;
     private Energy energy;
-    private final HashMap<Tool,Integer> inventory;
+    private Inventory inventory=new Inventory();
     private Map<NPCs, Integer> friendships;
     private boolean isDiedYesterday;
+    private Tool inHandTool=null;
     private boolean isFainted=false;
 
-    public Player(model.Basics.User user, Maps farm, int farmingSkill, int miningSkill, int foragingSkill,
-                  int fishingSkill, Energy energy, HashMap<Tool,Integer> inventory, Map<NPCs, Integer> friendships) {
+    public Player(User user, Maps farm, int farmingSkill, int miningSkill, int foragingSkill,
+                  int fishingSkill, Energy energy,  Map<NPCs, Integer> friendships) {
         this.user = user;
         this.farm = farm;
         this.farmingSkill = farmingSkill;
@@ -33,12 +37,34 @@ public class Player {
         this.foragingSkill = foragingSkill;
         this.fishingSkill = fishingSkill;
         this.energy = energy;
-        this.inventory = inventory;
         this.friendships = friendships;
+        this.inventory=initializeInventory();
+    }
+
+    public Tool getInHandTool() {
+        return inHandTool;
+    }
+
+    private static Inventory initializeInventory(){
+        Inventory inventory1=new Inventory();
+        inventory1.getTools().add(new Tool(ToolType.Hoe, ToolLevel.Initial));
+        inventory1.getTools().add(new Tool(ToolType.Pickaxe, ToolLevel.Initial));
+        inventory1.getTools().add(new Tool(ToolType.Axe, ToolLevel.Initial));
+        inventory1.getTools().add(new Tool(ToolType.WateringCan, ToolLevel.Initial));
+        inventory1.getTools().add(new Tool(ToolType.Scythe, ToolLevel.Initial));
+        return inventory1;
+    }
+
+    public void setInHandTool(Tool inHandTool) {
+        this.inHandTool = inHandTool;
     }
 
     public User getUser() {
         return user;
+    }
+
+    public Inventory getInventory() {
+        return inventory;
     }
 
     public Energy getEnergy() {
@@ -88,4 +114,38 @@ public class Player {
     public boolean isFainted() {
         return isFainted;
     }
+
+    public int returnFarmingSkill(){
+        if (this.farmingSkill<150)return 0;
+        else if (this.farmingSkill<250) return 1;
+        else if (this.farmingSkill<350) return 2;
+        else if (this.farmingSkill<450) return 3;
+        else return 4;
+    }
+
+    public int returnMiningSkill(){
+        if (this.miningSkill<150) return 0;
+        else if (this.miningSkill<250) return 1;
+        else if (this.miningSkill<350) return 2;
+        else if (this.miningSkill<450) return 3;
+        else return 4;
+    }
+
+    public int returnForagingSkill(){
+        if (this.foragingSkill<150) return 0;
+        else if (this.foragingSkill<250) return 1;
+        else if (this.foragingSkill<350) return 2;
+        else if (this.foragingSkill<450) return 3;
+        else return 4;
+    }
+
+    public int returnFishingSkill(){
+        if (this.fishingSkill<150) return 0;
+        else if (this.fishingSkill<250) return 1;
+        else if (this.fishingSkill<350) return 2;
+        else if (this.fishingSkill<450) return 3;
+        return 4;
+    }
+
+
 }

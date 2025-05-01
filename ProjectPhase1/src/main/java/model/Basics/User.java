@@ -57,6 +57,10 @@ public class User {
         this.password = password;
     }
 
+    public Game getCurrentGame() {
+        return currentGame;
+    }
+
     public String getGender() {
         return gender;
     }

@@ -33,7 +33,7 @@ public class Tile {
 
     public void addTree(Tree tree) {}
 
-    public Tree getTree() {}
+    public Tree getTree() {return tree;}
 
     public void addCrop(Crop crop) {}
 
