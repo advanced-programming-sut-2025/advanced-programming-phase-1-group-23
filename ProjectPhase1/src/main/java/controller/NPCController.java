@@ -18,7 +18,8 @@ public class NPCController extends ControllersController{
         }
 
 
-        //NPC 5
+        private void initializeNPCs() {
+        }
 
 
         public List<NPCs> getAllNPCs() {
