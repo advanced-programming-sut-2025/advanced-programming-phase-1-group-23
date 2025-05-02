@@ -1,0 +1,125 @@
+package controller;
+
+import model.Basics.App;
+import model.Basics.Game;
+import model.Command;
+import model.Repo.GameRepo;
+import model.Resualt;
+import model.enums.Weather;
+
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+public class GameController extends ControllersController {
+    public static Resualt handleTimeQuery(Command request) {
+        Resualt response = new Resualt();
+        response.setAccept(true);
+        response.setAnswer(App.getLoggedInUser().getCurrentGame().getDate().toLocalTime().toString());
+        return response;
+    }
+
+    public static Resualt handleDateQuery(Command request) {
+        Resualt response = new Resualt();
+        response.setAccept(true);
+        response.setAnswer(App.getLoggedInUser().getCurrentGame().getDate().toLocalDate().toString());
+        return response;
+    }
+
+    public static Resualt handleDatetimeQuery(Command request) {
+        Resualt response = new Resualt();
+        response.setAccept(true);
+        response.setAnswer(App.getLoggedInUser().getCurrentGame()
+                .getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd  HH:mm:ss")).toString());
+        return response;
+    }
+
+    public static Resualt handleDayOfWeekQuery(Command request) {
+        Resualt response = new Resualt();
+        response.setAccept(true);
+        LocalDateTime currentDateTime = App.getLoggedInUser().getCurrentGame().getDate();
+        int currentDay = currentDateTime.getDayOfMonth();
+        int dayOfWeek = (currentDay - 1) % 7;
+        response.setAnswer(DayOfWeek.values()[dayOfWeek].toString().toLowerCase());
+        return response;
+    }
+
+    public static Resualt handleCheatAdvanceTime(Command request) {
+        int amountOfHours = Integer.parseInt(request.body.get("X"));
+        LocalDateTime currentDateTime = App.getLoggedInUser().getCurrentGame().getDate();
+        LocalDateTime nextDateTime;
+        Game currentGame = App.getLoggedInUser().getCurrentGame();
+        int howManyDays = amountOfHours / 24;
+        int howManyHours = amountOfHours % 24;
+        int howManyMonths = howManyDays / 28;
+        howManyDays %= 28;
+        int currentHour = currentDateTime.getHour();
+        int currentDay = currentDateTime.getDayOfMonth();
+        if (howManyHours + currentHour > 22) {
+            howManyHours = 22 - currentHour;
+        }
+        if (howManyDays + currentDay > 28) {
+            howManyMonths++;
+            howManyDays -= 28;
+        }
+        nextDateTime = currentDateTime.plusDays(howManyDays);
+        nextDateTime = nextDateTime.plusHours(howManyHours);
+        nextDateTime = nextDateTime.plusMonths(howManyMonths);
+        currentGame.setDate(nextDateTime);
+        currentGame.checkSeasonChange();
+        GameRepo.saveGame(currentGame);
+        return new Resualt(true, "Date and time set successfully.");
+    }
+
+    public static Resualt handleCheatAdvanceDate(Command request) {
+        int amountOfDays = Integer.parseInt(request.body.get("X"));
+        LocalDateTime currentDateTime = App.getLoggedInUser().getCurrentGame().getDate();
+        LocalDateTime nextDateTime;
+        Game currentGame = App.getLoggedInUser().getCurrentGame();
+        int howManyDays = amountOfDays % 28;
+        int howManyMonths = amountOfDays / 28;
+        int currentDay = currentDateTime.getDayOfMonth();
+        if (howManyDays + currentDay > 28) {
+            howManyMonths++;
+            howManyDays -= 28;
+        }
+        nextDateTime = currentDateTime.plusDays(howManyDays);
+        nextDateTime = nextDateTime.plusMonths(howManyMonths);
+        currentGame.setDate(nextDateTime);
+        currentGame.checkSeasonChange();
+        GameRepo.saveGame(currentGame);
+        return new Resualt(true, "Date set successfully.");
+    }
+
+    public static Resualt handleSeasonQuery(Command request) {
+        return new Resualt(true, App.getLoggedInUser().getCurrentGame().getSeason().toString());
+    }
+
+    public static Resualt handleCheatThor(Command request) {
+        return null;
+        //TODO:I DONT KNOW CRYYYYYYYYYYYYYYYYYY
+    }
+
+    public static Resualt handleWeatherQuery(Command request) {
+        return new Resualt(true, App.getLoggedInUser().getCurrentGame().getWeatherToday().toString());
+    }
+
+    public static Resualt handleWeatherForecastQuery(Command request) {
+        return new Resualt(true, "Tomorrow's weather forecast is: "
+                + App.getLoggedInUser().getCurrentGame().getWeatherTomorrow().toString());
+    }
+
+    public static Resualt handleSetWeatherCheat(Command request) {
+        String type = request.body.get("Type");
+        Weather weather = Weather.getWeatherByName(type);
+        Game game = App.getLoggedInUser().getCurrentGame();
+        if (weather == null) {
+            return new Resualt(false, "Weather type is invalid.");
+        } else {
+            game.setWeatherTomorrow(weather);
+            GameRepo.saveGame(game);
+        }
+        return new Resualt(true, "Tomorrow's weather set successfully.");
+    }
+
+}
