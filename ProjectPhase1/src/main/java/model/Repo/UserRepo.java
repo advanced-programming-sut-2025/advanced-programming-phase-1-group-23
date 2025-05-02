@@ -119,21 +119,21 @@ public class UserRepo {
         }
     }
 
-    public static void populateUsersOfPlayers(Game game) {
-        String sql = "SELECT u.* FROM users u INNER JOIN players p ON u.id = p.user_id WHERE p.game_id = ?";
-        try (PreparedStatement stmt = db.prepareStatement(sql)) {
-            stmt.setString(1, game.getId());
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                User user = extractUserFromResultSet(rs);
-                game.getPlayers().stream()
-                        .filter(p -> p.getUser_id().equals(user.getId()))
-                        .forEach(p -> p.setUser(user));
-            }
-        } catch (SQLException e) {
-            handleSQLException(e);
-        }
-    }
+//    public static void populateUsersOfPlayers(Game game) {
+//        String sql = "SELECT u.* FROM users u INNER JOIN players p ON u.id = p.user_id WHERE p.game_id = ?";
+//        try (PreparedStatement stmt = db.prepareStatement(sql)) {
+//            stmt.setString(1, game.getId());
+//            ResultSet rs = stmt.executeQuery();
+//            while (rs.next()) {
+//                User user = extractUserFromResultSet(rs);
+//                game.getPlayers().stream()
+//                        .filter(p -> p..equals(user.getId()))
+//                        .forEach(p -> p.setUser(user));
+//            }
+//        } catch (SQLException e) {
+//            handleSQLException(e);
+//        }
+//    }
 
     private static User extractUserFromResultSet(ResultSet rs) throws SQLException {
         return new User(

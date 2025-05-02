@@ -1,7 +1,8 @@
 package model.Repo;
 
-import java.sql.Connection;
+
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class Connection {
@@ -10,11 +11,7 @@ public class Connection {
     public static java.sql.Connection getDatabase() {
         if (connection == null) {
             try {
-                // حالت فایلی (ذخیره دائمی)
                 String url = "jdbc:h2:./data/user_management;AUTO_SERVER=TRUE";
-
-                // حالت In-Memory (موقت - برای تست)
-                // String url = "jdbc:h2:mem:user_management;DB_CLOSE_DELAY=-1";
 
                 connection = DriverManager.getConnection(url, "sa", "");
                 initializeDatabase();
@@ -35,5 +32,10 @@ public class Connection {
                 )
                 """);
         }
+    }
+
+
+    public PreparedStatement prepareStatement(String sql) {
+        return null;
     }
 }
