@@ -22,7 +22,8 @@ public class Player {
     private int foragingSkill;
     private int fishingSkill;
     private Energy energy;
-    private Inventory inventory=new Inventory();
+    private Inventory inventory;
+    private int trashCan=0;
     private Map<NPCs, Integer> friendships;
     private boolean isDiedYesterday;
     private Tool inHandTool=null;
@@ -41,17 +42,25 @@ public class Player {
         this.inventory=initializeInventory();
     }
 
+    public void upgradeTrashCan(){
+        if (this.trashCan==0)this.trashCan=15;
+        else if (this.trashCan==15)this.trashCan=30;
+        else if (this.trashCan==30)this.trashCan=45;
+        else if (this.trashCan==45)this.trashCan=60;
+    }
+
     public Tool getInHandTool() {
         return inHandTool;
     }
 
     private static Inventory initializeInventory(){
-        Inventory inventory1=new Inventory();
-        inventory1.getTools().add(new Tool(ToolType.Hoe, ToolLevel.Initial));
-        inventory1.getTools().add(new Tool(ToolType.Pickaxe, ToolLevel.Initial));
-        inventory1.getTools().add(new Tool(ToolType.Axe, ToolLevel.Initial));
-        inventory1.getTools().add(new Tool(ToolType.WateringCan, ToolLevel.Initial));
-        inventory1.getTools().add(new Tool(ToolType.Scythe, ToolLevel.Initial));
+        Inventory inventory1=Inventory.InventoryTypes.Initial.getInventory();
+        inventory1.getTools().put(new Tool(ToolType.Hoe, ToolLevel.Initial),1);
+        inventory1.getTools().put(new Tool(ToolType.Pickaxe, ToolLevel.Initial),1);
+        inventory1.getTools().put(new Tool(ToolType.Axe, ToolLevel.Initial),1);
+        inventory1.getTools().put(new Tool(ToolType.WateringCan, ToolLevel.Initial),1);
+        inventory1.getTools().put(new Tool(ToolType.Scythe, ToolLevel.Initial),1);
+        inventory1.decreaseOccupiedCapacity(5);
         return inventory1;
     }
 

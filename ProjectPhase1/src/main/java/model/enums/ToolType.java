@@ -8,5 +8,6 @@ public enum ToolType {
     Scissors,
     WateringCan,
     MilkingCan,
-    FishingRod;
+    FishingRod,
+    TrashCan;
 }

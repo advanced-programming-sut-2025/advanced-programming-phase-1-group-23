@@ -57,6 +57,7 @@ public class Tool {
                 case Initial, Iron, Cooper, Gold -> 0;
                 case Iridium -> 4;
             };
+            case TrashCan -> 0;
         };
 
         if ((this.toolType == ToolType.Hoe || this.toolType == ToolType.WateringCan) && player.returnFarmingSkill() == 4)
