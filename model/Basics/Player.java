@@ -1,37 +1,36 @@
 package model.Basics;
 
 
-import model.Maps.Farm;
-import model.Maps.Position;
 import model.NPC.NPCs;
 import model.Maps.Maps;
 import model.Objects.Energy;
+import model.Objects.Inventory;
 import model.Objects.Tool;
+import model.enums.ToolLevel;
+import model.enums.ToolType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Player {
-    private User user;
-    private Farm farm;
+    private final model.Basics.User user;
+    private final Maps farm;
     private int farmingSkill;
     private int miningSkill;
     private int foragingSkill;
     private int fishingSkill;
-    private double energy;
-    private ArrayList<Tool> inventory;
+    private Energy energy;
+    private Inventory inventory;
+    private int trashCan=0;
     private Map<NPCs, Integer> friendships;
-    private Position position;
-    private String id;
-    private double maximumEnergy;
-    private int money;
-    private double energyUsed;
-    private boolean isFainted;
+    private boolean isDiedYesterday;
+    private Tool inHandTool=null;
+    private boolean isFainted=false;
 
-
-    public Player(User user, Farm farm, int farmingSkill, int miningSkill, int foragingSkill,
-                  int fishingSkill, double energy, ArrayList<Tool> inventory) {
+    public Player(User user, Maps farm, int farmingSkill, int miningSkill, int foragingSkill,
+                  int fishingSkill, Energy energy,  Map<NPCs, Integer> friendships) {
         this.user = user;
         this.farm = farm;
         this.farmingSkill = farmingSkill;
@@ -39,24 +38,50 @@ public class Player {
         this.foragingSkill = foragingSkill;
         this.fishingSkill = fishingSkill;
         this.energy = energy;
-        this.inventory = inventory;
+        this.friendships = friendships;
+        this.inventory=initializeInventory();
     }
 
-    public Player(User user){
-        this.user = user;
-        this.id = user.getId();
-        this.position = new Position(0,0);
-        this.money = 0;
-        this.energyUsed = 0;
-        this.isFainted = false;
+    public void upgradeTrashCan(){
+        if (this.trashCan==0)this.trashCan=15;
+        else if (this.trashCan==15)this.trashCan=30;
+        else if (this.trashCan==30)this.trashCan=45;
+        else if (this.trashCan==45)this.trashCan=60;
+    }
+
+    public Tool getInHandTool() {
+        return inHandTool;
+    }
+
+    private static Inventory initializeInventory(){
+        Inventory inventory1=Inventory.InventoryTypes.Initial.getInventory();
+        inventory1.getTools().put(new Tool(ToolType.Hoe, ToolLevel.Initial),1);
+        inventory1.getTools().put(new Tool(ToolType.Pickaxe, ToolLevel.Initial),1);
+        inventory1.getTools().put(new Tool(ToolType.Axe, ToolLevel.Initial),1);
+        inventory1.getTools().put(new Tool(ToolType.WateringCan, ToolLevel.Initial),1);
+        inventory1.getTools().put(new Tool(ToolType.Scythe, ToolLevel.Initial),1);
+        inventory1.decreaseOccupiedCapacity(5);
+        return inventory1;
+    }
+
+    public void setInHandTool(Tool inHandTool) {
+        this.inHandTool = inHandTool;
     }
 
     public User getUser() {
         return user;
     }
 
-    public double getEnergy() {
+    public Inventory getInventory() {
+        return inventory;
+    }
+
+    public Energy getEnergy() {
         return energy;
+    }
+
+    public void setEnergy(Energy energy) {
+        this.energy = energy;
     }
 
     public int getFarmingSkill() {
@@ -91,99 +116,45 @@ public class Player {
         this.fishingSkill += amount;
     }
 
-    public Position getPosition() {
-        return position;
-    }
-
-    public void setPosition(Position position) {
-        this.position = position;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Farm getFarm() {
-        return farm;
-    }
-
-    public void setFarm(Farm farm) {
-        this.farm = farm;
-    }
-
-    public void setFarmingSkill(int farmingSkill) {
-        this.farmingSkill = farmingSkill;
-    }
-
-    public void setMiningSkill(int miningSkill) {
-        this.miningSkill = miningSkill;
-    }
-
-    public void setForagingSkill(int foragingSkill) {
-        this.foragingSkill = foragingSkill;
-    }
-
-    public void setFishingSkill(int fishingSkill) {
-        this.fishingSkill = fishingSkill;
-    }
-
-    public void setEnergy(double energy) {
-        this.energy = energy;
-    }
-
-    public ArrayList<Tool> getInventory() {
-        return inventory;
-    }
-
-    public void setInventory(ArrayList<Tool> inventory) {
-        this.inventory = inventory;
-    }
-
-    public Map<NPCs, Integer> getFriendships() {
-        return friendships;
-    }
-
-    public void setFriendships(Map<NPCs, Integer> friendships) {
-        this.friendships = friendships;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public int getMoney() {
-        return money;
-    }
-
-    public void setMoney(int money) {
-        this.money = money;
-    }
-
-    public double getMaximumEnergy() {
-        return maximumEnergy;
-    }
-
-    public void setMaximumEnergy(double maximumEnergy) {
-        this.maximumEnergy = maximumEnergy;
-    }
-
-    public double getEnergyUsed() {
-        return energyUsed;
-    }
-
-    public void setEnergyUsed(double energyUsed) {
-        this.energyUsed = energyUsed;
+    public void setFainted(boolean fainted) {
+        isFainted = fainted;
     }
 
     public boolean isFainted() {
         return isFainted;
     }
 
-    public void setFainted(boolean fainted) {
-        isFainted = fainted;
+    public int returnFarmingSkill(){
+        if (this.farmingSkill<150)return 0;
+        else if (this.farmingSkill<250) return 1;
+        else if (this.farmingSkill<350) return 2;
+        else if (this.farmingSkill<450) return 3;
+        else return 4;
     }
+
+    public int returnMiningSkill(){
+        if (this.miningSkill<150) return 0;
+        else if (this.miningSkill<250) return 1;
+        else if (this.miningSkill<350) return 2;
+        else if (this.miningSkill<450) return 3;
+        else return 4;
+    }
+
+    public int returnForagingSkill(){
+        if (this.foragingSkill<150) return 0;
+        else if (this.foragingSkill<250) return 1;
+        else if (this.foragingSkill<350) return 2;
+        else if (this.foragingSkill<450) return 3;
+        else return 4;
+    }
+
+    public int returnFishingSkill(){
+        if (this.fishingSkill<150) return 0;
+        else if (this.fishingSkill<250) return 1;
+        else if (this.fishingSkill<350) return 2;
+        else if (this.fishingSkill<450) return 3;
+        return 4;
+    }
+
+
 }

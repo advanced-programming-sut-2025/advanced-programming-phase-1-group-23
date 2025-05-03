@@ -8,8 +8,7 @@ public enum Menus {
     MainMenu(new MainMenu()),
     ProfileMenu(new ProfileMenu()),
     AvatarMenu(new AvatarMenu()),
-    HomeMenu(new HomeMenu()),
-    ExitMenu(new ExitMenu());
+    HomeMenu(new HomeMenu());
 
     private final AppMenu menu;
 

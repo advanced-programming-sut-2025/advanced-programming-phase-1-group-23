@@ -5,61 +5,41 @@ import model.Naturals.Mineral;
 import model.Naturals.Tree;
 
 public class Tile {
-    private Objects objectOnCell;
-    private Position coordinate;
-    private boolean isTilled;
+    private final Position position;
+    private boolean isTraversable;
+    private Tree tree;
+    private Crop crop;
+    private Mineral mineral;
 
-    public int distance = 0;
-    public double energy = 0;
-    public int turns = 0;
-    public Tile prev = null;
-
-    public Tile(){}
-
-    public Tile(Objects objectOnCell, Position coordinate) {
-        this.objectOnCell = objectOnCell;
-        this.coordinate = coordinate;
-        this.isTilled = false;
+    public Tile(Position position, boolean isTraversable) {
+        this.position = position;
+        this.isTraversable = isTraversable;
+        this.tree = null;
+        this.crop = null;
+        this.mineral = null;
     }
 
-    public int diffXPrev() {
-        return this.coordinate.getX() - this.prev.coordinate.getX();
+    public Position getPosition() {
+        return position;
     }
 
-    public int diffYPrev() {
-        return this.coordinate.getY() - this.prev.coordinate.getY();
+    public boolean isTraversable() {
+        return isTraversable;
     }
 
-    public void setEnergy() {
-        energy = distance + 10 * turns;
+    public void setTraversable(boolean traversable) {
+        isTraversable = traversable;
     }
 
-    public Position getCoordinate() {
-        return coordinate;
-    }
+    public void addTree(Tree tree) {}
 
-    public void setCoordinate(Position coordinate) {
-        this.coordinate = coordinate;
-    }
+    public Tree getTree() {return tree;}
 
-    public Objects getObjectOnCell() {
-        return objectOnCell;
-    }
+    public void addCrop(Crop crop) {}
 
-    public void setObjectOnCell(Objects objectOnCell) {
-        this.objectOnCell = objectOnCell;
-    }
+    public Crop getCrop() {return crop;}
 
-    public boolean isTilled() {
-        return isTilled;
-    }
+    public void addMineral(Mineral mineral) {}
 
-    public void setTilled(boolean tilled) {
-        isTilled = tilled;
-    }
-
-    @Override
-    public Tile clone() {
-        return new Tile(objectOnCell, coordinate);
-    }
+    public Mineral getMineral() {return mineral;}
 }

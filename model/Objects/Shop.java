@@ -16,6 +16,6 @@ public class Shop {
     }
 
     public String shopMenu(Shop shop) {
-        return null;
+
     }
 }

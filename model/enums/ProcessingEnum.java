@@ -8,7 +8,9 @@ public enum ProcessingEnum {
     CHEESEPRESSCHEESE("artisan use Cheese (Milk|Large Milk)"),
     CHEESEPRESSGOATCHEESE("artisan use Goat Cheese (Goat Milk|Large Goat Milk)"),
     KEGBEER("artisan use Beer Wheat"),
-    KEGVINEGAR("artisan use Vinegar Rice");
+    KEGVINEGAR("artisan use Vinegar Rice"),
+
+
 
     private String pattern;
 

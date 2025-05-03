@@ -5,30 +5,41 @@ import model.Naturals.Tree;
 import java.util.ArrayList;
 
 public class Maps {
-    private ArrayList<Farm> farms;
-    private Village village;
+    private final Tile[][] tiles = new Tile[][];
+    private final Area cabin = new Area();
+    private final Area greenHouse = new Area();
+    private final ArrayList<Area> rivers = new ArrayList<>();
+    private final ArrayList<Area> quarries = new ArrayList<>();
+    private final ArrayList<Area> barns = new ArrayList<>();
+    private final ArrayList<Tree> trees = new ArrayList<>();
 
-    public Maps() {}
-    private Maps(ArrayList<Farm> farms, Village village) {
-        this.farms = farms;
-        this.village = village;
+    public Tile[][] getTiles() {
+        return tiles;
     }
 
-    public static Maps makeMap() {
-        ArrayList<Farm> farms = new ArrayList<>();
-        Village village = new Village();
-        return new Maps(farms, village);
+    public Area getCabin() {
+        return cabin;
     }
 
-    public void addFarm(Farm farm) {
-        farms.add(farm);
+    public Area getGreenHouse() {
+        return greenHouse;
     }
 
-    public ArrayList<Farm> getFarms() {
-        return farms;
+    public ArrayList<Area> getRivers() {
+        return rivers;
     }
 
-    public Village getVillage() {
-        return village;
+    public ArrayList<Area> getQuarries() {
+        return quarries;
+    }
+
+    public ArrayList<Area> getBarns() {
+        return barns;
+    }
+
+    public ArrayList<Tile> gegtTiles(Area area) {};
+
+    public void addBarn(Area barn) {
+        this.barns.add(barn);
     }
 }
