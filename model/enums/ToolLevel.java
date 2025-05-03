@@ -5,5 +5,9 @@ public enum ToolLevel {
     Cooper,
     Iron,
     Gold,
-    Iridium;
+    Iridium,
+    Learning,
+    Bambou,
+    FiberGlass,
+    ;
 }
