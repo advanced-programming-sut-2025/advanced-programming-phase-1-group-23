@@ -2,34 +2,36 @@ package controller;
 
 import model.Basics.Result;
 
-public class LivestockController extends ControllersController{
-    public Result buyAnimals(String command){
-
+public class LivestockController extends ControllersController {
+    public Result buyAnimals(String command) {
+        return null;
     }
 
-    public Result animals(String command){
-
+    public Result animals(String command) {
+        return null;
     }
 
-    public Result category(String command){
-
+    public Result category(String command) {
+        return null;
     }
 
-    public Result feed(String command){
-
+    public Result feed(String command) {
+        return null;
     }
 
-    public Result product(String command){
-
+    public Result product(String command) {
+        return null;
     }
 
-    public Result ProductionCollection(String command){
-
+    public Result ProductionCollection(String command) {
+        return null;
     }
 
-    public Result sellAnimals(String command){
-
+    public Result sellAnimals(String command) {
+        return null;
     }
 
-    public Result fishing(String command){}
+    public Result fishing(String command) {
+        return null;
+    }
 }

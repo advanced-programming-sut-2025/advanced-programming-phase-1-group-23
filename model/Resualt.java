@@ -5,6 +5,7 @@ public class Resualt {
     private String answer;
 
     public Resualt() {
+
     }
 
     public Resualt(boolean accept, String answer) {

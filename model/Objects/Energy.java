@@ -1,33 +1,41 @@
 package model.Objects;
 
-import model.Basics.Player;
-
 public class Energy {
-    private final int maxEnergy;
-    private int amount;
-    private boolean isUnlimited;
+    private int maxEnergy;
+    private int minEnergy;
+    private int initialEnergy;
 
-    public Energy(int maxEnergy, int initialEnergy) {
+    public Energy(int maxEnergy, int minEnergy, int initialEnergy) {
         this.maxEnergy = maxEnergy;
-        this.amount = initialEnergy;
-        this.isUnlimited=false;
+        this.minEnergy = minEnergy;
+        this.initialEnergy = initialEnergy;
     }
 
-    public boolean getIsUnlimited(){return isUnlimited;}
     public int getMaxEnergy() {
         return maxEnergy;
     }
 
-
-    public int getAmount() {
-        return amount;
+    public int getMinEnergy() {
+        return minEnergy;
     }
 
-    public void updateEnergy(int amount, Player player){
-        this.amount-=amount;
-        if (this.amount<=0){
-            player.setFainted(true);
-            this.amount=0;
-        }
+    public int getInitialEnergy() {
+        return initialEnergy;
+    }
+
+    public void setMaxEnergy(int maxEnergy) {
+        this.maxEnergy = maxEnergy;
+    }
+
+    public void setMinEnergy(int minEnergy) {
+        this.minEnergy = minEnergy;
+    }
+
+    public void changeInitialEnergy(int amount) {
+        this.initialEnergy += amount;
+    }
+
+    public void resetEnergy() {
+        this.initialEnergy = maxEnergy;
     }
 }

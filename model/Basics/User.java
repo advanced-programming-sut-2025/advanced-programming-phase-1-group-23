@@ -1,11 +1,14 @@
 package model.Basics;
 
 import model.Objects.Tool;
+import model.Repo.GameRepo;
 import model.enums.SecurityQuestion;
+import view.PlayGame;
 
 import java.util.ArrayList;
 
 public class User {
+    // Start Part
     private String username;
     private String nickname;
     private String password;
@@ -14,12 +17,18 @@ public class User {
     private String answer;
     private String email;
     private final String gender;
+    private String id;
+    //Game
     private Game currentGame;
-    private int maxScore;
+    private ArrayList<Game> games = new ArrayList<>();
     private int numberOfGamesPlayed;
     private boolean isPlaying;
-    private String id;
+
+    //Other
+    private int maxScore;
     private ArrayList<Tool> inventory;
+
+
 
     public User(String gender
             , String email, String nickname, String password, String username) {
@@ -55,10 +64,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Game getCurrentGame() {
-        return currentGame;
     }
 
     public String getGender() {
@@ -143,5 +148,26 @@ public class User {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Game getCurrentGame() {
+        if(currentGame == null) return null;
+        if(currentGame.getId() == null) return currentGame;
+        PlayGame t = currentGame.getGameThread();
+        currentGame = populateGame();
+        currentGame.setGameThread(t);
+        return currentGame;
+    }
+
+    public Game populateGame() {
+        return GameRepo.findGameById(currentGame.getId().toString(), true);
+    }
+
+    public ArrayList<Game> getGames() {
+        return games;
+    }
+
+    public void setGames(ArrayList<Game> games) {
+        this.games = games;
     }
 }

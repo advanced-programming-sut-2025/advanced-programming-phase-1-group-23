@@ -1,8 +1,12 @@
 package model.Maps;
 
 public class Position {
-    private final int x;
-    private final int y;
+    private int x;
+    private int y;
+
+    public Position() {
+
+    }
 
     public Position(int x, int y) {
         this.x = x;
@@ -12,6 +16,7 @@ public class Position {
     public int getX() {
         return x;
     }
+
     public int getY() {
         return y;
     }
