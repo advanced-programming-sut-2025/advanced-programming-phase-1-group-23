@@ -1,26 +1,29 @@
 package model.Naturals;
 
-import model.enums.PlantType;
+import model.enums.CropName;
+import model.enums.Season;
 import model.enums.SeedType;
 
 import java.util.ArrayList;
 
 public class Crop {
-    private PlantType name;
-    private SeedType source;
-    private ArrayList<Integer> stages;
+    private final String name;
+    private final String source;
+    private final int[] stages;
     private int totalHarvestTime;
     private boolean oneTime;
     private int regrowthTime;
     private int baseSellPrice;
-    private boolean isEatable;
+    private final boolean isEatable;
     private int energy;
+    private final Season[] season;
     private boolean canBecomeGiant;
-    private String season; // NOCH
+    private int daysPassedSincePlanting=0;
 
-    public Crop(PlantType name, SeedType source, ArrayList<Integer> stages, int totalHarvestTime,
+
+    public Crop(String name,String source, int[] stages, int totalHarvestTime,
                 boolean oneTime, int regrowthTime, int baseSellPrice, boolean isEatable, int energy,
-                boolean canBecomeGiant, String season) {
+                Season[] season, boolean canBecomeGiant) {
         this.name = name;
         this.source = source;
         this.stages = stages;
@@ -34,20 +37,13 @@ public class Crop {
         this.season = season;
     }
 
-    public PlantType getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(PlantType name) {
-        this.name = name;
-    }
 
-    public SeedType getSource() {
+    public String getSource() {
         return source;
-    }
-
-    public void setSource(SeedType source) {
-        this.source = source;
     }
 
     public int getTotalHarvestTime() {
@@ -58,12 +54,8 @@ public class Crop {
         this.totalHarvestTime = totalHarvestTime;
     }
 
-    public ArrayList<Integer> getStages() {
+    public int[] getStages() {
         return stages;
-    }
-
-    public void setStages(ArrayList<Integer> stages) {
-        this.stages = stages;
     }
 
     public boolean isOneTime() {
@@ -86,10 +78,6 @@ public class Crop {
         return isEatable;
     }
 
-    public void setEatable(boolean eatable) {
-        isEatable = eatable;
-    }
-
     public int getBaseSellPrice() {
         return baseSellPrice;
     }
@@ -106,7 +94,7 @@ public class Crop {
         this.energy = energy;
     }
 
-    public boolean isCanBecomeGiant() {
+    public boolean canBecomeGiant() {
         return canBecomeGiant;
     }
 
@@ -114,11 +102,8 @@ public class Crop {
         this.canBecomeGiant = canBecomeGiant;
     }
 
-    public String getSeason() {
+    public Season[] getSeason() {
         return season;
     }
 
-    public void setSeason(String season) {
-        this.season = season;
-    }
 }

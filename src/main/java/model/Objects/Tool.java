@@ -1,5 +1,7 @@
 package model.Objects;
 
+import model.Basics.Game;
+import model.Basics.Player;
 import model.enums.ToolLevel;
 import model.enums.ToolType;
 
@@ -8,7 +10,7 @@ public class Tool {
     private ToolLevel toolLevel;
     private int useCost;
 
-    public Tool(ToolType toolType, ToolLevel toolLevel, int useCost) {
+    public Tool(ToolType toolType, ToolLevel toolLevel) {
         this.toolType = toolType;
         this.toolLevel = toolLevel;
         this.useCost = calculateUseCost();
@@ -43,11 +45,11 @@ public class Tool {
             case TrashCan -> 0;
         };
 
-        if ((this.toolType == ToolType.Hoe || this.toolType == ToolType.WateringCan) && player.returnFarmingSkill() == 4)
+        if ((this.toolType == ToolType.Hoe || this.toolType == ToolType.WateringCan) && player.returnFarmingLevel() == 4)
             useCost--;
-        if ((this.toolType == ToolType.Pickaxe) && player.returnMiningSkill() == 4) useCost--;
-        if (this.toolType == ToolType.Axe && player.returnForagingSkill() == 4) useCost--;
-        if (this.toolType == ToolType.FishingRod && player.returnFishingSkill() == 4) useCost--;
+        if ((this.toolType == ToolType.Pickaxe) && player.returnMiningLevel() == 4) useCost--;
+        if (this.toolType == ToolType.Axe && player.returnForagingLevel() == 4) useCost--;
+        if (this.toolType == ToolType.FishingRod && player.returnFishingLevel() == 4) useCost--;
 
         return Math.min(0, useCost);
     }
@@ -69,7 +71,7 @@ public class Tool {
     }
 
     public int getUseCost() {
-        return useCost;
+        return useCost=calculateUseCost();
     }
 
     public void setUseCost(int useCost) {

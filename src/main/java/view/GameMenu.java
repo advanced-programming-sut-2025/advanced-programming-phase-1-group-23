@@ -3,6 +3,7 @@ package view;
 import controller.*;
 import model.Basics.App;
 import model.Basics.Game;
+import model.Basics.Result;
 import model.Command;
 import model.Resualt;
 import model.enums.GameMenuCommands;
@@ -73,6 +74,8 @@ public class GameMenu implements AppMenu {
                 response = getForceDeleteGameResponse(input);
             } else if (GameMenuCommands.HELP_READING_MAP.matches(input)) {
                 response = getMapHelpResponse(input);
+            } else if (GameMenuCommands.SHOWPLANETINFO.matches(input)) {
+                response = getShowPlanetInfoResponse(input);
             } else {
                 response = new Resualt(false, "SORRY sorry!");
                 ;
@@ -176,6 +179,13 @@ public class GameMenu implements AppMenu {
         return response;
     }
 
+    private static Resualt getShowPlanetInfoResponse(String input){
+        Resualt result;
+        Command request=new Command(input);
+        request.body.put("cropName",GameMenuCommands.SHOWPLANETINFO.getGroup(input,"craftName"));
+        result= FarmingController.showPlanetsInfo(request);
+        return result;
+    }
     private static Resualt getDayOfWeekResponse(String input) {
         Resualt response;
         Command request = new Command(input);

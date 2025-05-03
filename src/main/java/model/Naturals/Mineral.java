@@ -1,15 +1,15 @@
 package model.Naturals;
 
-import model.enums.PlantType;
+import model.enums.CropName;
 
 public class Mineral {
-    private PlantType name;
+    private CropName name;
     private boolean isEatable;
     private int energy;
     private boolean canBecomeGiant;
     private String season;
 
-    public Mineral(PlantType name, boolean isEatable, int energy, boolean canBecomeGiant, String season) {
+    public Mineral(CropName name, boolean isEatable, int energy, boolean canBecomeGiant, String season) {
         this.name = name;
         this.isEatable = isEatable;
         this.energy = energy;

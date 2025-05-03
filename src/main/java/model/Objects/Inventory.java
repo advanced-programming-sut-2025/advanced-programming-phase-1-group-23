@@ -20,7 +20,7 @@ public class Inventory {
             return inventory;
         }
     }
-    private HashMap<Tool, Integer> tools=new HashMap<>();
+    private final HashMap<Tool, Integer> tools=new HashMap<>();
     private int  capacity;
 
     public Inventory( int capacity) {

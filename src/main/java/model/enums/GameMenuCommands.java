@@ -26,6 +26,7 @@ public enum GameMenuCommands {
     WALK("^walk\\s+-l\\s+(?<x>\\d+)\\s*,\\s*(?<y>\\d+)$"),
     PRINT_MAP("^print\\s+map\\s+-l\\s+(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s+-s\\s+(?<size>.+)$"),
     HELP_READING_MAP("^help\\s+reading\\s+map$"),
+    SHOWPLANETINFO("^craftinfo\\s+-n\\s+(?<craftName>.*)\\s+"),
     SHOW_MENU("show\\s+current\\s+menu"),
     EXIT_MENU("menu\\s+exit"),
     ENTER_MENU("menu\\s+enter\\s+(?<menuName>.*)");

@@ -1,6 +1,12 @@
 package controller;
 
+import model.Basics.App;
+import model.Basics.Game;
+import model.Basics.Player;
 import model.Basics.Result;
+import model.Objects.Tool;
+import model.enums.ToolLevel;
+import model.enums.ToolType;
 
 public class InventoryFunctionsController extends ControllersController {
     public Result showInventory(String command) {

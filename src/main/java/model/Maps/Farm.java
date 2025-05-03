@@ -1,7 +1,6 @@
 package model.Maps;
 
 import model.Basics.App;
-import model.enums.PlantType;
 
 import java.util.ArrayList;
 

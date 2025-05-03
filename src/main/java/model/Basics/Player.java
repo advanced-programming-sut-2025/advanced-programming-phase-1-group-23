@@ -6,7 +6,10 @@ import model.Maps.Position;
 import model.NPC.NPCs;
 import model.Maps.Maps;
 import model.Objects.Energy;
+import model.Objects.Inventory;
 import model.Objects.Tool;
+import model.enums.ToolLevel;
+import model.enums.ToolType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +28,6 @@ public class Player {
     private int trashCan=0;
     private boolean isDiedYesterday;
     private Tool inHandTool=null;
-    private ArrayList<Tool> inventory;
     private Map<NPCs, Integer> friendships;
     private Position position;
     private String id;
@@ -100,6 +102,10 @@ public class Player {
         return position;
     }
 
+    public Inventory getInventory() {
+        return inventory;
+    }
+
     public void setPosition(Position position) {
         this.position = position;
     }
@@ -136,13 +142,6 @@ public class Player {
         this.energy = energy;
     }
 
-    public ArrayList<Tool> getInventory() {
-        return inventory;
-    }
-
-    public void setInventory(ArrayList<Tool> inventory) {
-        this.inventory = inventory;
-    }
 
     public Map<NPCs, Integer> getFriendships() {
         return friendships;
