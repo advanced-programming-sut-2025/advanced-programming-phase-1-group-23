@@ -17,24 +17,24 @@ public class FarmingController extends ControllersController {
         String cropName=request.body.get("craftName");
         StringBuilder info= new StringBuilder();
         for (CropName cropName1: CropName.values()){
-            Crop crop=cropName1.getCrop();
-            if (crop.getName().equals(cropName)){
-                info.append("Name: ").append(crop.getName()).append("\n");
-                info.append("Source: ").append(crop.getSource()).append("\n");
-                info.append("Stages: ").append(Arrays.toString(crop.getStages())).append("\n");
-                info.append("Total Harvest Time: ").append(crop.getTotalHarvestTime()).append("\n");
-                info.append("One Time: ").append(crop.isOneTime()).append("\n");
-                info.append("Regrowth Time: ").append(crop.getRegrowthTime()).append("\n");
-                info.append("Base Sell Price: ").append(crop.getBaseSellPrice()).append("\n");
-                info.append("Eatable: ").append(crop.isEatable()).append("\n");
-                info.append("Energy: ").append(crop.getEnergy()).append("\n");
-                info.append("Season(s): ").append(Arrays.toString(crop.getSeason())).append("\n");
-                info.append("Can Become Giant: ").append(crop.canBecomeGiant()).append("\n");
+
+            if (cropName1.getName().equals(cropName)){
+                info.append("Name: ").append(cropName1.getName()).append("\n");
+                info.append("Source: ").append(cropName1.getSource()).append("\n");
+                info.append("Stages: ").append(Arrays.toString(cropName1.getStages())).append("\n");
+                info.append("Total Harvest Time: ").append(cropName1.getTotalHarvestTime()).append("\n");
+                info.append("One Time: ").append(cropName1.isOneTime()).append("\n");
+                info.append("Regrowth Time: ").append(cropName1.getRegrowthTime()).append("\n");
+                info.append("Base Sell Price: ").append(cropName1.getBaseSellPrice()).append("\n");
+                info.append("Eatable: ").append(cropName1.isEatable()).append("\n");
+                info.append("Energy: ").append(cropName1.getEnergy()).append("\n");
+                info.append("Season(s): ").append(Arrays.toString(cropName1.getSeason())).append("\n");
+                info.append("Can Become Giant: ").append(cropName1.canBecomeGiant()).append("\n");
             }
         }
 
         if (!info.isEmpty())return new Resualt(true,info.toString());
-        else return new Resualt(false,"This crop doesn't exist!");
+        else return new Resualt(false,"This crop doesn't exist.");
     }
 
     public Result fertilityControl(String command) {

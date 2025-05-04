@@ -203,13 +203,12 @@ public class Player {
     }
 
     private static Inventory initializeInventory(){
-        Inventory inventory1=Inventory.InventoryTypes.Initial.getInventory();
+        Inventory inventory1=new Inventory();
         inventory1.getTools().put(new Tool(ToolType.Hoe, ToolLevel.Initial),1);
         inventory1.getTools().put(new Tool(ToolType.Pickaxe, ToolLevel.Initial),1);
         inventory1.getTools().put(new Tool(ToolType.Axe, ToolLevel.Initial),1);
         inventory1.getTools().put(new Tool(ToolType.WateringCan, ToolLevel.Initial),1);
         inventory1.getTools().put(new Tool(ToolType.Scythe, ToolLevel.Initial),1);
-        inventory1.decreaseOccupiedCapacity(5);
         return inventory1;
     }
 
