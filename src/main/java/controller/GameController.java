@@ -13,11 +13,23 @@ import java.time.format.DateTimeFormatter;
 
 public class GameController extends ControllersController {
     public static Resualt handleTimeQuery(Command request) {
-        Resualt response = new Resualt();
-        response.setAccept(true);
-        response.setAnswer(App.getLoggedInUser().getCurrentGame().getDate().toLocalTime().toString());
-        return response;
+    Resualt response = new Resualt();
+    response.setAccept(true);
+    
+    try {
+        String timeString = App.getLoggedInUser()
+                             .getCurrentGame()
+                             .getDate()
+                             .toLocalTime()
+                             .toString();
+        response.setAnswer(timeString);
+    } catch (NullPointerException e) {
+        response.setAccept(false);
+        response.setAnswer("Error: Could not determine current time");
     }
+    
+    return response;
+}
 
     public static Resualt handleDateQuery(Command request) {
         Resualt response = new Resualt();
