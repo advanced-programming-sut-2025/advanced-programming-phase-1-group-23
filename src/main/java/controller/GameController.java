@@ -7,6 +7,7 @@ import model.Repo.GameRepo;
 import model.Resualt;
 import model.enums.Weather;
 
+import java.time.DateTimeException;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -15,23 +16,53 @@ public class GameController extends ControllersController {
     public static Resualt handleTimeQuery(Command request) {
         Resualt response = new Resualt();
         response.setAccept(true);
-        response.setAnswer(App.getLoggedInUser().getCurrentGame().getDate().toLocalTime().toString());
+    
+        try {
+            String timeString = App.getLoggedInUser()
+                                 .getCurrentGame()
+                                 .getDate()
+                                 .toLocalTime()
+                                 .toString();
+            response.setAnswer(timeString);
+        } catch (NullPointerException e) {
+            response.setAccept(false);
+            response.setAnswer("Error: Could not determine current time");
+        }
+    
         return response;
     }
 
     public static Resualt handleDateQuery(Command request) {
         Resualt response = new Resualt();
-        response.setAccept(true);
-        response.setAnswer(App.getLoggedInUser().getCurrentGame().getDate().toLocalDate().toString());
+    
+        try {
+            String dateString = App.getLoggedInUser()
+                                 .getCurrentGame()
+                                 .getDate()
+                                 .toLocalDate()
+                                 .toString();
+            response.setAccept(true);
+            response.setAnswer(dateString);
+        } catch (NullPointerException e) {
+            response.setAccept(false);
+            response.setAnswer("Error: Could not determine current date");
+        }
+    
         return response;
     }
 
-    public static Resualt handleDatetimeQuery(Command request) {
-        Resualt response = new Resualt();
-        response.setAccept(true);
-        response.setAnswer(App.getLoggedInUser().getCurrentGame()
-                .getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd  HH:mm:ss")).toString());
-        return response;
+    public static Result handleDatetimeQuery(Command request) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd  HH:mm:ss");
+            String formattedDate = App.getLoggedInUser()
+                                    .getCurrentGame()
+                                    .getDate()
+                                    .format(formatter);
+        
+            return new Result(true, formattedDate);
+        } catch (NullPointerException | DateTimeException e) {
+            return new Result(false, "Error: Could not format datetime");
+        }
     }
 
     public static Resualt handleDayOfWeekQuery(Command request) {

@@ -345,9 +345,8 @@ public class RegisterController extends ControllersController {
         try {
             String header = "Available Security Questions (choose wisely):\n";
 
-            String questions = IntStream.range(0, SecurityQuestion.values().length)
-                    .mapToObj(i -> String.format("%d. %s", i + 1, SecurityQuestion.values()[i]))
-                    .collect(Collectors.joining("\n"));
+            String questions ="^_^ 1. What was the name of your first teacher?\n" +
+                    "^_^ 2. What is the name of your favorite book?";
 
             String footer = "\n\nPro Tip: Don't pick 'Mother's maiden name' if your mom is on social media!";
 
