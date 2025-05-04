@@ -100,7 +100,7 @@ public class Farm {
         ArrayList<Tile> farmCells = new ArrayList<>();
         ArrayList<Buildings> farmBuildings = new ArrayList<>();
         makeEmptyCells(farmCells);
-        // add buildings
+        // TODO add buildings
         if (lakeModifier == 1)
             addOneLake(farmCells);
         else
@@ -175,7 +175,8 @@ public class Farm {
     }
 
     private static boolean isMineCell(Tile cell) {
-        return cell.getCoordinate().getX() <=9 && cell.getCoordinate().getX() >=0 && cell.getCoordinate().getY() <=11 && cell.getCoordinate().getY() >=0;
+        return cell.getCoordinate().getX() <=9 && cell.getCoordinate().getX() >=0
+            && cell.getCoordinate().getY() <=11 && cell.getCoordinate().getY() >=0;
     }
 
     private static Tile getCellByCoordinate(int x, int y, ArrayList<Tile> cells) {
