@@ -8,7 +8,7 @@ import model.enums.CropName;
 
 import java.util.Arrays;
 
-public class FarmingController extends ControllersController {
+public class FarmingController extends controller.ControllersController {
     public Result plantingSeeds(String command) {
         return null;
     }
