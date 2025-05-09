@@ -32,4 +32,7 @@ public enum FruitType {
         this.energy = energy;
     }
 
+    public String getName() {
+        return name;
+    }
 }

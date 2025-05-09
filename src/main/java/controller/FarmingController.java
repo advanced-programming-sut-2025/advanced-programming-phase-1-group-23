@@ -5,6 +5,7 @@ import model.Command;
 import model.Naturals.Crop;
 import model.Resualt;
 import model.enums.CropName;
+import model.enums.TreeName;
 
 import java.util.Arrays;
 
@@ -30,6 +31,17 @@ public class FarmingController extends controller.ControllersController {
                 info.append("Energy: ").append(cropName1.getEnergy()).append("\n");
                 info.append("Season(s): ").append(Arrays.toString(cropName1.getSeason())).append("\n");
                 info.append("Can Become Giant: ").append(cropName1.canBecomeGiant()).append("\n");
+            }
+        }
+
+        for (TreeName treeName: TreeName.values()){
+            if (treeName.getName().equals(cropName)){
+                info.append("Name: ").append(treeName.getName()).append("\n");
+                info.append("Source: ").append(treeName.getSource()).append("\n");
+                info.append("Stages: ").append(Arrays.toString(treeName.getStages())).append("\n");
+                info.append("Total Harvest Time: ").append(treeName.getTotalHarvestTime()).append("\n");
+                info.append("Fruit: ").append(treeName.getFruitType().getName()).append("\n");
+                info.append("Season(s): ").append(Arrays.toString(treeName.getSeasons())).append("\n");
             }
         }
 

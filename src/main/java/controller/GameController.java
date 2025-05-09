@@ -2,6 +2,7 @@ package controller;
 
 import model.Basics.App;
 import model.Basics.Game;
+import model.Basics.Result;
 import model.Command;
 import model.Repo.GameRepo;
 import model.Resualt;

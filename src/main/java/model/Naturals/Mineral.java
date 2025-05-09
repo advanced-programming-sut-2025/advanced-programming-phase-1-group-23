@@ -2,7 +2,7 @@ package model.Naturals;
 
 import model.enums.CropName;
 
-public class Mineral {
+public class Mineral implements Objectss {
     private CropName name;
     private boolean isEatable;
     private int energy;
