@@ -23,7 +23,7 @@ public class Player {
     private int foragingSkill;
     private int fishingSkill;
     private double energy;
-    private Energy energy;
+    private Energy energy1;
     private Inventory inventory;
     private int trashCan=0;
     private boolean isDiedYesterday;
@@ -185,6 +185,10 @@ public class Player {
 
     public boolean isFainted() {
         return isFainted;
+    }
+
+    public Energy getEnergy1() {
+        return energy1;
     }
 
     public void setFainted(boolean fainted) {

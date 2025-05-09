@@ -7,10 +7,12 @@ import model.enums.TreeName;
 
 import java.util.ArrayList;
 
-public class Tree {
+public class Tree implements Objectss{
 
     private final TreeName treeName;
     private boolean cut;
+    private boolean wateredToday=false;
+    private int daysWithoutIrrigation=0;
 
     public Tree(TreeName treeName, boolean cut) {
         this.treeName = treeName;
@@ -25,4 +27,19 @@ public class Tree {
         this.cut=!(this.cut);
     }
 
+    public int getDaysWithoutIrrigation() {
+        return daysWithoutIrrigation;
+    }
+
+    public void increaseDaysWithoutIrrigation() {
+        this.daysWithoutIrrigation++;
+    }
+
+    public boolean isWateredToday() {
+        return wateredToday;
+    }
+
+    public void setWateredToday(boolean wateredToday) {
+        this.wateredToday = wateredToday;
+    }
 }

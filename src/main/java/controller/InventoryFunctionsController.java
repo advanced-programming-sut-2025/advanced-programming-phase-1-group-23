@@ -4,13 +4,22 @@ import model.Basics.App;
 import model.Basics.Game;
 import model.Basics.Player;
 import model.Basics.Result;
+import model.Command;
+import model.Maps.Farm;
+import model.Maps.Position;
+import model.Maps.Tile;
+import model.NPC.DialogueCondition;
+import model.Naturals.Crop;
+import model.Naturals.Tree;
 import model.Objects.Tool;
+import model.Resualt;
 import model.enums.ToolLevel;
 import model.enums.ToolType;
+import org.h2.util.geometry.EWKBUtils;
+
+import java.util.PropertyPermission;
 
 public class InventoryFunctionsController extends ControllersController {
-    public Result showInventory(String command) {
-    }
 
     public Result toolEquip(String toolName) {
         Game game = App.loggedInUser.getCurrentGame();
@@ -99,6 +108,166 @@ public class InventoryFunctionsController extends ControllersController {
         return new Result(false, "The inHandTool can't be upgraded");
 
     }
+
+    public static Position findPositionByDirection(String direction, Position first) {
+        //TODO fix the directions;
+        Position p = first;
+        switch (direction) {
+            case "Right" -> {
+                p.setX(p.getX() + 1);
+                return p;
+            }
+            case "Left" -> {
+                p.setX(p.getX() - 1);
+                return p;
+            }
+            case "Up" -> {
+                p.setY(p.getY() + 1);
+                return p;
+            }
+            case "Down" -> {
+                p.setY(p.getY() - 1);
+                return p;
+            }
+            case "UpLeft" -> {
+                p.setY(p.getY() + 1);
+                p.setX(p.getX() - 1);
+                return p;
+            }
+            case "UpRight" -> {
+                p.setX(p.getX() + 1);
+                p.setY(p.getY() + 1);
+                return p;
+            }
+            case "DownLeft" -> {
+                p.setY(p.getY());
+                p.setX(p.getX());
+                return p;
+            }
+            case "DownRight" -> {
+                p.setX(p.getX());
+                p.setY(p.getY());
+                return p;
+            }
+        }
+    }
+
+    public Resualt useTool(Command request) {
+        String direction = request.body.get("direction");
+        Game game = App.getLoggedInUser().getCurrentGame();
+        Player player = game.getCurrentPlayer();
+        Tool tool = player.getInHandTool();
+        Position position = findPositionByDirection(direction, player.getPosition());
+        Tile tile = findTileByPosition(position, player.getFarm());
+        if (tile == null) return new Resualt(false, "You are going out of the map!");
+        if (tool != null) {
+            player.setEnergyUsed(player.getEnergyUsed() + tool.getUseCost());
+            player.setEnergy(player.getEnergy() + tool.getUseCost());
+
+            switch (tool.getToolType()) {
+                case Axe -> {
+                    return useAxe(position, tile);
+                }
+                case Pickaxe -> {
+                    return usePickaxe(position, tile);
+                }
+                case Hoe -> {
+                    return useHoe(position, tile);
+                }
+                case Scissors -> {
+                    return useScissors(position, tile);
+                }
+                case Scythe -> {
+                    return useScythe(position, tile);
+                }
+                case MilkingCan -> {
+                    return useMilkingCan(position, tile);
+                }
+                case WateringCan -> {
+                    return useWateringCan(position, tile);
+                }
+                case TrashCan -> {
+                    return useTrashCan(position, tile);
+                }
+                case FishingRod -> {
+                    return useFishingRod(position, tile);
+                }
+
+            }
+        }
+        return new Resualt(false, "No tool in your hand");
+    }
+
+    public static Tile findTileByPosition(Position position, Farm farm) {
+        for (Tile tile : farm.getCells()) {
+            if (tile.getCoordinate().equals(position)) {
+                return tile;
+            }
+        }
+        return null;
+    }
+
+    public Resualt useAxe(Position position, Tile tile) {
+        if (tile.getObject() instanceof Tree) {
+            //TODO : cutting trees and add wood to backpack
+            return new Resualt(true, "You have obtained some wood!");
+        }
+        return new Resualt(false, "Axe cannot be used on this tile");
+
+    }
+
+    public Resualt useHoe(Position position, Tile tile) {
+        if (tile.getObject() == null) {
+            tile.setTilled(true);
+            return new Resualt(true, "You have Plowed the ground");
+        }
+        return new Resualt(false, "Go tend to your own garden!");
+    }
+
+    public Resualt usePickaxe(Position position, Tile tile) {
+    }
+
+    public Resualt useScissors(Position position, Tile tile) {
+    }
+
+    public Resualt useScythe(Position position, Tile tile) {
+    }
+
+    public Resualt useMilkingCan(Position position, Tile tile) {
+    }
+
+    public Resualt useWateringCan(Position position, Tile tile) {
+        Tool tool = App.loggedInUser.getCurrentGame().getCurrentPlayer().getInHandTool();
+        if (tile.getObjectOnCell().type.equals("water")) {
+            switch (tool.getToolLevel()) {
+                case Cooper -> tool.setIrrigationCapacity(55);
+                case Iron -> tool.setIrrigationCapacity(70);
+                case Initial -> tool.setIrrigationCapacity(40);
+                case Gold -> tool.setIrrigationCapacity(85);
+                case Iridium -> tool.setIrrigationCapacity(100);
+            }
+
+            return new Resualt(true, "Now you have your watering can full of water");
+        } else if (tile.getObject() instanceof Tree tree) {
+            if (tool.getIrrigationCapacity() <= 0)
+                return new Resualt(false, "You think the wateringCan us a fountain?? ");
+            tree.setWateredToday(true);
+            return new Resualt(true, "You have irrigated " + tree.getTreeName().getName() + " tree");
+        } else if (tile.getObject() instanceof Crop crop) {
+            if (tool.getIrrigationCapacity() <= 0)
+                return new Resualt(false, "You think the wateringCan us a fountain?? ");
+            crop.setWateredToday(true);
+            return new Resualt(true, "You have irrigated " + crop.getCropName().getName() + " crop");
+        }
+        return new Resualt(false, "Watering Can cannot be used on this tile");
+    }
+
+    public Resualt useTrashCan(Position position, Tile tile) {
+    }
+
+    public Resualt useFishingRod(Position position, Tile tile) {
+    }
+
 
     public Result craftQuery(String command) {
         return null;

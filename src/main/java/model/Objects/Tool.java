@@ -9,6 +9,7 @@ public class Tool {
     private ToolType toolType;
     private ToolLevel toolLevel;
     private int useCost;
+    private int irrigationCapacity=0;
 
     public Tool(ToolType toolType, ToolLevel toolLevel) {
         this.toolType = toolType;
@@ -76,5 +77,21 @@ public class Tool {
 
     public void setUseCost(int useCost) {
         this.useCost = useCost;
+    }
+
+    public int getIrrigationCapacity() {
+        return irrigationCapacity;
+    }
+
+    public void setIrrigationCapacity(int irrigationCapacity) {
+        this.irrigationCapacity = irrigationCapacity;
+    }
+
+    public boolean isHasWater() {
+        return hasWater;
+    }
+
+    public void setHasWater(boolean hasWater) {
+        this.hasWater = hasWater;
     }
 }

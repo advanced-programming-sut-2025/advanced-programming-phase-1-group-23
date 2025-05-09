@@ -1,7 +1,9 @@
 package model.Objects;
+import model.Maps.Objects;
+import model.Naturals.Objectss;
 import model.enums.AnimalType;
 
-public class Animal {
+public class Animal implements Objectss {
     private final AnimalType type;
     private final String name;
     private final int productPriceI;

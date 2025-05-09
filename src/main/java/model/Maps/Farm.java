@@ -8,9 +8,6 @@ public class Farm {
     private ArrayList<Tile> cells;
     private ArrayList<Buildings> buildings;
 
-    public Farm() {
-
-    }
 
     public Farm(ArrayList<Tile> cells, ArrayList<Buildings> buildings) {
         this.cells = cells;

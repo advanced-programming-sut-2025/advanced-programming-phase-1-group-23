@@ -2,12 +2,14 @@ package model.Maps;
 
 import model.Naturals.Crop;
 import model.Naturals.Mineral;
+import model.Naturals.Objectss;
 import model.Naturals.Tree;
 
 public class Tile {
     private Objects objectOnCell;
     private Position coordinate;
     private boolean isTilled;
+    private Objectss object;
 
     public int distance = 0;
     public double energy = 0;
@@ -20,6 +22,10 @@ public class Tile {
         this.objectOnCell = objectOnCell;
         this.coordinate = coordinate;
         this.isTilled = false;
+    }
+
+    public Objectss getObject() {
+        return object;
     }
 
     public int diffXPrev() {

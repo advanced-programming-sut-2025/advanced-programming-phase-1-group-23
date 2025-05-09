@@ -1,5 +1,5 @@
 package model.Naturals;
 
-public class Fruit {
+public class Fruit implements Objectss{
 
 }
