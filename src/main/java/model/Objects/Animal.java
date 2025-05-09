@@ -17,7 +17,7 @@ public class Animal implements Objectss {
     private boolean isInsideBarn;
     private Position position;
 
-    public Animal(AnimalType type, String name) {
+    public Animal(AnimalType type, String name, Position position) {
         this.type = type;
         this.name = name;
         this.friendship = 0;
@@ -25,6 +25,7 @@ public class Animal implements Objectss {
         this.hasBeenFed = false;
         this.hasBeenNuzzed = false;
         this.isInsideBarn = true;
+        this.position = position;
 
         switch(type) {
             case Hen -> {

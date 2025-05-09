@@ -52,11 +52,14 @@ public class RanchingController {
                                         default -> false;
                                     };
                     if (isValid) {
+                        Animal newAnimal = null;
                         Position freeTile;
-                        //TODO add position
-//                        for(Tile tile : barn.getTiles())
-//                            if(tile.getObjectOnCell() instanceof Animal)
-                        barn.getAnimals().add(new Animal(newAnimalType, name));
+                        for(Tile tile : barn.getTiles())
+                            if(!(tile.getObject() instanceof Animal)) {
+                                newAnimal = new Animal(newAnimalType, name, tile.getCoordinate());
+                                tile.setObject(newAnimal);
+                            }
+                        barn.getAnimals().add(newAnimal);
                         player.setMoney(player.getMoney() - newAnimalType.getPrice());
                         return new Result(true, "Animal bought successfully!");
                     }

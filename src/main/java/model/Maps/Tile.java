@@ -24,6 +24,11 @@ public class Tile {
         this.isTilled = false;
     }
 
+
+    public void setObject(Objectss object) {
+        this.object = object;
+    }
+
     public Objectss getObject() {
         return object;
     }
