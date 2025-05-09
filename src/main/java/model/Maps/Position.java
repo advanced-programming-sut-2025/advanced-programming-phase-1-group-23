@@ -21,6 +21,14 @@ public class Position {
         return y;
     }
 
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
     public boolean isNextTo(Position position) {
         return (position.getX() == x - 1 || position.getX() == x || position.getX() == x + 1) &&
                 (position.getY() == y - 1 || position.getY() == y || position.getY() == y + 1) &&
