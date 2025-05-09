@@ -1,18 +1,19 @@
 package model.Maps;
 
 import model.Basics.App;
+import model.Maps.Building;
 
 import java.util.ArrayList;
 
 public class Farm {
     private ArrayList<Tile> cells;
-    private ArrayList<Buildings> buildings;
+    private ArrayList<Building> buildings;
 
     public Farm() {
 
     }
 
-    public Farm(ArrayList<Tile> cells, ArrayList<Buildings> buildings) {
+    public Farm(ArrayList<Tile> cells, ArrayList<Building> buildings) {
         this.cells = cells;
         this.buildings = buildings;
     }
@@ -92,13 +93,13 @@ public class Farm {
         return cells;
     }
 
-    public ArrayList<Buildings> getBuildings() {
+    public ArrayList<Building> getBuildings() {
         return buildings;
     }
 
     public static Farm makeFarm(int lakeModifier) {
         ArrayList<Tile> farmCells = new ArrayList<>();
-        ArrayList<Buildings> farmBuildings = new ArrayList<>();
+        ArrayList<Building> farmBuildings = new ArrayList<>();
         makeEmptyCells(farmCells);
         // TODO add buildings
         if (lakeModifier == 1)

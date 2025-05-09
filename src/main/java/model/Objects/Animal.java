@@ -1,5 +1,6 @@
 package model.Objects;
 import model.enums.AnimalType;
+import model.Maps.Position;
 
 public class Animal {
     private final AnimalType type;
@@ -12,6 +13,7 @@ public class Animal {
     private boolean hasBeenFed;
     private boolean hasBeenNuzzed;
     private boolean isInsideBarn;
+    private Position position;
 
     public Animal(AnimalType type, String name) {
         this.type = type;
@@ -129,6 +131,14 @@ public class Animal {
 
     public void setInsideBarn(boolean insideBarn) {
         isInsideBarn = insideBarn;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
     }
 
     public void GoodNight() {

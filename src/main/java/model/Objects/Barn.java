@@ -1,15 +1,19 @@
 package src.main.java.model.Objects;
 
 import src.main.java.model.enums.BarnType;
+import model.Maps.Building;
+import model.Maps.Tile;
+import model.Objects.Animal;
 
 import java.util.ArrayList;
 
-public class Barn {
+public class Barn extends Building {
     private final BarnType type;
     private final int capacity;
     private final ArrayList<Animal> animals;
 
-    public Barn(BarnType type) {
+    public Barn(ArrayList<Tile> tiles, BarnType type) {
+        super(tiles);
         this.type = type;
         switch(type) {
             case SimpleBarn, SimpleCoop -> this.capacity = 4;
