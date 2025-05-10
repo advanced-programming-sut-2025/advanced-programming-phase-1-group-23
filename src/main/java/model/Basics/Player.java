@@ -165,7 +165,7 @@ public class Player {
         this.money = money;
     }
 
-    private static ArrayList<Recipe> initializeRecipes{
+    private static ArrayList<Recipe> initializeRecipes() {
         this.recipes.add(Recipe.FriedEgg);
         this.recipes.add(Recipe.BakedFish);
         this.recipes.add(Recipe.Salad);

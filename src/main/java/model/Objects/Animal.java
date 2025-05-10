@@ -3,19 +3,28 @@ import model.Maps.Objects;
 import model.Naturals.Objectss;
 import model.enums.AnimalType;
 import model.Maps.Position;
+import model.enums.Ingredients;
+
+import java.util.Random;
+import java.util.SplittableRandom;
+
+import static java.lang.Math.floor;
 
 public class Animal implements Objectss {
     private final AnimalType type;
     private final String name;
-    private final int productPriceI;
-    private final int productPriceII;
+//    private final int productPriceI;
+//    private final int productPriceII;
     private final int produceCycle;
     private int friendship;
     private int lastProduce;
     private boolean hasBeenFed;
     private boolean hasBeenNuzzed;
+    private boolean hasBeenOut;
     private boolean isInsideBarn;
     private Position position;
+    private Ingredients product;
+    private static Random random = new Random();
 
     public Animal(AnimalType type, String name, Position position) {
         this.type = type;
@@ -24,53 +33,37 @@ public class Animal implements Objectss {
         this.lastProduce = 0;
         this.hasBeenFed = false;
         this.hasBeenNuzzed = false;
+        this.hasBeenOut = false;
         this.isInsideBarn = true;
         this.position = position;
+        this.product = null;
 
         switch(type) {
             case Hen -> {
-                this.productPriceI = 50;
-                this.productPriceII = 95;
                 this.produceCycle = 1;
             }
             case Duck -> {
-                this.productPriceI = 95;
-                this.productPriceII = 250;
                 this.produceCycle = 2;
             }
             case Rabbit -> {
-                this.productPriceI = 340;
-                this.productPriceII = 565;
                 this.produceCycle = 4;
             }
             case Dinosaur -> {
-                this.productPriceI = 350;
-                this.productPriceII = 0;
                 this.produceCycle = 7;
             }
             case Cow -> {
-                this.productPriceI = 125;
-                this.productPriceII = 190;
                 this.produceCycle = 1;
             }
             case Goat -> {
-                this.productPriceI = 225;
-                this.productPriceII = 345;
                 this.produceCycle = 2;
             }
             case Sheep -> {
-                this.productPriceI = 340;
-                this.productPriceII = 0;
                 this.produceCycle = 3;
             }
             case Pig -> {
-                this.productPriceI = 625;
-                this.productPriceII = 0;
                 this.produceCycle = 0;
             }
             default -> {
-                this.productPriceI = 0;
-                this.productPriceII = 0;
                 this.produceCycle = 0;
             }
         }
@@ -84,12 +77,8 @@ public class Animal implements Objectss {
         return name;
     }
 
-    public int getProductPriceI() {
-        return productPriceI;
-    }
-
-    public int getProductPriceII() {
-        return productPriceII;
+    public Ingredients getProduct() {
+        return product;
     }
 
     public int getProduceCycle() {
@@ -130,6 +119,14 @@ public class Animal implements Objectss {
         this.hasBeenNuzzed = hasBeenNuzzed;
     }
 
+    public boolean getHasBeenOut() {
+        return hasBeenOut;
+    }
+
+    public void setHasBeenOut(boolean hasBeenOut) {
+        this.hasBeenOut = hasBeenOut;
+    }
+
     public boolean getIsInsideBarn() {
         return isInsideBarn;
     }
@@ -147,11 +144,49 @@ public class Animal implements Objectss {
     }
 
     public void GoodNight() {
+        if(this.lastProduce < this.produceCycle)
+            this.lastProduce++;
         if(!isInsideBarn)
             this.friendship -= 20;
-        if(!hasBeenFed)
+        if(!hasBeenFed) {
             this.friendship -= 20;
+            this.lastProduce = 0;
+        }
         if(!hasBeenNuzzed)
             this.friendship -= 10;
+        if(this.lastProduce == this.produceCycle && this.product == null) {
+            switch (this.type) {
+                case Hen -> this.product = Ingredients.EGG;
+                case Duck -> {
+                    double probability = this.friendship + (150 * random.nextDouble(0.5, 1.5));
+                    int probabilityInt = (int)floor(probability);
+                    int quality = random.nextInt(1500);
+                    if(quality < probabilityInt)
+                        this.product = Ingredients.DUCK_FEATHER;
+                    else
+                        this.product = Ingredients.DUCK_EGG;
+                }
+                case Rabbit -> {
+                    double probability = this.friendship + (150 * random.nextDouble(0.5, 1.5));
+                    int probabilityInt = (int)floor(probability);
+                    int quality = random.nextInt(1500);
+                    if(quality < probabilityInt)
+                        this.product = Ingredients.RABBIT_PIE;
+                    else
+                        this.product = Ingredients.WOOL;
+                }
+                case Dinosaur -> this.product = Ingredients.DINOSAUR_EGG;
+                case Cow -> this.product = Ingredients.MILK;
+                case Goat -> this.product = Ingredients.GOAT_MILK;
+                case Sheep -> this.product = Ingredients.WOOL;
+                case Pig -> {
+                    if(this.hasBeenOut)
+                        this.product = Ingredients.TRUFFLE;
+                }
+            }
+        }
+        this.hasBeenFed = false;
+        this.hasBeenOut = false;
+        this.hasBeenNuzzed = false;
     }
 }
