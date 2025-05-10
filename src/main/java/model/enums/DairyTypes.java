@@ -1,26 +1,26 @@
 package model.enums;
 
 public enum DairyTypes {
-    SmallEgg("smallEgg",50),
-    BigEgg("bigEgg", 95),
-    DuckEgg("duckEgg", 95),
-    DuckFeather("duckFeather", 250),
-    RabbitWool("rabbitWool", 340),
-    RabbitPie("rabbitPie",565),
-    DinosaurEgg("dinosaurEgg", 350),
-    Milk("Milk", 125),
-    BigMilk("bigMilk",190),
-    GoatMilk("goatMilk",225),
-    BigGoatMilk("bigGoatMilk", 345),
-    Wool("wool", 340),
-    Truffle("truffle", 625)
+    SmallEgg(Ingredients.EGG,50),
+    BigEgg(Ingredients.EGG, 95),
+    DuckEgg(Ingredients.DUCK_EGG, 95),
+    DuckFeather(Ingredients.DUCK_FEATHER, 250),
+    RabbitWool(Ingredients.WOOL, 340),
+    RabbitPie(Ingredients.RABBIT_PIE,565),
+    DinosaurEgg(Ingredients.DINOSAUR_EGG, 350),
+    Milk(Ingredients.MILK, 125),
+    BigMilk(Ingredients.MILK,190),
+    GoatMilk(Ingredients.GOAT_MILK,225),
+    BigGoatMilk(Ingredients.GOAT_MILK, 345),
+    Wool(Ingredients.WOOL, 340),
+    Truffle(Ingredients.TRUFFLE, 625)
     ;
 
-    private final String name;
+    private final Ingredients ingredients;
     private final int price;
 
-    DairyTypes(String name, int price) {
-        this.name = name;
+    DairyTypes(Ingredients ingredients, int price) {
+        this.ingredients = ingredients ;
         this.price = price;
     }
 }

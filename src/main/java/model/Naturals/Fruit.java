@@ -4,5 +4,5 @@ import model.enums.FruitType;
 
 public class Fruit {
 
-    private FruitType
+    private FruitType fruitType;
 }

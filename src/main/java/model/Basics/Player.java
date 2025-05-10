@@ -8,6 +8,7 @@ import model.Maps.Maps;
 import model.Objects.Energy;
 import model.Objects.Inventory;
 import model.Objects.Tool;
+import model.enums.Recipe;
 import model.enums.ToolLevel;
 import model.enums.ToolType;
 
@@ -18,14 +19,15 @@ import java.util.Map;
 public class Player {
     private User user;
     private Farm farm;
-    private int farmingSkill;
-    private int miningSkill;
-    private int foragingSkill;
-    private int fishingSkill;
+    private int farmingSkill=0;
+    private int miningSkill=0;
+    private int foragingSkill=0;
+    private int fishingSkill=0;
     private double energy;
-    private Energy energy1;
     private Inventory inventory;
+    private Inventory refrigerator;
     private int trashCan=0;
+    private ArrayList<Recipe> recipes=new ArrayList<>();
     private boolean isDiedYesterday;
     private Tool inHandTool=null;
     private Map<NPCs, Integer> friendships;
@@ -37,26 +39,19 @@ public class Player {
     private boolean isFainted;
 
 
-    public Player(User user, Farm farm, int farmingSkill, int miningSkill, int foragingSkill,
-                  int fishingSkill, double energy, ArrayList<Tool> inventory) {
+    public Player(User user) {
         this.user = user;
-        this.farm = farm;
-        this.farmingSkill = farmingSkill;
-        this.miningSkill = miningSkill;
-        this.foragingSkill = foragingSkill;
-        this.fishingSkill = fishingSkill;
-        this.energy = energy;
+        this.energy = 200;
         this.inventory=initializeInventory();
-    }
-
-    public Player(User user){
-        this.user = user;
+        this.refrigerator=new Inventory();
         this.id = user.getId();
         this.position = new Position(0,0);
         this.money = 0;
         this.energyUsed = 0;
         this.isFainted = false;
+        this.recipes=initializeRecipes;
     }
+
 
     public User getUser() {
         return user;
@@ -142,6 +137,9 @@ public class Player {
         this.energy = energy;
     }
 
+    public ArrayList<Recipe> getRecipes() {
+        return recipes;
+    }
 
     public Map<NPCs, Integer> getFriendships() {
         return friendships;
@@ -167,6 +165,12 @@ public class Player {
         this.money = money;
     }
 
+    private static ArrayList<Recipe> initializeRecipes{
+        this.recipes.add(Recipe.FriedEgg);
+        this.recipes.add(Recipe.BakedFish);
+        this.recipes.add(Recipe.Salad);
+    }
+
     public double getMaximumEnergy() {
         return maximumEnergy;
     }
@@ -187,8 +191,8 @@ public class Player {
         return isFainted;
     }
 
-    public Energy getEnergy1() {
-        return energy1;
+    public Inventory getRefrigerator() {
+        return refrigerator;
     }
 
     public void setFainted(boolean fainted) {
