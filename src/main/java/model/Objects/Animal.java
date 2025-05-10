@@ -2,6 +2,7 @@ package model.Objects;
 import model.Maps.Objects;
 import model.Naturals.Objectss;
 import model.enums.AnimalType;
+import model.Maps.Position;
 
 public class Animal implements Objectss {
     private final AnimalType type;
@@ -14,8 +15,9 @@ public class Animal implements Objectss {
     private boolean hasBeenFed;
     private boolean hasBeenNuzzed;
     private boolean isInsideBarn;
+    private Position position;
 
-    public Animal(AnimalType type, String name) {
+    public Animal(AnimalType type, String name, Position position) {
         this.type = type;
         this.name = name;
         this.friendship = 0;
@@ -23,6 +25,7 @@ public class Animal implements Objectss {
         this.hasBeenFed = false;
         this.hasBeenNuzzed = false;
         this.isInsideBarn = true;
+        this.position = position;
 
         switch(type) {
             case Hen -> {
@@ -131,6 +134,14 @@ public class Animal implements Objectss {
 
     public void setInsideBarn(boolean insideBarn) {
         isInsideBarn = insideBarn;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
     }
 
     public void GoodNight() {

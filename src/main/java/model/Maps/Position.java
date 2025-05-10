@@ -24,4 +24,21 @@ public class Position {
     public void setY(int y) {
         this.y = y;
     }
+
+    public boolean isNextTo(Position position) {
+        return (position.getX() == x - 1 || position.getX() == x || position.getX() == x + 1) &&
+                (position.getY() == y - 1 || position.getY() == y || position.getY() == y + 1) &&
+                !position.equals(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o == this)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+
+        Position position = (Position) o;
+        return position.x == x && position.y == y;
+    }
 }
