@@ -2,6 +2,7 @@ package model.Maps;
 
 import model.Basics.App;
 import model.Maps.Building;
+import model.Maps.Position;
 
 import java.util.ArrayList;
 
@@ -186,9 +187,9 @@ public class Farm {
         return null;
     }
 
-    public Tile findCellByCoordinate(int x, int y) {
+    public Tile findCellByCoordinate(Position position) {
         for (Tile cell : cells) {
-            if (cell.getCoordinate().getX() == x && cell.getCoordinate().getY() == y) {
+            if (cell.getCoordinate().equals(position)) {
                 return cell;
             }
         }

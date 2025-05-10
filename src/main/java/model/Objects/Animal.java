@@ -102,6 +102,8 @@ public class Animal implements Objectss {
 
     public void changeFriendship(int amount) {
         this.friendship += amount;
+        if(this.friendship > 1000)
+            this.friendship = 1000;
     }
 
     public int getLastProduce() {

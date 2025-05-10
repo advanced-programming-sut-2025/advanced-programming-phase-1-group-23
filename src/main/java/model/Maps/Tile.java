@@ -10,6 +10,7 @@ public class Tile {
     private Position coordinate;
     private boolean isTilled;
     private Objectss object;
+    private boolean isInsideBuilding;
 
     public int distance = 0;
     public double energy = 0;
@@ -22,6 +23,7 @@ public class Tile {
         this.objectOnCell = objectOnCell;
         this.coordinate = coordinate;
         this.isTilled = false;
+        this.isInsideBuilding = false;
     }
 
 
@@ -67,6 +69,14 @@ public class Tile {
 
     public void setTilled(boolean tilled) {
         isTilled = tilled;
+    }
+
+    public boolean isInsideBuilding() {
+        return isInsideBuilding;
+    }
+
+    public void setInsideBuilding(boolean insideBuilding) {
+        isInsideBuilding = insideBuilding;
     }
 
     @Override

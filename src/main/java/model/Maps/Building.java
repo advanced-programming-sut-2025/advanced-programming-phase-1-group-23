@@ -10,6 +10,8 @@ public class Building {
 
     public Building(ArrayList<Tile> tiles) {
         this.tiles = tiles;
+        for(Tile tile : tiles)
+            tile.setInsideBuilding(true);
     }
 
     public ArrayList<Tile> getTiles() {
