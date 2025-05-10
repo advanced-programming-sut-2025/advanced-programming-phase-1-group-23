@@ -15,6 +15,7 @@ import model.Objects.Tool;
 import model.Resualt;
 import model.enums.ToolLevel;
 import model.enums.ToolType;
+import model.enums.Weather;
 import org.h2.util.geometry.EWKBUtils;
 
 import java.util.PropertyPermission;
@@ -231,6 +232,7 @@ public class InventoryFunctionsController extends ControllersController {
     }
 
     public Resualt useScythe(Position position, Tile tile) {
+
     }
 
     public Resualt useMilkingCan(Position position, Tile tile) {
@@ -248,15 +250,20 @@ public class InventoryFunctionsController extends ControllersController {
             }
 
             return new Resualt(true, "Now you have your watering can full of water");
+        } else if (App.loggedInUser.getCurrentGame().getWeatherToday().equals(Weather.RAIN)) {
+            return new Resualt(false, "You don't need to irrigate crops while raining");
+
         } else if (tile.getObject() instanceof Tree tree) {
             if (tool.getIrrigationCapacity() <= 0)
-                return new Resualt(false, "You think the wateringCan us a fountain?? ");
+                return new Resualt(false, "You think the wateringCan is a fountain?? ");
             tree.setWateredToday(true);
+            tool.setIrrigationCapacity(tool.getIrrigationCapacity() - 1);
             return new Resualt(true, "You have irrigated " + tree.getTreeName().getName() + " tree");
         } else if (tile.getObject() instanceof Crop crop) {
             if (tool.getIrrigationCapacity() <= 0)
-                return new Resualt(false, "You think the wateringCan us a fountain?? ");
+                return new Resualt(false, "You think the wateringCan is a fountain?? ");
             crop.setWateredToday(true);
+            tool.setIrrigationCapacity(tool.getIrrigationCapacity() - 1);
             return new Resualt(true, "You have irrigated " + crop.getCropName().getName() + " crop");
         }
         return new Resualt(false, "Watering Can cannot be used on this tile");
