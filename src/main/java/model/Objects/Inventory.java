@@ -12,25 +12,27 @@ public class Inventory {
         return ingredients;
     }
 
-    public void setIngredients(HashMap<Ingredients, Integer> ingredients) {
-        this.ingredients = ingredients;
-    }
 
-    public enum InventoryTypes{
-        Initial(12),
-        Huge(24),
-        Deluxe(100000);
-
-        private final int capacity;
-        InventoryTypes(int capacity) {
-            this.capacity = capacity;
-        }
-
-    }
     private HashMap<Tool, Integer> tools=new HashMap<>();
     private HashMap<Ingredients, Integer> ingredients=new HashMap<>();
-    private final InventoryTypes inventoryTypes=InventoryTypes.Initial;
+    private String level="initial";
+    private int capacity=12;
 
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
 
     public HashMap<Tool, Integer> getTools() {
         return tools;

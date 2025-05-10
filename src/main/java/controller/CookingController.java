@@ -4,77 +4,171 @@ import model.Basics.App;
 import model.Basics.Player;
 import model.Basics.Result;
 import model.Command;
+import model.Objects.Inventory;
 import model.enums.Ingredients;
 import model.enums.Recipe;
+import org.h2.command.CommandContainer;
 
 import java.util.Map;
 
 public class CookingController extends ControllersController {
-    public Result getFromRefrigerator(String command) {
-        return null;
+    public Result getFromRefrigerator(Command command) {
+        Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
+        Inventory inventory = player.getInventory();
+        Inventory refrigerator = player.getRefrigerator();
+        String itemName = command.body.get("item");
+        Ingredients item = null;
+        for (Ingredients item1 : Ingredients.values()) {
+            if (item1.getName().equals(itemName))
+                item = item1;
+        }
+        if (item == null) return new Result(false, "Item doesn't exist");
+        int exist = 0;
+        for (Map.Entry<Ingredients, Integer> need : refrigerator.getIngredients().entrySet()) {
+            if (need.getKey().equals(item)) {
+                exist = 1;
+                break;
+            }
+        }
+        if (exist == 0) return new Result(false, "You don't have the item in the refrigerator");
+        if (inventory.getCapacity() > 0) {
+            inventory.setCapacity(inventory.getCapacity() - 1);
+            inventory.getIngredients().put(item, refrigerator.getIngredients().get(item));
+            refrigerator.setCapacity(refrigerator.getCapacity()+1);
+            refrigerator.getIngredients().remove(item);
+            return new Result(true, "Item successfully added to inventory");
+        }
+        return new Result(false, "Inventory is full");
     }
 
-    public Result putInRefrigerator(String command) {
-        return null;
+    public Result eatDeliciousFood(Command command) {
+        Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
+        Inventory inventory = player.getInventory();
+        String itemName = command.body.get("foodName");
+        Ingredients food=null;
+        for (Ingredients item1 : Ingredients.values()) {
+            if (item1.getName().equals(itemName))
+                food = item1;
+        }
+        if (food==null)return new Result(false, "Goshnegi housh o havaseto borde Haaa!!!");
+        int exist = 0;
+        for (Map.Entry<Ingredients, Integer> need : inventory.getIngredients().entrySet()) {
+            if (need.getKey().equals(food)) {
+                exist = 1;
+                break;
+            }
+        }
+        if (exist == 0) return new Result(false, "You don't have the food in the inventory");
+        inventory.getIngredients().put(food, inventory.getIngredients().get(food)-1);
+        if (inventory.getIngredients().get(food)==0){
+            inventory.getIngredients().remove(food);
+            inventory.setCapacity(inventory.getCapacity()+1);
+        }
+        player.setEnergy(player.getEnergy()+food.getEnergy());
+        return new Result(true, "Bon appetit!");
+    }
+
+    public Result putInRefrigerator(Command command) {
+
+        Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
+        Inventory inventory = player.getInventory();
+        Inventory refrigerator = player.getRefrigerator();
+        String itemName = command.body.get("item");
+        Ingredients item = null;
+        for (Ingredients item1 : Ingredients.values()) {
+            if (item1.getName().equals(itemName))
+                item = item1;
+        }
+        if (item == null) return new Result(false, "Item doesn't exist");
+        int exist = 0;
+        for (Map.Entry<Ingredients, Integer> need : inventory.getIngredients().entrySet()) {
+            if (need.getKey().equals(item)) {
+                exist = 1;
+                break;
+            }
+        }
+        if (exist == 0) return new Result(false, "You don't have the item in the inventory");
+
+        if (refrigerator.getCapacity() > 0) {
+            refrigerator.setCapacity(refrigerator.getCapacity() - 1);
+            refrigerator.getIngredients().put(item, inventory.getIngredients().get(item));
+            inventory.getIngredients().remove(item);
+            inventory.setCapacity(inventory.getCapacity()+1);
+            return new Result(true, "Item successfully added to refrigerator");
+        }
+        return new Result(false, "Refrigerator is full");
+
     }
 
     public Result showRecipes() {
-        Player player= App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
-        StringBuilder recipes=new StringBuilder();
-        for (Recipe recipe: player.getRecipes()){
+        Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
+        StringBuilder recipes = new StringBuilder();
+        for (Recipe recipe : player.getRecipes()) {
             recipes.append("Name: ").append(recipe.getName()).append("  Energy: ").append(recipe.getEnergy()).append("\n");
         }
 
-        if (!recipes.isEmpty())return new Result(true, recipes.toString());
+        if (!recipes.isEmpty()) return new Result(true, recipes.toString());
         return new Result(false, "You haven't learned any recipes yet!");
     }
 
-    public Result cookFood (Command command){
-        String foodRecipe=command.body.get("recipeName");
-        Recipe recipe=null;
-        for (Recipe recipe1:Recipe.values()){
+    public Result cookFood(Command command) {
+        String foodRecipe = command.body.get("recipeName");
+        Recipe recipe = null;
+        for (Recipe recipe1 : Recipe.values()) {
             if (recipe1.getName().equals(foodRecipe))
-                recipe=recipe1;
+                recipe = recipe1;
         }
-        Player player=App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
-        if (!player.getRecipes().contains(recipe) || recipe==null){
-            return new Result(false,"You don't know the recipe.");
+        Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
+        if (!player.getRecipes().contains(recipe) || recipe == null) {
+            return new Result(false, "You don't know the recipe.");
         }
-        for (Map.Entry<Ingredients, Integer> provided: recipe.getIngredients().entrySet()){
-            for (Map.Entry<Ingredients, Integer> needed:player.getInventory().getIngredients().entrySet()){
-                if (needed.getKey()==provided.getKey()){
-                    if (needed.getValue()<provided.getValue()){
-                        return new Result(false,"You don't have enough ingredients");
+        for (Map.Entry<Ingredients, Integer> provided : recipe.getIngredients().entrySet()) {
+            for (Map.Entry<Ingredients, Integer> needed : player.getInventory().getIngredients().entrySet()) {
+                if (needed.getKey() == provided.getKey()) {
+                    if (needed.getValue() < provided.getValue()) {
+                        return new Result(false, "You don't have enough ingredients");
                     }
                 }
 
             }
-            for (Map.Entry<Ingredients, Integer> needed:player.getRefrigerator().getIngredients().entrySet()){
-                if (needed.getKey()==provided.getKey()){
-                    if (needed.getValue()<provided.getValue()){
-                        return new Result(false,"You don't have enough ingredients");
+            for (Map.Entry<Ingredients, Integer> needed : player.getRefrigerator().getIngredients().entrySet()) {
+                if (needed.getKey() == provided.getKey()) {
+                    if (needed.getValue() < provided.getValue()) {
+                        return new Result(false, "You don't have enough ingredients");
                     }
                 }
 
             }
-        } // Now we can Start cooking
-        for (Map.Entry<Ingredients, Integer> provided: recipe.getIngredients().entrySet()){
-            for (Map.Entry<Ingredients, Integer> needed:player.getInventory().getIngredients().entrySet()){
-                if (needed.getKey()==provided.getKey()){
-                    player.getInventory().getIngredients().put(needed.getKey(), needed.getValue()-provided.getValue());
+        }
+        if (player.getInventory().getCapacity() <= 0) return new Result(false, "Your inventory is full!");
+        if (player.getEnergy() <= 3) {
+            player.setFainted(true);
+            return new Result(false, "Na ki gofte bandeye shekamam");
+        }
+        // Now we can Start cooking
+        for (Map.Entry<Ingredients, Integer> provided : recipe.getIngredients().entrySet()) {
+            for (Map.Entry<Ingredients, Integer> needed : player.getInventory().getIngredients().entrySet()) {
+                if (needed.getKey() == provided.getKey()) {
+                    player.getInventory().getIngredients().put(needed.getKey(), needed.getValue() - provided.getValue());
                 }
 
             }
-            for (Map.Entry<Ingredients, Integer> needed:player.getRefrigerator().getIngredients().entrySet()){
-                if (needed.getKey()==provided.getKey()){
-                    player.getRefrigerator().getIngredients().put(needed.getKey(), needed.getValue()-provided.getValue());
+            for (Map.Entry<Ingredients, Integer> needed : player.getRefrigerator().getIngredients().entrySet()) {
+                if (needed.getKey() == provided.getKey()) {
+                    player.getRefrigerator().getIngredients().put(needed.getKey(), needed.getValue() - provided.getValue());
                 }
 
             }
         }
-        player.setEnergy(player.getEnergy()-3);
-
-
-
+        player.setEnergy(player.getEnergy() - 3);
+        if (player.getInventory().getIngredients().containsKey(recipe.getFoodMade())) {
+            player.getInventory().getIngredients().put(recipe.getFoodMade(), player.getInventory().getIngredients().get(recipe.getFoodMade()) + 1);
+        } else {
+            player.getInventory().setCapacity(player.getInventory().getCapacity() - 1);
+            player.getInventory().getIngredients().put(recipe.getFoodMade(), 1);
+        }
+        return new Result(true, "New food was cooked!");
     }
+
+    //TODO bye recipes;
 }
