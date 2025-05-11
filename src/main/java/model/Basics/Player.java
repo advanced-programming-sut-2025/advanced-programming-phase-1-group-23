@@ -3,17 +3,14 @@ package model.Basics;
 
 import model.Maps.Farm;
 import model.Maps.Position;
-import model.NPC.NPCs;
-import model.Maps.Maps;
-import model.Objects.Energy;
 import model.Objects.Inventory;
 import model.Objects.Tool;
 import model.enums.Recipe;
 import model.enums.ToolLevel;
 import model.enums.ToolType;
+import model.Objects.Shop;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class Player {
@@ -30,13 +27,14 @@ public class Player {
     private ArrayList<Recipe> recipes=new ArrayList<>();
     private boolean isDiedYesterday;
     private Tool inHandTool=null;
-    private Map<NPCs, Integer> friendships;
+    private Map<model.NPC.NPC, Integer> friendships;
     private Position position;
     private String id;
     private double maximumEnergy;
     private int money;
     private double energyUsed;
     private boolean isFainted;
+    private Shop currentShop;
 
 
     public Player(User user) {
@@ -50,6 +48,7 @@ public class Player {
         this.energyUsed = 0;
         this.isFainted = false;
         this.recipes=initializeRecipes;
+        this.currentShop = null;
     }
 
 
@@ -91,6 +90,14 @@ public class Player {
 
     public void increaseFishingSkill(int amount) {
         this.fishingSkill += amount;
+    }
+
+    public Shop getCurrentShop() {
+        return currentShop;
+    }
+
+    public void setCurrentShop(Shop currentShop) {
+        this.currentShop = currentShop;
     }
 
     public Position getPosition() {
@@ -141,11 +148,11 @@ public class Player {
         return recipes;
     }
 
-    public Map<NPCs, Integer> getFriendships() {
+    public Map<model.NPC.NPC, Integer> getFriendships() {
         return friendships;
     }
 
-    public void setFriendships(Map<NPCs, Integer> friendships) {
+    public void setFriendships(Map<model.NPC.NPC, Integer> friendships) {
         this.friendships = friendships;
     }
 

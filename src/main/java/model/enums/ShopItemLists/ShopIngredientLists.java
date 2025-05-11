@@ -6,6 +6,11 @@ import src.main.java.model.Objects.ShopIngredient;
 import java.util.List;
 
 public enum ShopIngredientLists {
+    BLACKSMITH(
+            new ShopIngredient(Ingredients.COOPER_ORE, 1000000),
+            new ShopIngredient(Ingredients.IRON_ORE, 1000000),
+            new ShopIngredient(Ingredients.GOLD_ORE, 1000000),
+            new ShopIngredient(Ingredients.COAL, 1000000)),
     CARPENTER(
             new ShopIngredient(Ingredients.WOOD, 1000000),
             new ShopIngredient(Ingredients.STONE, 1000000)),

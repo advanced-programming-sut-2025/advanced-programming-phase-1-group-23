@@ -1,16 +1,10 @@
 package controller;
 
-import model.NPC.DialogueCondition;
-import model.NPC.NPCs;
-import model.NPC.Quest;
-import view.NPCView;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class NPCController extends ControllersController{
-        private List<NPCs> npcs;
+        private List<model.NPC.NPC> npcs;
 
         public NPCController() {
             this.npcs = new ArrayList<>();
@@ -22,7 +16,7 @@ public class NPCController extends ControllersController{
         }
 
 
-        public List<NPCs> getAllNPCs() {
+        public List<model.NPC.NPC> getAllNPCs() {
             return npcs;
         }
 
