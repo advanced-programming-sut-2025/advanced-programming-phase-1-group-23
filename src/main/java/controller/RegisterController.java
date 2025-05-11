@@ -96,7 +96,11 @@ public class RegisterController extends ControllersController {
                     "Username invalid! Try something that doesn't look like your cat walked on keyboard");
         }
 
-        username = makeUsernameUnique(username);
+      //  username = makeUsernameUnique(username);
+
+        if(!isUniqe(username)){
+            return new Resualt(false, "Username already exists!");
+        }
 
         Resualt passwordResult = handlePasswordLogic(password, passwordConfirm);
         if (!passwordResult.isAccept()) {
@@ -125,7 +129,7 @@ public class RegisterController extends ControllersController {
 
 
         return new Resualt(true,
-                "Welcome aboard " + nickname + "!\n" +
+                "Welcome aboard " + username + "!\n" +
                         "Your secret code (shh!): " + password + "\n" +
                         "Now pick a security question - make it something you'll remember when you're 80!\n" +
                         "Command: 'pick question -q <number> -a <answer> -c <confirm answer>'\n" +
@@ -138,6 +142,10 @@ public class RegisterController extends ControllersController {
             username += (int) (Math.random() * 420);
         }
         return username;
+    }
+
+    private  static  boolean isUniqe(String username) {
+        return UserRepo.findUserByUsername(username) == null;
     }
 
     private static Resualt handlePasswordLogic(String password, String passwordConfirm) {
