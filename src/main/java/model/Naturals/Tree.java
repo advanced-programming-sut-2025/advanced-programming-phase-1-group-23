@@ -13,6 +13,10 @@ public class Tree implements Objectss{
     private boolean cut;
     private boolean wateredToday=false;
     private int daysWithoutIrrigation=0;
+    private int daysPassedSincePlanting=0;
+    private boolean speedGroFertility=false;
+    private boolean retainingSoilFertility=false;
+    private int daysPassedSinceHarvesting=1000;
 
     public Tree(TreeName treeName, boolean cut) {
         this.treeName = treeName;
@@ -41,5 +45,37 @@ public class Tree implements Objectss{
 
     public void setWateredToday(boolean wateredToday) {
         this.wateredToday = wateredToday;
+    }
+
+    public int getDaysPassedSincePlanting() {
+        return daysPassedSincePlanting;
+    }
+
+    public void setDaysPassedSincePlanting(int daysPassedSincePlanting) {
+        this.daysPassedSincePlanting = daysPassedSincePlanting;
+    }
+
+    public boolean isSpeedGroFertility() {
+        return speedGroFertility;
+    }
+
+    public void setSpeedGroFertility(boolean speedGroFertility) {
+        this.speedGroFertility = speedGroFertility;
+    }
+
+    public boolean isRetainingSoilFertility() {
+        return retainingSoilFertility;
+    }
+
+    public void setRetainingSoilFertility(boolean retainingSoilFertility) {
+        this.retainingSoilFertility = retainingSoilFertility;
+    }
+
+    public int getDaysPassedSinceHarvesting() {
+        return daysPassedSinceHarvesting;
+    }
+
+    public void setDaysPassedSinceHarvesting(int daysPassedSinceHarvesting) {
+        this.daysPassedSinceHarvesting = daysPassedSinceHarvesting;
     }
 }

@@ -11,13 +11,16 @@ import model.Maps.Tile;
 import model.NPC.DialogueCondition;
 import model.Naturals.Crop;
 import model.Naturals.Tree;
+import model.Objects.Inventory;
 import model.Objects.Tool;
 import model.Resualt;
+import model.enums.Ingredients;
 import model.enums.ToolLevel;
 import model.enums.ToolType;
 import model.enums.Weather;
 import org.h2.util.geometry.EWKBUtils;
 
+import java.util.Map;
 import java.util.PropertyPermission;
 
 public class InventoryFunctionsController extends ControllersController {
@@ -76,7 +79,7 @@ public class InventoryFunctionsController extends ControllersController {
     public Result toolUpgrade(String command) {
 
         //TODO check if the player is in the blackSmith shop;
-        Game game = App.loggedInUser.getCurrentGame();
+        Game game = App.getLoggedInUser().getCurrentGame();
         Player player = game.getCurrentPlayer();
         Tool tool = player.getInHandTool();
         switch (tool.getToolType()) {
@@ -209,8 +212,22 @@ public class InventoryFunctionsController extends ControllersController {
     }
 
     public Resualt useAxe(Position position, Tile tile) {
+        Inventory inventory = App.getLoggedInUser().getCurrentGame().getCurrentPlayer().getInventory();
         if (tile.getObject() instanceof Tree) {
-            //TODO : cutting trees and add wood to backpack
+            tile.setObject(null);
+            int exist = 0;
+            for (Map.Entry<Ingredients, Integer> need : inventory.getIngredients().entrySet()) {
+                if (need.getKey().equals(Ingredients.WOOD)) {
+                    exist = 1;
+                    break;
+                }
+            }
+            if (exist != 0) {
+                inventory.getIngredients().put(Ingredients.WOOD, inventory.getIngredients().get(Ingredients.WOOD));
+            } else if (inventory.getCapacity() > 0) {
+                inventory.setCapacity(inventory.getCapacity() - 1);
+                inventory.getIngredients().put(Ingredients.WOOD, 1);
+            }
             return new Resualt(true, "You have obtained some wood!");
         }
         return new Resualt(false, "Axe cannot be used on this tile");
@@ -232,14 +249,55 @@ public class InventoryFunctionsController extends ControllersController {
     }
 
     public Resualt useScythe(Position position, Tile tile) {
+        Inventory inventory=App.getLoggedInUser().getCurrentGame().getCurrentPlayer().getInventory();
+        if (tile.getObject() instanceof Tree tree){
+            if (tree.getDaysPassedSincePlanting()>tree.getTreeName().getTotalHarvestTime() && tree.getDaysPassedSinceHarvesting()>=tree.getTreeName().getFruitingCycle()){
+                tree.setDaysPassedSinceHarvesting(0);
+                int exist = 0;
+                for (Map.Entry<Ingredients, Integer> need : inventory.getIngredients().entrySet()) {
+                    if (need.getKey().equals(tree.getTreeName().getFruitType())){
+                        exist = 1;
+                        break;
+                    }
+                }
+                if (exist != 0) {
+                    inventory.getIngredients().put(tree.getTreeName().getFruitType(), inventory.getIngredients().get(tree.getTreeName().getFruitType()));
+                } else if (inventory.getCapacity() > 0) {
+                    inventory.setCapacity(inventory.getCapacity() - 1);
+                    inventory.getIngredients().put(tree.getTreeName().getFruitType(), 1);
+                }
 
+            }
+            return new Resualt(true, "You've successfully harvested the tree");
+        }else if (tile.getObject() instanceof Crop crop){
+            if (crop.getDaysPassedSincePlanting()>crop.getCropName().getTotalHarvestTime() && crop.getDaysPassedSinceHarvesting()>=crop.getCropName().getRegrowthTime()){
+                crop.setDaysPassedSinceHarvesting(0);
+                int exist = 0;
+                for (Map.Entry<Ingredients, Integer> need : inventory.getIngredients().entrySet()) {
+                    if (need.getKey().equals(crop.getCropName().getIngredients())){
+                        exist = 1;
+                        break;
+                    }
+                }
+                if (exist != 0) {
+                    inventory.getIngredients().put(crop.getCropName().getIngredients(), inventory.getIngredients().get(crop.getCropName().getIngredients()));
+                } else if (inventory.getCapacity() > 0) {
+                    inventory.setCapacity(inventory.getCapacity() - 1);
+                    inventory.getIngredients().put(crop.getCropName().getIngredients(), 1);
+                }
+
+            }
+            if (crop.getCropName().isOneTime())tile.setObject(null);
+            return new Resualt(true, "You've successfully harvested the crop");
+        }
+        return new Resualt(false, "You can't harvest anything here.");
     }
 
     public Resualt useMilkingCan(Position position, Tile tile) {
     }
 
     public Resualt useWateringCan(Position position, Tile tile) {
-        Tool tool = App.loggedInUser.getCurrentGame().getCurrentPlayer().getInHandTool();
+        Tool tool = App.getLoggedInUser().getCurrentGame().getCurrentPlayer().getInHandTool();
         if (tile.getObjectOnCell().type.equals("water")) {
             switch (tool.getToolLevel()) {
                 case Cooper -> tool.setIrrigationCapacity(55);

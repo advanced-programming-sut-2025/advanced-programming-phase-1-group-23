@@ -1,5 +1,6 @@
 package model.Objects;
 
+import model.Basics.App;
 import model.Basics.Game;
 import model.Basics.Player;
 import model.enums.ToolLevel;
@@ -22,7 +23,7 @@ public class Tool {
     }
 
     private int calculateUseCost() {
-        Game game = App.allGames.getLast();
+        Game game = App.loggedInUser.getCurrentGame();
         Player player = game.getCurrentPlayer();
         int useCost = switch (this.toolType) {
             case Hoe, Pickaxe, Axe, WateringCan -> switch (this.toolLevel) {
@@ -85,13 +86,5 @@ public class Tool {
 
     public void setIrrigationCapacity(int irrigationCapacity) {
         this.irrigationCapacity = irrigationCapacity;
-    }
-
-    public boolean isHasWater() {
-        return hasWater;
-    }
-
-    public void setHasWater(boolean hasWater) {
-        this.hasWater = hasWater;
     }
 }

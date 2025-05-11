@@ -9,21 +9,38 @@ import model.Maps.Farm;
 import model.Maps.Position;
 import model.Maps.Tile;
 import model.Naturals.Crop;
+import model.Naturals.Tree;
 import model.Objects.Inventory;
+import model.Objects.Tool;
 import model.Resualt;
-import model.enums.CropName;
-import model.enums.ForAgingSeeds;
-import model.enums.TreeName;
+import model.enums.*;
 import org.h2.util.geometry.EWKBUtils;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Random;
 
 public class FarmingController extends controller.ControllersController {
+    public void GoodNightFarm(){
+        for (Farm farm: App.getLoggedInUser().getCurrentGame().getMap().getFarms()){
+            for (Tile tile:farm.getCells()){
+                if (tile.getObject() instanceof Tree tree){
+                    if (tree.isWateredToday())tree.setDaysPassedSincePlanting(tree.getDaysPassedSincePlanting()+1);
+                    if (!tree.isWateredToday())tree.increaseDaysWithoutIrrigation();
+                    tree.setWateredToday(false);
+                    if (tree.getDaysWithoutIrrigation()==2)tile.setObject(null);
+                }
+            }
+        }
+    }
+
     public Result plantingSeeds(Command command) {
         Game game=App.getLoggedInUser().getCurrentGame();
         String direction=command.body.get("direction");
         String seed=command.body.get("seed");
+        if (seed.equals("Mixed Seeds")){
+            seed=chooseMixedSeeds(game.getSeason());
+        }
         Player player= App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         Inventory inventory=player.getInventory();
         Farm farm=player.getFarm();
@@ -55,6 +72,82 @@ public class FarmingController extends controller.ControllersController {
 
     private static CropName findCropBySeed(ForAgingSeeds seed){
 
+         //TODO find crop
+    }
+
+    public static String chooseMixedSeeds(Season season){
+        Random random=new Random();
+        if (season==Season.SPRING){
+            int rand= random.nextInt(5);
+            ForAgingSeeds[] seeds=SeasonSeeds.SpringSeed.getSeeds();
+            return seeds[rand].getSeedName();
+        }
+        if (season==Season.AUTUMN){
+            int rand= random.nextInt(6);
+            ForAgingSeeds[] seeds=SeasonSeeds.FallSeeds.getSeeds();
+            return seeds[rand].getSeedName();
+        }if (season==Season.SUMMER){
+            int rand= random.nextInt(7);
+            ForAgingSeeds[] seeds=SeasonSeeds.SummerSeed.getSeeds();
+            return seeds[rand].getSeedName();
+        }if (season==Season.WINTER){
+            ForAgingSeeds[] seeds=SeasonSeeds.WinterSeed.getSeeds();
+            return seeds[0].getSeedName();
+        }
+    }
+    public Result showPlantingInfo(Command command){
+        Game game=App.getLoggedInUser().getCurrentGame();
+        int x= Integer.parseInt(command.body.get("x"));
+        int y= Integer.parseInt(command.body.get("y"));
+        Player player= App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
+        Farm farm=player.getFarm();
+        Tile tile=findTileByxy(x,y,player.getFarm());
+        StringBuilder details=new StringBuilder();
+        if(tile.getObject() instanceof Tree tree){
+            details.append(tree.getTreeName().getName()).append("\n");
+            details.append("Time remaining to fruiting").append(tree.getTreeName().getTotalHarvestTime()-tree.getDaysPassedSincePlanting()).append("\n");
+            details.append("watered Today? ").append(tree.isWateredToday()).append("\n");
+            details.append("fertilied?").append(tree.isRetainingSoilFertility() || tree.isSpeedGroFertility()).append("\n");
+            details.append("Stage: ").append(calculateStage(tree.getTreeName().getStages(), tree.getDaysPassedSincePlanting())).append("\n");
+
+        }else if (tile.getObject() instanceof Crop crop){
+            details.append(crop.getCropName().getName()).append("\n");
+            details.append("Time remaining to fruiting").append(crop.getCropName().getTotalHarvestTime()-crop.getDaysPassedSincePlanting()).append("\n");
+            details.append("watered Today? ").append(crop.isWateredToday()).append("\n");
+            details.append("fertilied?").append(crop.isRetainingSoilFertility() || crop.isSpeedGroFertility()).append("\n");
+            details.append("Stage: ").append(calculateStage(crop.getCropName().getStages(), crop.getDaysPassedSincePlanting())).append("\n");
+
+        }
+        return new Result(true,details.toString());
+
+    }
+    public static Tile findTileByxy(int x, int y, Farm farm){
+        for (Tile tile:farm.getCells()){
+            if (tile.getCoordinate().getX()==x && tile.getCoordinate().getY()==y){
+                return tile;
+            }
+        }
+        return null;
+    }
+
+    public Result seeWater(Command command){
+        Player player=App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
+        Inventory inventory=player.getInventory();
+        for (Tool tool : player.getInventory().getTools().keySet()) {
+            if (tool.getToolType().toString().equals("WateringCan")) {
+                return new Result(true, "IrrigationCapacity: "+ tool.getIrrigationCapacity());
+            }
+        }
+        return new Result(false, "You don't have a watering can");
+    }
+    public static int calculateStage(int[] stages, int daysPassedPlanting){
+        int stage=0;
+        int days=0;
+        while(days<daysPassedPlanting){
+            days+=stages[stage];
+            stage++;
+        }
+        return stage;
     }
     public static Resualt showPlanetsInfo(Command request) {
         String cropName=request.body.get("craftName");
