@@ -1,5 +1,7 @@
 package src.main.java.model.enums;
 
+import src.main.java.model.Objects.FishType;
+
 import java.util.List;
 
 public enum SeasonFish {

@@ -22,7 +22,7 @@ public class Tool {
     }
 
     private int calculateUseCost() {
-        Game game = App.allGames.getLast();
+        Game game = App.allGames.getLast();///Warning!!!
         Player player = game.getCurrentPlayer();
         int useCost = switch (this.toolType) {
             case Hoe, Pickaxe, Axe, WateringCan -> switch (this.toolLevel) {
