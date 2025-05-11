@@ -1,21 +1,24 @@
 package model.Objects;
 
 import model.NPC.NPCs;
+import src.main.java.model.Objects.ShopIngredient;
+import src.main.java.model.Objects.ShopItem;
 
 import java.util.ArrayList;
 
 public class Shop {
-    private String shopName;
-    private NPCs npcs;
-    private ArrayList<String> products;
+    private final ArrayList<ShopItem> items;
 
-    public Shop(NPCs npcs, ArrayList<String> products, String shopName) {
-        this.npcs = npcs;
-        this.products = products;
-        this.shopName = shopName;
+    public Shop(ArrayList<ShopItem> items) {
+        this.items = items;
     }
 
-    public String shopMenu(Shop shop) {
-        return null;
+    public ArrayList<ShopItem> getItems() {
+        return items;
+    }
+
+    public void GoodNight() {
+        for(ShopItem shopItem : items)
+            shopItem.resetNumberOfSold();
     }
 }

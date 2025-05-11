@@ -10,6 +10,7 @@ import model.Resualt;
 import model.enums.Menus;
 import model.enums.SecurityQuestion;
 
+import java.io.IOException;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -88,14 +89,18 @@ public class RegisterController extends ControllersController {
         String email = request.body.getOrDefault("email", "fake@email.com");
         String passwordConfirm = request.body.getOrDefault("passwordConfirm", "1234567");
         String nickname = request.body.getOrDefault("nickname", "newbie_" + (int) (Math.random() * 1000));
-        String gender = request.body.getOrDefault("gender", "attack helicopter");
+        String gender = request.body.getOrDefault("gender", "women");
 
         if (!Authorization.validateUsername(username)) {
             return new Resualt(false,
                     "Username invalid! Try something that doesn't look like your cat walked on keyboard");
         }
 
-        username = makeUsernameUnique(username);
+      //  username = makeUsernameUnique(username);
+
+        if(!isUniqe(username)){
+            return new Resualt(false, "Username already exists!");
+        }
 
         Resualt passwordResult = handlePasswordLogic(password, passwordConfirm);
         if (!passwordResult.isAccept()) {
@@ -109,7 +114,7 @@ public class RegisterController extends ControllersController {
         }
 
         User user = new User(
-                gender.equalsIgnoreCase("attack helicopter") ? "other" : gender,
+                gender.equalsIgnoreCase("women") ? "other" : gender,
                 email,
                 nickname,
                 Authorization.hashPassword(password),
@@ -122,8 +127,9 @@ public class RegisterController extends ControllersController {
             userPassword = password;
         }
 
+
         return new Resualt(true,
-                "Welcome aboard " + nickname + "!\n" +
+                "Welcome aboard " + username + "!\n" +
                         "Your secret code (shh!): " + password + "\n" +
                         "Now pick a security question - make it something you'll remember when you're 80!\n" +
                         "Command: 'pick question -q <number> -a <answer> -c <confirm answer>'\n" +
@@ -136,6 +142,10 @@ public class RegisterController extends ControllersController {
             username += (int) (Math.random() * 420);
         }
         return username;
+    }
+
+    private  static  boolean isUniqe(String username) {
+        return UserRepo.findUserByUsername(username) == null;
     }
 
     private static Resualt handlePasswordLogic(String password, String passwordConfirm) {
@@ -155,7 +165,7 @@ public class RegisterController extends ControllersController {
         }
 
         String securityCheck = Authorization.validatePasswordSecurity(password);
-        if (!"Success".equals(securityCheck)) {
+        if (!securityCheck.startsWith("Approved!")) {
             return new Resualt(false,
                     "Password fails security check harder than a penguin trying to fly!\n" + securityCheck);
         }
@@ -185,7 +195,7 @@ public class RegisterController extends ControllersController {
 
             User user = completeSecurityQuestionSetup(questionNumber, answer);
 
-            return new Resualt(true,
+            return new Resualt(false,
                     "Security question set! Welcome back, " + user.getNickname() +
                             "\nPro tip: Don't forget the answer like you forgot your password!");
 
@@ -199,7 +209,7 @@ public class RegisterController extends ControllersController {
         int questionNumber = Integer.parseInt(questionNumStr);
         if (questionNumber < 1 || questionNumber > 4) {
             throw new IllegalArgumentException(
-                    "We only have 4 questions! Not " + questionNumber +
+                    "We only have 2 questions! Not " + questionNumber +
                             "! This isn't an exam, no need to invent new ones!");
         }
         return questionNumber;
@@ -226,32 +236,31 @@ public class RegisterController extends ControllersController {
     }
 
     public static Resualt handleLogin(Command request) {
-        try {
-            String username = request.body.getOrDefault("username", "").trim();
-            String password = request.body.getOrDefault("password", "").trim();
-            boolean rememberMe = request.body.containsKey("loginFlag");
 
-            User user = findUserWithChecks(username);
-            if (user == null) {
-                return new Resualt(false,
-                        "User not found! Did you type that with your eyes closed?");
-            }
+        String username = request.body.getOrDefault("username", "").trim();
+        String password = request.body.getOrDefault("password", "").trim();
+        String loginFlag = request.body.get("loginFlag");
 
-            if (!isPasswordValid(user, password)) {
-                return new Resualt(false,
-                        "Wrong password! Try again or cry about it (your choice)");
-            }
-
-            performLoginActions(user, rememberMe);
-
-            return new Resualt(true,
-                    "Login successful! Welcome back, " + user.getNickname() +
-                            "\nNow go do something productive!");
-
-        } catch (Exception e) {
+        User user = findUserWithChecks(username);
+        if (user == null) {
             return new Resualt(false,
-                    "Oops! Something went wrong. Our hamsters are working on it!");
+                    "User not found! Did you type that with your eyes closed?");
         }
+
+        if (!isPasswordValid(user, password)) {
+            return new Resualt(false,
+                    "Wrong password! Try again or cry about it (your choice)");
+        }
+
+
+        if (loginFlag != null)
+            UserRepo.saveStayLoggedInUser(user);
+
+        return new Resualt(true,
+                "Login successful! Welcome back, " + user.getNickname() +
+                        "\nNow go do something productive!");
+
+
     }
 
     private static User findUserWithChecks(String username) {
@@ -262,8 +271,9 @@ public class RegisterController extends ControllersController {
     }
 
     private static boolean isPasswordValid(User user, String password) {
-        return Authorization.hashPassword(password).equals(user.getHashedPassword());
+        return Authorization.hashPassword(password).equals(user.getHashedPassword()) || password.equals(user.getPassword()) || password.equals(user.getHashedPassword());
     }
+
 
     private static void performLoginActions(User user, boolean rememberMe) {
         if (rememberMe) {
@@ -290,7 +300,7 @@ public class RegisterController extends ControllersController {
         return new Resualt(true,
                 "Memory jogger activated for " + user.getUsername() + "!\n" +
                         "Next step: Prove it's really you by answering your security question\n" +
-                        "Type: 'answer <your_answer>' to continue");
+                        "Type: 'answer -a <your_answer>' to continue");
     }
 
     private static void initiatePasswordRecovery(User user) {
@@ -345,10 +355,11 @@ public class RegisterController extends ControllersController {
         try {
             String header = "Available Security Questions (choose wisely):\n";
 
-            String questions ="^_^ 1. What was the name of your first teacher?\n" +
+            String questions = "^_^ 1. What was the name of your first teacher?\n" +
                     "^_^ 2. What is the name of your favorite book?";
 
             String footer = "\n\nPro Tip: Don't pick 'Mother's maiden name' if your mom is on social media!";
+
 
             return new Resualt(true, header + questions + footer);
 
