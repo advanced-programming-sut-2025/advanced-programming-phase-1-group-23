@@ -23,6 +23,7 @@ public class Crop implements Objectss{
         return cropName;
     }
 
+
     public int getDaysWithoutIrrigation() {
         return daysWithoutIrrigation;
     }

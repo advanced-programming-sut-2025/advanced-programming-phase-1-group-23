@@ -1,19 +1,61 @@
 package controller;
 
+import model.Basics.App;
+import model.Basics.Game;
+import model.Basics.Player;
 import model.Basics.Result;
 import model.Command;
+import model.Maps.Farm;
+import model.Maps.Position;
+import model.Maps.Tile;
 import model.Naturals.Crop;
+import model.Objects.Inventory;
 import model.Resualt;
 import model.enums.CropName;
+import model.enums.ForAgingSeeds;
 import model.enums.TreeName;
+import org.h2.util.geometry.EWKBUtils;
 
 import java.util.Arrays;
+import java.util.Map;
 
 public class FarmingController extends controller.ControllersController {
-    public Result plantingSeeds(String command) {
-        return null;
+    public Result plantingSeeds(Command command) {
+        Game game=App.getLoggedInUser().getCurrentGame();
+        String direction=command.body.get("direction");
+        String seed=command.body.get("seed");
+        Player player= App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
+        Inventory inventory=player.getInventory();
+        Farm farm=player.getFarm();
+        ForAgingSeeds seed1=null;
+        CropName cropName=null;
+        Position position=InventoryFunctionsController.findPositionByDirection(direction, player.getPosition());
+        Tile tile= InventoryFunctionsController.findTileByPosition(position, farm);
+        if (tile==null)return new Result(false, "Rafti too baghalia!");
+        if (!tile.isTilled()) return new Result(false,"tile not tilled");
+        for (Map.Entry<ForAgingSeeds, Integer> seeds: player.getInventory().getSeeds().entrySet()){
+            if (seeds.getKey().getSeedName().equals(seed)){
+                seed1=seeds.getKey();
+                player.getInventory().getSeeds().put(seed1, seeds.getValue()-1);
+                if (player.getInventory().getSeeds().get(seed1)==0){
+                    inventory.getSeeds().remove(seed1);
+                    inventory.setCapacity(inventory.getCapacity()+1);
+                }
+                cropName=findCropBySeed(seed1);
+                break;
+            }
+        }
+        if (cropName==null)return new Result(false,"You don't have the seed in your backPack");
+        if (!Arrays.asList(cropName.getSeason()).contains(game.getSeason())) return new Result(false,"not in the seaaon!");
+        tile.setObject(new Crop(cropName,0,0));
+        tile.setTilled(false);
+
+        return new Result(true,"Seed planted successfully");
     }
 
+    private static CropName findCropBySeed(ForAgingSeeds seed){
+
+    }
     public static Resualt showPlanetsInfo(Command request) {
         String cropName=request.body.get("craftName");
         StringBuilder info= new StringBuilder();

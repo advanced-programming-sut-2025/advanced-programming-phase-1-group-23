@@ -4,7 +4,7 @@ import model.Naturals.Fruit;
 import model.Naturals.Tree;
 
 public enum TreeName {
-    ApricotTree("Apricot Tree", "pricot Sapling", new int[]{7, 7, 7, 7}, 28, new Season[]{Season.SPRING}, FruitType.Apricot),
+    ApricotTree("Apricot Tree", "apricot Sapling", new int[]{7, 7, 7, 7}, 28, new Season[]{Season.SPRING}, FruitType.Apricot),
     CherryTree("Cherry Tree", "Cherry Sapling", new int[]{7, 7, 7, 7}, 28, new Season[]{Season.SPRING}, FruitType.Cherry),
     BananaTree("Banana Tree", "Banana Sapling", new int[]{7, 7, 7, 7}, 28, new Season[]{Season.SUMMER}, FruitType.Banana),
     MangoTree("Mango Tree", "Mango Sapling", new int[]{7, 7, 7, 7}, 28, new Season[]{Season.SUMMER}, FruitType.Mango),
@@ -17,8 +17,7 @@ public enum TreeName {
     PineTree("Pine Tree", "Pine Cones", new int[]{7, 7, 7, 7}, 28, new Season[]{Season.AUTUMN,Season.SPRING,Season.SUMMER,Season.WINTER}, FruitType.PineTar),
     MahoganyTree("Mahogany Tree", "Mahogany Seeds", new int[]{7, 7, 7, 7}, 28, new Season[]{Season.AUTUMN,Season.SPRING,Season.SUMMER,Season.WINTER},FruitType.Sap),
     MushroomTree("Mushroom Tree", "Mushroom Tree Seeds", new int[]{7, 7, 7, 7}, 28, new Season[]{Season.AUTUMN,Season.SPRING,Season.SUMMER,Season.WINTER},FruitType.CommonMushroom),
-    MysticTree("Mystic Tree", "Mystic Tree Seeds", new int[]{7, 7, 7, 7}, 28, new Season[]{Season.AUTUMN,Season.SPRING,Season.SUMMER,Season.WINTER}, FruitType.MysticSyrup);
-
+    MysticTree("Mystic Tree", "Mystic Tree Seeds", new int[]{7, 7, 7, 7}, 28, new Season[]{Season.AUTUMN,Season.SPRING,Season.SUMMER,Season.WINTER}, FruitType.MysticSyrup),
     ;
 
 
