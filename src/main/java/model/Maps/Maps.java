@@ -3,7 +3,9 @@ package model.Maps;
 import model.Naturals.Tree;
 
 import java.util.ArrayList;
+import dev.morphia.annotations.Embedded;
 
+@Embedded
 public class Maps {
     private ArrayList<Farm> farms;
     private Village village;
