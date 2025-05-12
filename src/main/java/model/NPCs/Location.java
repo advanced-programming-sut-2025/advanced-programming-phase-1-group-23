@@ -1,5 +1,8 @@
 package model.NPC;
 
+import dev.morphia.annotations.Embedded;
+
+@Embedded
 public class Location {
     private String name;
     private int x;
@@ -9,6 +12,9 @@ public class Location {
         this.name = name;
         this.x = x;
         this.y = y;
+    }
+
+    public Location(){
     }
 
     public String getName() {
