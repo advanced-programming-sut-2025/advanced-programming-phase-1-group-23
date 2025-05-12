@@ -1,14 +1,20 @@
 package model.Basics;
 
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Transient;
 import model.Objects.Tool;
 import model.Repo.GameRepo;
 import model.enums.SecurityQuestion;
+import org.bson.types.ObjectId;
 import view.PlayGame;
 
 import java.util.ArrayList;
 
+@Entity("users")
 public class User {
     // Start Part
+    @Id
     private String username;
     private String nickname;
     private String password;
@@ -16,11 +22,13 @@ public class User {
     private SecurityQuestion question;
     private String answer;
     private String email;
-    private final String gender;
+    private String gender;
     private String id;
+    private ObjectId gameId;
     //Game
+    @Transient
     private Game currentGame;
-    private ArrayList<Game> games = new ArrayList<>();
+    private ArrayList<ObjectId> games = new ArrayList<>();
     private int numberOfGamesPlayed;
     private boolean isPlaying;
 
@@ -28,7 +36,14 @@ public class User {
     private int maxScore;
     private ArrayList<Tool> inventory;
 
+    public User(String gender){
 
+        this.gender = gender;
+    }
+
+    public User (){
+
+    }
 
     public User(String gender
             , String email, String nickname, String password, String username) {
@@ -163,11 +178,24 @@ public class User {
         return GameRepo.findGameById(currentGame.getId().toString(), true);
     }
 
-    public ArrayList<Game> getGames() {
+    public ArrayList<ObjectId> getGames() {
         return games;
     }
 
-    public void setGames(ArrayList<Game> games) {
+    public void setGames(ArrayList<ObjectId> games) {
         this.games = games;
     }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public ObjectId getGameId() {
+        return gameId;
+    }
+
+    public void setGameId(ObjectId gameId) {
+        this.gameId = gameId;
+    }
+
 }
