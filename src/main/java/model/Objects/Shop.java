@@ -6,6 +6,9 @@ import model.Maps.Tile;
 
 import java.util.ArrayList;
 
+import dev.morphia.annotations.Embedded;
+
+@Embedded
 public class Shop {
     private final ArrayList<Tile> tiles;
     private final String name;
@@ -20,6 +23,9 @@ public class Shop {
         this.owner = owner;
         this.items = items;
         this.seasonItems = seasonItems;
+    }
+
+    public Shop() {
     }
 
     public String getName() {
