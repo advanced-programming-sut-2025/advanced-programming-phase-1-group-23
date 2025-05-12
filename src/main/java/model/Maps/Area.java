@@ -1,5 +1,8 @@
 package model.Maps;
 
+import dev.morphia.annotations.Embedded;
+
+@Embedded
 public class Area {
     private final Position UpperLeftCorner;
     private final Position BottomRightCorner;
