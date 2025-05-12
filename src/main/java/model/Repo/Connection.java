@@ -1,41 +1,32 @@
 package model.Repo;
 
-
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import com.mongodb.client.MongoClients;
+import dev.morphia.Datastore;
+import dev.morphia.Morphia;
+import org.bson.codecs.Codec;
+import org.bson.codecs.configuration.CodecConfigurationException;
 
 public class Connection {
-    private static java.sql.Connection connection;
+    private static Datastore database;
 
-    public static java.sql.Connection getDatabase() {
-        if (connection == null) {
+    public static Datastore getDatabase() {
+        if (database == null) {
             try {
-                String url = "jdbc:h2:./data/user_management;AUTO_SERVER=TRUE";
-
-                connection = DriverManager.getConnection(url, "sa", "");
-                initializeDatabase();
-            } catch (SQLException e) {
-                throw new RuntimeException("Failed to connect to H2 database", e);
+                String DB_URI = System.getProperty("DB_URI", "mongodb://localhost:27017");
+                String DB = System.getProperty("DB_NAME", "test");
+                database = Morphia.createDatastore(MongoClients.create(DB_URI), DB);
+                database.getMapper().mapPackage("model.Basics");
+                database.getMapper().mapPackage("model.Maps");
+                database.getMapper().mapPackage("model.Naturals");
+                database.getMapper().mapPackage("model.Objects");
+                database.getMapper().mapPackage("model.Seasons");
+                database.getMapper().mapPackage("model");
+                database.ensureIndexes();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
-        return connection;
+        return database;
     }
-
-    private static void initializeDatabase() throws SQLException {
-        try (var stmt = connection.createStatement()) {
-            stmt.execute("""
-                CREATE TABLE IF NOT EXISTS users (
-                    id VARCHAR(36) PRIMARY KEY,
-                    username VARCHAR(255) UNIQUE NOT NULL,
-                    password VARCHAR(255) NOT NULL
-                )
-                """);
-        }
-    }
-
-
-    public PreparedStatement prepareStatement(String sql) {
-        return null;
-    }
+    
 }
