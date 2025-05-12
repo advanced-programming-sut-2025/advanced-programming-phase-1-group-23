@@ -1,5 +1,7 @@
 package model;
+import dev.morphia.annotations.Embedded;
 
+@Embedded
 public class Resualt {
     private boolean accept;
     private String answer;
