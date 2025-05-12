@@ -10,6 +10,9 @@ import java.util.SplittableRandom;
 
 import static java.lang.Math.floor;
 
+import dev.morphia.annotations.Embedded;
+
+@Embedded
 public class Animal implements Objectss {
     private final AnimalType type;
     private final String name;
@@ -67,6 +70,9 @@ public class Animal implements Objectss {
                 this.produceCycle = 0;
             }
         }
+    }
+
+    pubic Animal() {
     }
 
     public AnimalType getType() {
