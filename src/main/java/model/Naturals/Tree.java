@@ -7,6 +7,9 @@ import model.enums.TreeName;
 
 import java.util.ArrayList;
 
+import dev.morphia.annotations.Embedded;
+
+@Embedded
 public class Tree implements Objectss{
 
     private final TreeName treeName;
@@ -22,7 +25,10 @@ public class Tree implements Objectss{
         this.treeName = treeName;
         this.cut = cut;
     }
-
+    
+    public Tree(){
+    }
+    
     public TreeName getTreeName() {
         return treeName;
     }
