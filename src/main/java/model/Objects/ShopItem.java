@@ -1,5 +1,8 @@
 package src.main.java.model.Objects;
 
+import dev.morphia.annotations.Embedded;
+
+@Embedded
 public abstract class ShopItem {
     private final int dailyLimit;
     private int numberOfSold;
@@ -7,6 +10,9 @@ public abstract class ShopItem {
     public ShopItem(int dailyLimit) {
         this.dailyLimit = dailyLimit;
         this.numberOfSold = 0;
+    }
+
+    public ShopItem() {
     }
 
     public int getDailyLimit() {
