@@ -5,7 +5,9 @@ import model.enums.Season;
 import model.enums.SeedType;
 
 import java.util.ArrayList;
+import dev.morphia.annotations.Embedded;
 
+@Embedded
 public class Crop implements Objectss{
 
     private CropName cropName;
@@ -21,6 +23,9 @@ public class Crop implements Objectss{
         this.cropName = cropName;
         this.daysPassedSincePlanting = daysPassedSincePlanting;
         this.daysWithoutIrrigation = daysWithoutIrrigation;
+    }
+
+    public Crop() {
     }
 
     public CropName getCropName() {
