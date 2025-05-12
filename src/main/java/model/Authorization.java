@@ -6,8 +6,10 @@ import java.security.SecureRandom;
 import java.security.spec.KeySpec;
 import java.util.Base64;
 
-public class Authorization {
+import dev.morphia.annotations.Embedded;
 
+@Embedded
+public class Authorization {   
     private static int thisCharCount(char ch, String str) {
         return str.length() - str.replace(String.valueOf(ch), "").length();
     }
