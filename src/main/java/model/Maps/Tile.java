@@ -5,6 +5,9 @@ import model.Naturals.Mineral;
 import model.Naturals.Objectss;
 import model.Naturals.Tree;
 
+import dev.morphia.annotations.Embedded;
+
+@Embedded
 public class Tile {
     private Objects objectOnCell;
     private Position coordinate;
