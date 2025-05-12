@@ -100,15 +100,32 @@ public class CookingController extends ControllersController {
 
     }
 
-    public Result showRecipes() {
+    public Result showCookingRecipes() {
         Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         StringBuilder recipes = new StringBuilder();
         for (Recipe recipe : player.getRecipes()) {
-            recipes.append("Name: ").append(recipe.getName()).append("  Energy: ").append(recipe.getEnergy()).append("\n");
+            if (recipe.isEatable()){
+                recipes.append("Name: ").append(recipe.getName()).append("  Energy: ").append(recipe.getEnergy()).append("\n");
+
+            }
         }
 
         if (!recipes.isEmpty()) return new Result(true, recipes.toString());
-        return new Result(false, "You haven't learned any recipes yet!");
+        return new Result(false, "You haven't learned any cooking recipes yet!");
+    }
+
+    public Result showCraftingRecipes() {
+        Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
+        StringBuilder recipes = new StringBuilder();
+        for (Recipe recipe : player.getRecipes()) {
+            if (!recipe.isEatable()){
+                recipes.append("Name: ").append(recipe.getName()).append("  Energy: ").append(recipe.getEnergy()).append("\n");
+
+            }
+        }
+
+        if (!recipes.isEmpty()) return new Result(true, recipes.toString());
+        return new Result(false, "You haven't learned any crafting recipes yet!");
     }
 
     public Result cookFood(Command command) {
@@ -168,6 +185,51 @@ public class CookingController extends ControllersController {
             player.getInventory().getIngredients().put(recipe.getFoodMade(), 1);
         }
         return new Result(true, "New food was cooked!");
+    }
+
+    public Result startCraft(Command command) {
+        String craftRecipe = command.body.get("recipeName");
+        Recipe recipe = null;
+        for (Recipe recipe1 : Recipe.values()) {
+            if (recipe1.getName().equals(craftRecipe))
+                recipe = recipe1;
+        }
+        Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
+        if (!player.getRecipes().contains(recipe) || recipe == null) {
+            return new Result(false, "You don't know this recipe.");
+        }
+        for (Map.Entry<Ingredients, Integer> provided : recipe.getIngredients().entrySet()) {
+            for (Map.Entry<Ingredients, Integer> needed : player.getInventory().getIngredients().entrySet()) {
+                if (needed.getKey() == provided.getKey()) {
+                    if (needed.getValue() < provided.getValue()) {
+                        return new Result(false, "You don't have enough ingredients");
+                    }
+                }
+
+            }
+        }
+        if (player.getInventory().getCapacity() <= 0) return new Result(false, "Your inventory is full!");
+        if (player.getEnergy() <= 2) {
+            player.setFainted(true);
+            return new Result(false, "You don't have enough energy to craft this.");
+        }
+        // Now we can Start crafting
+        for (Map.Entry<Ingredients, Integer> provided : recipe.getIngredients().entrySet()) {
+            for (Map.Entry<Ingredients, Integer> needed : player.getInventory().getIngredients().entrySet()) {
+                if (needed.getKey() == provided.getKey()) {
+                    player.getInventory().getIngredients().put(needed.getKey(), needed.getValue() - provided.getValue());
+                }
+
+            }
+        }
+        player.setEnergy(player.getEnergy() - 2);
+        if (player.getInventory().getIngredients().containsKey(recipe.getFoodMade())) {
+            player.getInventory().getIngredients().put(recipe.getFoodMade(), player.getInventory().getIngredients().get(recipe.getFoodMade()) + 1);
+        } else {
+            player.getInventory().setCapacity(player.getInventory().getCapacity() - 1);
+            player.getInventory().getIngredients().put(recipe.getFoodMade(), 1);
+        }
+        return new Result(true, "New crafting was crafted!");
     }
 
     //TODO bye recipes;

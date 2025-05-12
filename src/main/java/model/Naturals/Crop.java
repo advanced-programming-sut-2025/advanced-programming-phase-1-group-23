@@ -1,10 +1,7 @@
 package model.Naturals;
 
 import model.enums.CropName;
-import model.enums.Season;
-import model.enums.SeedType;
 
-import java.util.ArrayList;
 import dev.morphia.annotations.Embedded;
 
 @Embedded
@@ -66,6 +63,10 @@ public class Crop implements Objectss{
 
     public void setRetainingSoilFertility(boolean retainingSoilFertility) {
         this.retainingSoilFertility = retainingSoilFertility;
+    }
+
+    public void setDaysPassedSincePlanting(int daysPassedSincePlanting) {
+        this.daysPassedSincePlanting = daysPassedSincePlanting;
     }
 
     public int getDaysPassedSinceHarvesting() {

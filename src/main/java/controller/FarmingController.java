@@ -29,6 +29,11 @@ public class FarmingController extends controller.ControllersController {
                     if (!tree.isWateredToday())tree.increaseDaysWithoutIrrigation();
                     tree.setWateredToday(false);
                     if (tree.getDaysWithoutIrrigation()==2)tile.setObject(null);
+                }else if (tile.getObject() instanceof  Crop crop){
+                    if (crop.isWateredToday())crop.setDaysPassedSincePlanting(crop.getDaysPassedSincePlanting()+1);
+                    if (!crop.isWateredToday())crop.increaseDaysWithoutIrrigation();
+                    crop.setWateredToday(false);
+                    if (crop.getDaysWithoutIrrigation()==2)tile.setObject(null);
                 }
             }
         }
@@ -161,9 +166,9 @@ public class FarmingController extends controller.ControllersController {
                 info.append("Total Harvest Time: ").append(cropName1.getTotalHarvestTime()).append("\n");
                 info.append("One Time: ").append(cropName1.isOneTime()).append("\n");
                 info.append("Regrowth Time: ").append(cropName1.getRegrowthTime()).append("\n");
-                info.append("Base Sell Price: ").append(cropName1.getBaseSellPrice()).append("\n");
+                info.append("Base Sell Price: ").append(cropName1.getIngredients().getPrice()).append("\n");
                 info.append("Eatable: ").append(cropName1.isEatable()).append("\n");
-                info.append("Energy: ").append(cropName1.getEnergy()).append("\n");
+                info.append("Energy: ").append(cropName1.getIngredients().getPrice()).append("\n");
                 info.append("Season(s): ").append(Arrays.toString(cropName1.getSeason())).append("\n");
                 info.append("Can Become Giant: ").append(cropName1.canBecomeGiant()).append("\n");
             }

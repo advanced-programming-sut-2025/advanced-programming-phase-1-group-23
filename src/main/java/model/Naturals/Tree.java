@@ -1,11 +1,6 @@
 package model.Naturals;
 
-import model.enums.CropName;
-import model.enums.Season;
-import model.enums.SeedType;
 import model.enums.TreeName;
-
-import java.util.ArrayList;
 
 import dev.morphia.annotations.Embedded;
 
