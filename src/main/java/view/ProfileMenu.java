@@ -1,9 +1,11 @@
 package view;
 
 import controller.ProfileController;
+import controller.RegisterController;
 import model.Command;
 import model.Resualt;
 import model.enums.ProfileMenuCommands;
+import model.enums.RegisterMenuCommand;
 
 import java.util.Scanner;
 
@@ -22,6 +24,12 @@ public class ProfileMenu implements AppMenu {
             response = getChangeNicknameResponse(input);
         } else if (ProfileMenuCommands.USER_INFO.matches(input)) {
             response = getUserInfoResponse(input);
+        } else if (ProfileMenuCommands.ENTER_MENU.matches(input)) {
+            response = getEnterMenuResponse(input);
+        } else if (ProfileMenuCommands.EXIT_MENU.matches(input)) {
+            response = getExitMenuResponse(input);
+        } else if (ProfileMenuCommands.SHOW_MENU.matches(input)) {
+            response = getShowMenuResponse(input);
         } else {
             response = new Resualt(false, "SORRY sorry!");
         }
@@ -30,64 +38,47 @@ public class ProfileMenu implements AppMenu {
     }
 
     private static Resualt getUserInfoResponse(String input) {
-        Resualt response;
-        Command request = new Command(input);
-        response = ProfileController.handleUserInfoQuery(request);
-        return response;
+        return ProfileController.handleUserInfoQuery(new Command(input));
     }
 
     private static Resualt getChangeNicknameResponse(String input) {
-        Resualt response;
         Command request = new Command(input);
         request.body.put("nickname", ProfileMenuCommands.CHANGE_NICKNAME.getGroup(input, "nickname"));
-        response = ProfileController.handleChangeNickname(request);
-        return response;
+        return ProfileController.handleChangeNickname(request);
     }
 
     private static Resualt getChangeEmailResponse(String input) {
-        Resualt response;
         Command request = new Command(input);
         request.body.put("email", ProfileMenuCommands.CHANGE_EMAIL.getGroup(input, "email"));
-        response = ProfileController.handleChangeEmail(request);
-        return response;
+        return ProfileController.handleChangeEmail(request);
     }
 
     private static Resualt getChangePasswordResponse(String input) {
-        Resualt response;
         Command request = new Command(input);
         request.body.put("newPassword", ProfileMenuCommands.CHANGE_PASSWORD.getGroup(input, "newPassword"));
         request.body.put("oldPassword", ProfileMenuCommands.CHANGE_PASSWORD.getGroup(input, "oldPassword"));
-        response = ProfileController.handleChangePassword(request);
-        return response;
+        return ProfileController.handleChangePassword(request);
     }
 
     private static Resualt getChangeUsernameResponse(String input) {
-        Resualt response;
         Command request = new Command(input);
         request.body.put("username", ProfileMenuCommands.CHANGE_USERNAME.getGroup(input, "username"));
-        response = ProfileController.handleChangeUsername(request);
-        return response;
+        return ProfileController.handleChangeUsername(request);
     }
 
-//    private static Response getShowMenuResponse(String input) {
-//        Response response;
-//        Request request = new Request(input);
-//        response = ProfileMenuController.handleShowMenu(request);
-//        return response;
-//    }
+    private static Resualt getEnterMenuResponse(String input) {
+        Command request = new Command(input);
+        request.body.put("menuName", RegisterMenuCommand.ENTER_MENU.getGroup(input, "menuName"));
+        return RegisterController.getMenu(request);
+    }
 
-//    private static Response getExitMenuResponse(String input) {
-//        Response response;
-//        Request request = new Request(input);
-//        response = ProfileMenuController.handleExitMenu(request);
-//        return response;
-//    }
+    private static Resualt getExitMenuResponse(String input) {
+        Command request = new Command(input);
+        return RegisterController.exit(request);
+    }
 
-//    private static Resualt getEnterMenuResponse(String input) {
-//        Resualt response;
-//        Command request = new Command(input);
-//        request.body.put("menuName", ProfileMenuCommands.ENTER_MENU.getGroup(input, "menuName"));
-//        response = ProfileController.handleEnterMenu(request);
-//        return response;
-//    }
+    private static Resualt getShowMenuResponse(String input) {
+        return RegisterController.handleShowMenu(new Command(input));
+    }
+
 }
