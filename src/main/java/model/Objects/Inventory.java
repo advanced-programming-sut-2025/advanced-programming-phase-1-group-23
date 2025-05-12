@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import dev.morphia.annotations.Embedded;
+
+@Embedded
 public class Inventory {
     public HashMap<Ingredients, Integer> getIngredients() {
         return ingredients;
@@ -19,6 +22,9 @@ public class Inventory {
     private HashMap<ForAgingSeeds, Integer> seeds=new HashMap<>();
     private String level="initial";
     private int capacity=12;
+
+    public Inventory() {
+    }
 
     public int getCapacity() {
         return capacity;
