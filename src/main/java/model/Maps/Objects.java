@@ -1,5 +1,8 @@
 package model.Maps;
 
+import dev.morphia.annotations.Embedded;
+
+@Embedded
 abstract public class Objects {
     public String color;
     public boolean canWalk;
