@@ -7,6 +7,9 @@ import model.Objects.Animal;
 
 import java.util.ArrayList;
 
+import dev.morphia.annotations.Embedded;
+
+@Embedded
 public class Barn extends Building {
     private final BarnType type;
     private final int capacity;
@@ -22,6 +25,9 @@ public class Barn extends Building {
             default -> this.capacity = 0;
         }
         this.animals = new ArrayList<>();
+    }
+
+    public Barn() {
     }
 
     public BarnType getType() {
