@@ -1,7 +1,9 @@
 package model.Naturals;
 
 import model.enums.CropName;
+import dev.morphia.annotations.Embedded;
 
+@Embedded
 public class Mineral implements Objectss {
     private CropName name;
     private boolean isEatable;
@@ -15,5 +17,8 @@ public class Mineral implements Objectss {
         this.energy = energy;
         this.canBecomeGiant = canBecomeGiant;
         this.season = season;
+    }
+
+    public Mineral(){
     }
 }
