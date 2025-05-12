@@ -12,6 +12,9 @@ public class Area {
         BottomRightCorner = bottomRightCorner;
     }
 
+    public Area () {
+    }
+
     public Position getUpperLeftCorner() {
         return UpperLeftCorner;
     }
