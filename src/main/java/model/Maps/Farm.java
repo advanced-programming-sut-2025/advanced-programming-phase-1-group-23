@@ -12,6 +12,12 @@ import dev.morphia.annotations.Embedded;
 public class Farm {
     private ArrayList<Tile> cells;
     private ArrayList<Building> buildings;
+    private int num;
+    private static int lastNum;
+
+    static {
+        lastNum = 0;
+    }
 
     public Farm(){
     }
@@ -208,5 +214,47 @@ public class Farm {
             cell.turns = 0;
             cell.prev = null;
         }
+    }
+
+     public void setCells(ArrayList<Tile> cells) {
+        this.cells = cells;
+    }
+
+    public void setBuildings(ArrayList<Buildings> buildings) {
+        this.buildings = buildings;
+    }
+
+    public int getNum() {
+        return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
+    }
+
+    public static int getLastNum() {
+        return lastNum;
+    }
+
+    public static void setLastNum(int lastNum) {
+        Farm.lastNum = lastNum;
+    }
+
+    public void strikeLightning(int targetX, int targetY, LocalDateTime source) {
+        Tile targetCell = findCellByCoordinate(targetX, targetY);
+        if (targetCell != null) {
+            if (targetCell.getObjectOnCell() instanceof Plant) {
+                TreeName burntTree = TreeName.BruntTree;
+
+                targetCell.setObject(new Tree(burntTree,false));
+            }
+            if (targetCell.getObjectOnCell() instanceof FodderCrop) {
+                targetCell.setObjectOnCell(new NothingInTile());
+            }
+            if (targetCell.getObjectOnCell() instanceof FodderCrop) {
+                targetCell.setObjectOnCell(new NothingInTile());
+            }
+        }
+        System.out.println("Lightning has struck coordinates: " + targetX + ", " + targetY);
     }
 }
