@@ -1,10 +1,13 @@
 package view;
 
 import controller.RegisterController;
+import model.Basics.App;
 import model.Command;
 import model.Resualt;
+import model.enums.Menus;
 import model.enums.RegisterMenuCommand;
 
+import java.awt.*;
 import java.util.Scanner;
 
 public class RegisterMenu implements AppMenu {
@@ -31,29 +34,32 @@ public class RegisterMenu implements AppMenu {
             response = getLoginResponse(input);
         } else if (RegisterMenuCommand.FORGET.matches(input)) {
             response = getForgetPasswordResponse(input);
+        } else if (RegisterMenuCommand.ENTER_MENU.matches(input)) {
+            response = getEnterMenuResponse(input);
+        } else if (RegisterMenuCommand.EXIT_MENU.matches(input)) {
+            response = getExitMenuResponse(input);
         } else {
             response = new Resualt(false, "SORRY sorry!");
         }
 
         System.out.println(response.getAnswer());
+        if (response.getAnswer().startsWith("Login successful!")) {
+            App.setCurrentMenu(Menus.MainMenu);
+        }
+        App.setCurrentMenu(Menus.LoginMenu);
     }
 
     private static Resualt getChangePasswordResponse(String input) {
-        Command request = new Command(input);
-        Resualt response = RegisterController.handleAccountRecovery(request);
-        return response;
+        return RegisterController.handleAccountRecovery(new Command(input));
     }
 
+
     private static Resualt getListQuestionsResponse(String input) {
-        Command request = new Command(input);
-        Resualt response = RegisterController.handleListQuestions(request);
-        return response;
+        return RegisterController.handleListQuestions(new Command(input));
     }
 
     private static Resualt getShowMenuResponse(String input) {
-        Command request = new Command(input);
-        Resualt response = RegisterController.handleShowMenu(request);
-        return response;
+        return RegisterController.handleShowMenu(new Command(input));
     }
 
     private static Resualt getRegisterResponse(String input) {
@@ -80,21 +86,31 @@ public class RegisterMenu implements AppMenu {
         request.body.put("username", RegisterMenuCommand.LOGIN.getGroup(input, "username"));
         request.body.put("password", RegisterMenuCommand.LOGIN.getGroup(input, "password"));
         request.body.put("loginFlag", RegisterMenuCommand.LOGIN.getGroup(input, "loginFlag"));
-        Resualt response = RegisterController.handleLogin(request);
-        return response;
+        return RegisterController.handleLogin(request);
     }
 
     private static Resualt getForgetPasswordResponse(String input) {
         Command request = new Command(input);
         request.body.put("username", RegisterMenuCommand.FORGET.getGroup(input, "username"));
-        Resualt response = RegisterController.handleForgetPassword(request);
-        return response;
+        return RegisterController.handleForgetPassword(request);
     }
 
     private static Resualt getAnswerResponse(String input) {
         Command request = new Command(input);
         request.body.put("answer", RegisterMenuCommand.ANSWER.getGroup(input, "answer"));
-        Resualt response = RegisterController.handleAnswer(request);
+        return RegisterController.handleAnswer(request);
+    }
+
+    private static Resualt getEnterMenuResponse(String input) {
+        Command request = new Command(input);
+        request.body.put("menuName", RegisterMenuCommand.ENTER_MENU.getGroup(input, "menuName"));
+        Resualt response = RegisterController.getMenu(request);
+        return response;
+    }
+
+    private static Resualt getExitMenuResponse(String input) {
+        Command request = new Command(input);
+        Resualt response = RegisterController.exit(request);
         return response;
     }
 
