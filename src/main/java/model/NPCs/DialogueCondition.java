@@ -4,6 +4,9 @@ import model.Seasons.TimeAndDate;
 import model.Seasons.Weather;
 import model.enums.Season;
 
+import dev.morphia.annotations.Embedded;
+
+@Embedded
 public class DialogueCondition {
     private TimeAndDate time;
     private Season season;
@@ -15,6 +18,9 @@ public class DialogueCondition {
         this.season = season;
         this.weather = weather;
         this.friendshipLevel = friendshipLevel;
+    }
+
+    public DialogueCondition(){
     }
 
     public TimeAndDate getTime() {
