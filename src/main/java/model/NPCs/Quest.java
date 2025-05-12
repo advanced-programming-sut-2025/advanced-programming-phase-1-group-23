@@ -1,5 +1,7 @@
 package model.NPC;
+import dev.morphia.annotations.Embedded;
 
+@Embedded
 public class Quest {
     private String description;
     private String requiredItem;
@@ -11,6 +13,9 @@ public class Quest {
         this.requiredItem = requiredItem;
         this.reward = reward;
         this.isCompleted = isCompleted;
+    }
+
+    public Queest(){
     }
 
     public String getDescription() {
