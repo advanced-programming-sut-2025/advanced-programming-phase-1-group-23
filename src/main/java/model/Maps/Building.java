@@ -11,6 +11,9 @@ import dev.morphia.annotations.Embedded;
 public class Building {
     private final ArrayList<Tile> tiles;
 
+    public Building() {
+    }
+ 
     public Building(ArrayList<Tile> tiles) {
         this.tiles = tiles;
         for(Tile tile : tiles)
