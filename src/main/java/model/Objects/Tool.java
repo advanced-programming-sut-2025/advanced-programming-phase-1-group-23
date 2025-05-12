@@ -6,6 +6,9 @@ import model.Basics.Player;
 import model.enums.ToolLevel;
 import model.enums.ToolType;
 
+import dev.morphia.annotations.Embedded;
+
+@Embedded
 public class Tool {
     private ToolType toolType;
     private ToolLevel toolLevel;
@@ -16,6 +19,9 @@ public class Tool {
         this.toolType = toolType;
         this.toolLevel = toolLevel;
         this.useCost = calculateUseCost();
+    }
+
+    public Tool() {
     }
 
     public void useOn(){
