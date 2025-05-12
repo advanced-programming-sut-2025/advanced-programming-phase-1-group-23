@@ -1,6 +1,7 @@
 package model.Basics;
 
-
+import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.Transient;
 import model.Maps.Farm;
 import model.Maps.Position;
 import model.Objects.Inventory;
@@ -13,7 +14,9 @@ import model.Objects.Shop;
 import java.util.ArrayList;
 import java.util.Map;
 
+@Embedded
 public class Player {
+    @Transient
     private User user;
     private Farm farm;
     private int farmingSkill=0;
@@ -35,6 +38,7 @@ public class Player {
     private double energyUsed;
     private boolean isFainted;
     private Shop currentShop;
+    private int currentFarm;
 
 
     public Player(User user) {
@@ -256,4 +260,16 @@ public class Player {
         else if (this.fishingSkill<350) return 2;
         else if (this.fishingSkill<450) return 3;
         return 4;}
+
+     public Farm getCurrentFarm(Game game){
+        return game.getFarmByNumber(currentFarm);
+    }
+
+    public int getCurrentFarm() {
+        return currentFarm;
+    }
+
+    public void setCurrentFarm(int currentFarm) {
+        this.currentFarm = currentFarm;
+    }
 }
