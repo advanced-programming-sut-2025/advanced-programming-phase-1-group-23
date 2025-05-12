@@ -1,16 +1,22 @@
 package model.Basics;
 
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Transient;
+import model.Maps.Farm;
 import model.Maps.Maps;
 import model.enums.Season;
 import model.enums.Weather;
+import org.bson.types.ObjectId;
 import view.PlayGame;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Map;
 
+@Entity("games")
 public class Game {
+    @Id
     private String id;
     private ArrayList<Player> players;
     private Maps map;
@@ -20,6 +26,9 @@ public class Game {
     private Weather weatherToday;
     private Weather weatherTomorrow;
     private Season season;
+    private ObjectId objectId;
+
+    @Transient
     private PlayGame gameThread;
     public boolean hasTurnCycleFinished;
 
@@ -169,5 +178,43 @@ public class Game {
             currentPlayer = players.get(index + 1);
             return false;
         }
+    }
+
+    //New Jasmin
+    public Farm getFarmByNumber(int number){
+        for(Player p:players){
+            if(p.getFarm().getNum() == number){
+                return p.getFarm();
+            }
+        }
+        return null;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setPlayers(ArrayList<Player> players) {
+        this.players = players;
+    }
+
+    public void setMap(Maps map) {
+        this.map = map;
+    }
+
+    public ObjectId getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(ObjectId objectId) {
+        this.objectId = objectId;
+    }
+
+    public boolean isHasTurnCycleFinished() {
+        return hasTurnCycleFinished;
+    }
+
+    public void setHasTurnCycleFinished(boolean hasTurnCycleFinished) {
+        this.hasTurnCycleFinished = hasTurnCycleFinished;
     }
 }
