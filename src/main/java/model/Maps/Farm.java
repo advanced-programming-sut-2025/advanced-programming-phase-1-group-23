@@ -6,10 +6,15 @@ import model.Maps.Position;
 
 import java.util.ArrayList;
 
+import dev.morphia.annotations.Embedded;
+
+@Embedded
 public class Farm {
     private ArrayList<Tile> cells;
     private ArrayList<Building> buildings;
 
+    public Farm(){
+    }
 
     public Farm(ArrayList<Tile> cells, ArrayList<Building> buildings) {
         this.cells = cells;
