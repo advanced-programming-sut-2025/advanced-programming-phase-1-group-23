@@ -6,10 +6,16 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
+import dev.morphia.annotations.Embedded;
+
+@Embedded
 public class GoTrack {
     public static ArrayList<Tile> cells;
     private static final int[][] DIRECTIONS = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
 
+    public GoTrack (){
+    }
+ 
     public static void pathBFS(Tile src, Tile dest, ArrayList<Tile> arr) {
         cells = arr;
         boolean[][] visited = new boolean[9][10];
