@@ -2,27 +2,23 @@ package model;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.KeySpec;
 import java.util.Base64;
-
 import dev.morphia.annotations.Embedded;
 
 @Embedded
-public class Authorization {   
+public class Authorization {
+
     private static int thisCharCount(char ch, String str) {
         return str.length() - str.replace(String.valueOf(ch), "").length();
     }
 
     public static boolean validatePasswordFormat(String password) {
-        String allowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789?><,\"';" +
-                ":\\/|[]}{+=)(*@&^%$#!";
-        for (char c : password.toCharArray()) {
-            if (allowedChars.indexOf(c) == -1) {
-                return false;
-            }
-        }
-        return !password.isEmpty();
+        String allowedChars =  "[a-zA-Z\\d?><,\"';:\\\\/|\\]\\[}{+=)(*@&^%$#!]+";
+        return password.matches(allowedChars);
     }
 
     public static String validatePasswordSecurity(String password) {
@@ -121,22 +117,19 @@ public class Authorization {
 
     public static String hashPassword(String password) {
         try {
-            SecureRandom random = new SecureRandom();
-            byte[] salt = new byte[16];
-            random.nextBytes(salt);
-
-            KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 256);
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-
-            byte[] hash = factory.generateSecret(spec).getEncoded();
-
-            byte[] combined = new byte[salt.length + hash.length];
-            System.arraycopy(salt, 0, combined, 0, salt.length);
-            System.arraycopy(hash, 0, combined, salt.length, hash.length);
-
-            return Base64.getEncoder().encodeToString(combined);
-        } catch (Exception e) {
-            throw new RuntimeException("Password hashing failed", e);
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes("UTF-8"));
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException | java.io.UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
         }
     }
 
