@@ -5,6 +5,9 @@ import model.Maps.Tile;
 
 import java.util.ArrayList;
 
+import dev.morphia.annotations.Embedded;
+
+@Embedded
 public class Building {
     private final ArrayList<Tile> tiles;
 
