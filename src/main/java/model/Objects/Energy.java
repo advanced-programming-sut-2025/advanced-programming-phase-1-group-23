@@ -1,5 +1,8 @@
 package model.Objects;
 
+import dev.morphia.annotations.Embedded;
+
+@Embedded
 public class Energy {
     private int maxEnergy;
     private int minEnergy;
@@ -9,6 +12,9 @@ public class Energy {
         this.maxEnergy = maxEnergy;
         this.minEnergy = minEnergy;
         this.initialEnergy = initialEnergy;
+    }
+
+    public Energy() {
     }
 
     public int getMaxEnergy() {
