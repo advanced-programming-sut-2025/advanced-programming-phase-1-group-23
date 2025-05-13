@@ -14,11 +14,16 @@ import model.Naturals.Tree;
 import model.Objects.Inventory;
 import model.Objects.Tool;
 import model.Resualt;
+import model.enums.*;
 import model.enums.Ingredients;
 import model.enums.ToolLevel;
 import model.enums.ToolType;
 import model.enums.Weather;
 import org.h2.util.geometry.EWKBUtils;
+
+import model.Objects.Animal;
+import model.enums.AnimalType;
+import src.main.java.controller.RanchingController;
 
 import java.util.Map;
 import java.util.PropertyPermission;
@@ -246,6 +251,17 @@ public class InventoryFunctionsController extends ControllersController {
     }
 
     public Resualt useScissors(Position position, Tile tile) {
+        if(tile.getObject() instanceof Animal animal) {
+            if(animal.getType() != AnimalType.Sheep)
+                return new Resualt(false, "You can't use shears on " + animal.getName());
+            if(animal.getProduct() == null)
+                return new Resualt(false, animal.getName() + " is not ready yet!");
+            RanchingController controller = new RanchingController();
+            //controller.CollectProduct()
+            //TODO : learn how to call a function.
+        }
+        else
+            return new Resualt(false, "No animal in selected direction.");
     }
 
     public Resualt useScythe(Position position, Tile tile) {

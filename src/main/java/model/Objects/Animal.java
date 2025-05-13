@@ -86,6 +86,9 @@ public class Animal implements Objectss {
     public Ingredients getProduct() {
         return product;
     }
+    public void collectProduct() {
+        this.product = null;
+    }
 
     public int getProduceCycle() {
         return produceCycle;
@@ -105,8 +108,8 @@ public class Animal implements Objectss {
         return lastProduce;
     }
 
-    public void changeLastProduce(int amount) {
-        this.lastProduce += amount;
+    public void resetLastProduce() {
+        this.lastProduce = 0;
     }
 
     public boolean getHasBeenFed() {

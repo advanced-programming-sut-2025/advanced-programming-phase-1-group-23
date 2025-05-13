@@ -6,10 +6,16 @@ import dev.morphia.annotations.Embedded;
 @Embedded
 public class ShopTool extends ShopItem {
     private final ToolType type;
+    private final int price;
 
     public ShopTool(ToolType type, int dailyLimit) {
         super(dailyLimit);
         this.type = type;
+        switch (type) {
+            case MilkingCan, Scissors -> this.price = 1000;
+            case FishingRod -> this.price = 25;
+            default -> this.price = 0;
+        }
     }
 
     public ShopTool() {
@@ -17,5 +23,9 @@ public class ShopTool extends ShopItem {
 
     public ToolType getType() {
         return type;
+    }
+
+    public int getPrice() {
+        return price;
     }
 }

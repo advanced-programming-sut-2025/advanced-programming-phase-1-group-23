@@ -22,7 +22,14 @@ public enum ShopIngredientLists {
             new ShopIngredient(Ingredients.BREAD, 100000),
             new ShopIngredient(Ingredients.SPAGHETTI, 1000000),
             new ShopIngredient(Ingredients.PIZZA, 1000000),
-            new ShopIngredient(Ingredients.COFFEE, 1000000)),
+            new ShopIngredient(Ingredients.COFFEE, 1000000),
+            new ShopIngredient(Ingredients.SpeedGro, 1000000),
+            new ShopIngredient(Ingredients.BasicRetainingSoil, 1000000),
+            new ShopIngredient(Ingredients.QualityRetainingSoil, 1000000),
+            new ShopIngredient(Ingredients.DeluxeRetainingSoil, 1000000),
+            new ShopIngredient(Ingredients.Bouquet, 1000000),
+            new ShopIngredient(Ingredients.WeddingRing, 1000000)
+            ),
     PIERRE_GENERAL(
             new ShopIngredient(Ingredients.RICE, 1000000),
             new ShopIngredient(Ingredients.WHEAT_FLOUR, 1000000),
@@ -33,7 +40,10 @@ public enum ShopIngredientLists {
             new ShopIngredient(Ingredients.JOJA_COLA, 1000000),
             new ShopIngredient(Ingredients.RICE, 1000000),
             new ShopIngredient(Ingredients.WHEAT_FLOUR, 1000000),
-            new ShopIngredient(Ingredients.SUGAR, 1000000));
+            new ShopIngredient(Ingredients.SUGAR, 1000000)),
+    FISH(
+            new ShopIngredient(Ingredients.TROUT_SOUP, 1)
+    );
 
     private final List<ShopIngredient> shopIngredientList;
 

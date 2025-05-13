@@ -15,6 +15,7 @@ public enum ForAgingSeeds {
     strawberrySeeds("Strawberry Seeds", new Season[]{Season.SPRING}, 80),
     tulipBulb("Tulip Bulb", new Season[]{Season.SPRING}, 20),
     riceShoot("Rice Shoot", new Season[]{Season.SPRING}, 40),
+
     blueberrySeeds("Blueberry Seeds", new Season[]{Season.SUMMER}, 80),
     cornSeeds("Corn Seeds", new Season[]{Season.SUMMER}, 150),
     hopsStarter("Hops Starter", new Season[]{Season.SUMMER}, 60),
@@ -29,6 +30,7 @@ public enum ForAgingSeeds {
     sunflowerSeeds("Sunflower Seeds", new Season[]{Season.SUMMER}, 200),
     tomatoSeeds("Tomato Seeds", new Season[]{Season.SUMMER}, 50),
     wheatSeeds("Wheat Seeds", new Season[]{Season.SUMMER}, 10),
+
     amaranthSeeds("Amaranth Seeds", new Season[]{Season.AUTUMN}, 70),
     artichokeSeeds("Artichoke Seeds", new Season[]{Season.AUTUMN}, 30),
     beetSeeds("Beet Seeds", new Season[]{Season.AUTUMN}, 16),
@@ -41,7 +43,9 @@ public enum ForAgingSeeds {
     pumpkinSeeds("Pumpkin Seeds", new Season[]{Season.AUTUMN}, 100),
     yamSeeds("Yam Seeds", new Season[]{Season.AUTUMN}, 60),
     rareSeed("Rare Seed", new Season[]{Season.AUTUMN}, 800),
+
     powdermelonSeeds("Powdermelon Seeds", new Season[]{Season.WINTER}, 20),
+
     ancientSeeds("Ancient Seeds", new Season[]{Season.SPRING, Season.SUMMER, Season.AUTUMN, Season.WINTER}, 400),
     mixedSeeds("Mixed Seeds", new Season[]{Season.SPRING, Season.SUMMER, Season.AUTUMN, Season.WINTER}, 0),
 
