@@ -9,7 +9,10 @@ import dev.morphia.annotations.Embedded;
 
 @Embedded
 public class Building {
-    private final ArrayList<Tile> tiles;
+    private  ArrayList<Tile> tiles;
+
+    public Building() {
+    }
  
     public Building(ArrayList<Tile> tiles) {
         this.tiles = tiles;

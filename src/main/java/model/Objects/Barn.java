@@ -27,9 +27,6 @@ public class Barn extends Building {
         this.animals = new ArrayList<>();
     }
 
-    public Barn() {
-    }
-
     public BarnType getType() {
         return type;
     }

@@ -9,8 +9,8 @@ public enum ShopToolLists {
     RANCH(
             new ShopTool(ToolType.MilkingCan, 1),
             new ShopTool(ToolType.Scissors, 1)),
-    BLACKSMITH(
-            new ShopTool(ToolType.TrashCan, 1));
+    FISH(
+            new ShopTool(ToolType.FishingRod, 1));
 
     private final List<ShopTool> shopToolList;
 

@@ -6,28 +6,64 @@ import model.enums.AnimalType;
 import model.Basics.Player;
 import model.Basics.App;
 import model.Basics.User;
+import model.Objects.Tool;
 import model.Basics.Game;
 import model.Maps.Position;
 import model.Maps.Tile;
 import model.Maps.Building;
 import model.enums.Ingredients;
+import model.enums.ToolType;
 import model.enums.Weather;
 import src.main.java.model.Objects.Barn;
+import src.main.java.model.Objects.FishType;
+import src.main.java.model.Objects.ShippingBin;
 import src.main.java.model.enums.BarnType;
+import src.main.java.model.enums.ShopName;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static java.lang.Integer.parseInt;
 import static java.lang.Math.floor;
+import static java.lang.Math.toRadians;
 
 public class RanchingController {
     public Result BuildBarn(Command request) {
-        //TODO : go to carpenter's shop first
         Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
+        if(player.getCurrentShop() == null || player.getCurrentShop().getName() != ShopName.CarpenterShop)
+            return new Result(false, "You must go to carpenter shop first.");
         String buildingName = request.body.get("name");
         int x = parseInt(request.body.get("x"));
         int y = parseInt(request.body.get("y"));
         Position cornerPosition = new Position(x, y);
+
+//        if(buildingName.equals("well")) {
+//            for(int i = 0; i < 3; i++)
+//                for(int j = 0; j < 3; j++) {
+//                    Tile tile = player.getFarm().findCellByCoordinate(new Position(x + i, y + j));
+//                    if(tile == null || tile.getObject() != null)
+//                        return new Result(false, "Position occupied.");
+//                }
+//            Integer stone = player.getInventory().getIngredients().get(Ingredients.STONE);
+//            if(stone < )
+//            if(player.getMoney() < )
+//            return null;
+//        }
+        if(buildingName.equals("shipping bin")) {
+            Tile tile = player.getFarm().findCellByCoordinate(cornerPosition);
+            if(tile == null || tile.getObject() != null)
+                return new Result(false, "Position occupied.");
+            Integer wood = player.getInventory().getIngredients().get(Ingredients.WOOD);
+            if(wood < 150)
+                return new Result(false, "Not enough material.");
+            if(player.getMoney() < 250)
+                return new Result(false, "Not enough money.");
+            ShippingBin shippingBin = new ShippingBin();
+            tile.setObject(shippingBin);
+            player.getFarm().getShippingBins().add(shippingBin);
+            return new Result(true, "Shipping bin added successfully!");
+        }
+
         BarnType barnType = null;
         for(BarnType type : BarnType.values())
             if(type.getKind().equals(buildingName))
@@ -46,7 +82,7 @@ public class RanchingController {
                     return new Result(false, "You are building a barn not a tree house!");
             }
         if(player.getMoney() < barnType.getPrice())
-            return new Result(false, "You are not rich enough to buy such a cheap item!");
+            return new Result(false, "YNot enough money.");
         Integer wood = player.getInventory().getIngredients().get(Ingredients.WOOD);
         Integer stone = player.getInventory().getIngredients().get(Ingredients.STONE);
         if(wood == null || wood < barnType.getWood() ||
@@ -66,7 +102,9 @@ public class RanchingController {
     }
 
     public Result BuyAnimal(Command request) {
-        //TODO : go to Marnie's Ranch first
+        Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
+        if(player.getCurrentShop() == null || player.getCurrentShop().getName() != ShopName.MarnieRanch)
+            return new Result(false, "You must go to Marnie Ranch first.");
         String animalKind = request.body.get("animalKind");
         String name = request.body.get("name");
         AnimalType newAnimalType = null;
@@ -75,7 +113,6 @@ public class RanchingController {
                 newAnimalType = animalType;
         if(newAnimalType == null)
             return new Result(false, "Invalid Animal Type.");
-        Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         if(player.getMoney() < newAnimalType.getPrice())
             return new Result(false, "Not enough money.");
         if(getAnimalByName(name) != null)
@@ -248,6 +285,8 @@ public class RanchingController {
             amount = 1;
         else
             amount++;
+        animal.collectProduct();
+        animal.set
         player.getInventory().getIngredients().put(animal.getProduct(), amount);
         return new Result(true, "Product collected successfully!");
     }
@@ -268,6 +307,17 @@ public class RanchingController {
         barn.getAnimals().remove(animal);
         player.setMoney(player.getMoney() + priceInt);
         return new Result(true, "Sold successfully!");
+    }
+
+    public Result Fishing() {
+        Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
+        boolean hasFishingRod = false;
+        for(Tool tool : player.getInventory().getTools().keySet())
+            if(tool.getToolType() == ToolType.FishingRod)
+                hasFishingRod = true;
+        if(!hasFishingRod)
+            return new Result(false, "You must have a fishing rod to go fishing.");
+        List<FishType>
     }
 
     public Result CheatSetFriendship(Command request) {

@@ -8,6 +8,7 @@ import model.Maps.Maps;
 import model.enums.Season;
 import model.enums.Weather;
 import org.bson.types.ObjectId;
+import src.main.java.model.Objects.FriendInteraction;
 import view.PlayGame;
 
 import java.time.LocalDateTime;
@@ -27,6 +28,7 @@ public class Game {
     private Weather weatherTomorrow;
     private Season season;
     private ObjectId objectId;
+    private ArrayList<ArrayList<FriendInteraction>> friendMatrix;
 
     @Transient
     private PlayGame gameThread;
@@ -90,6 +92,12 @@ public class Game {
         this.weatherTomorrow = Weather.SUNNY;
         this.season = Season.SPRING;
         this.isGameOngoing = false;
+        this.friendMatrix = new ArrayList<>();
+        for(int i = 0; i < players.size(); i++)
+            this.friendMatrix.add(new ArrayList<>());
+        for(int i = 0; i < players.size(); i++)
+            for(int j = 0; j < players.size(); j++)
+                this.friendMatrix.get(i).add(new FriendInteraction());
     }
 
     public ArrayList<Player> getPlayers() {
@@ -114,6 +122,10 @@ public class Game {
 
     public void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
+    }
+
+    public ArrayList<ArrayList<FriendInteraction>> getFriendMatrix() {
+        return friendMatrix;
     }
 
     public LocalDateTime getDate() {
