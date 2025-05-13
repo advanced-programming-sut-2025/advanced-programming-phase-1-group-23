@@ -14,10 +14,7 @@ import model.Naturals.Tree;
 import model.Objects.Inventory;
 import model.Objects.Tool;
 import model.Resualt;
-import model.enums.Ingredients;
-import model.enums.ToolLevel;
-import model.enums.ToolType;
-import model.enums.Weather;
+import model.enums.*;
 import org.h2.util.geometry.EWKBUtils;
 
 import java.util.Map;
@@ -25,6 +22,24 @@ import java.util.PropertyPermission;
 
 public class InventoryFunctionsController extends ControllersController {
 
+    public Result showAllInInventory(){
+        Inventory inventory=App.getLoggedInUser().getCurrentGame().getCurrentPlayer().getInventory();
+        StringBuilder allTools = new StringBuilder();
+        allTools.append("Tools: ").append("\n");
+        for (Tool tool : inventory.getTools().keySet()) {
+            allTools.append(tool.getToolType()).append(", ").append(tool.getToolLevel()).append("\n");
+        }
+        allTools.append("Items: ").append("\n");
+        for (Ingredients ingredient: inventory.getIngredients().keySet()){
+            allTools.append(ingredient.getName()).append(": ").append(inventory.getIngredients().get(ingredient)).append("\n");
+        }
+        allTools.append("Seeds: ").append("\n");
+        for (ForAgingSeeds seed: inventory.getSeeds().keySet()){
+            allTools.append(seed.getSeedName()).append(": ").append(inventory.getSeeds().get(seed));
+        }
+        return new Result(true, allTools.toString());
+
+    }
     public Result toolEquip(String toolName) {
         Game game = App.loggedInUser.getCurrentGame();
         Player player = game.getCurrentPlayer();
@@ -72,9 +87,6 @@ public class InventoryFunctionsController extends ControllersController {
         return null;
     }
 
-    public Result showTools(String command) {
-        return null;
-    }
 
     public Result toolUpgrade(String command) {
 
@@ -243,19 +255,36 @@ public class InventoryFunctionsController extends ControllersController {
     }
 
     public Resualt usePickaxe(Position position, Tile tile) {
+        tile.setTilled(false);
+        Inventory inventory = App.getLoggedInUser().getCurrentGame().getCurrentPlayer().getInventory();
+        Player player=App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
+
+        if (tile.getIngredients().getType().equals(IngredientsTypes.mineral) || tile.getIngredients().getType().equals(IngredientsTypes.craftedObjects)) {
+            if (inventory.getIngredients().containsKey(tile.getIngredients())) {
+                inventory.getIngredients().put(tile.getIngredients(), inventory.getIngredients().get(tile.getIngredients()) + 2);
+            } else if (inventory.getCapacity() > 0) {
+                inventory.setCapacity(inventory.getCapacity() - 1);
+                inventory.getIngredients().put(tile.getIngredients(), 2);
+            }
+            if (player.getForagingSkill()>=2)inventory.getIngredients().put(tile.getIngredients(), inventory.getIngredients().get(tile.getIngredients())+1);
+            return new Resualt(true, "You successfully picked up objects");
+        }
+        return new Resualt(false, "there is nothing here to pickUp");
+
+
     }
 
     public Resualt useScissors(Position position, Tile tile) {
     }
 
     public Resualt useScythe(Position position, Tile tile) {
-        Inventory inventory=App.getLoggedInUser().getCurrentGame().getCurrentPlayer().getInventory();
-        if (tile.getObject() instanceof Tree tree){
-            if (tree.getDaysPassedSincePlanting()>tree.getTreeName().getTotalHarvestTime() && tree.getDaysPassedSinceHarvesting()>=tree.getTreeName().getFruitingCycle()){
+        Inventory inventory = App.getLoggedInUser().getCurrentGame().getCurrentPlayer().getInventory();
+        if (tile.getObject() instanceof Tree tree) {
+            if (tree.getDaysPassedSincePlanting() > tree.getTreeName().getTotalHarvestTime() && tree.getDaysPassedSinceHarvesting() >= tree.getTreeName().getFruitingCycle()) {
                 tree.setDaysPassedSinceHarvesting(0);
                 int exist = 0;
                 for (Map.Entry<Ingredients, Integer> need : inventory.getIngredients().entrySet()) {
-                    if (need.getKey().equals(tree.getTreeName().getFruitType())){
+                    if (need.getKey().equals(tree.getTreeName().getFruitType())) {
                         exist = 1;
                         break;
                     }
@@ -269,12 +298,12 @@ public class InventoryFunctionsController extends ControllersController {
 
             }
             return new Resualt(true, "You've successfully harvested the tree");
-        }else if (tile.getObject() instanceof Crop crop){
-            if (crop.getDaysPassedSincePlanting()>crop.getCropName().getTotalHarvestTime() && crop.getDaysPassedSinceHarvesting()>=crop.getCropName().getRegrowthTime()){
+        } else if (tile.getObject() instanceof Crop crop) {
+            if (crop.getDaysPassedSincePlanting() > crop.getCropName().getTotalHarvestTime() && crop.getDaysPassedSinceHarvesting() >= crop.getCropName().getRegrowthTime()) {
                 crop.setDaysPassedSinceHarvesting(0);
                 int exist = 0;
                 for (Map.Entry<Ingredients, Integer> need : inventory.getIngredients().entrySet()) {
-                    if (need.getKey().equals(crop.getCropName().getIngredients())){
+                    if (need.getKey().equals(crop.getCropName().getIngredients())) {
                         exist = 1;
                         break;
                     }
@@ -287,7 +316,7 @@ public class InventoryFunctionsController extends ControllersController {
                 }
 
             }
-            if (crop.getCropName().isOneTime())tile.setObject(null);
+            if (crop.getCropName().isOneTime()) tile.setObject(null);
             return new Resualt(true, "You've successfully harvested the crop");
         }
         return new Resualt(false, "You can't harvest anything here.");

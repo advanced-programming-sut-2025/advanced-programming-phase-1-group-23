@@ -6,6 +6,8 @@ import model.Naturals.Objectss;
 import model.Naturals.Tree;
 
 import dev.morphia.annotations.Embedded;
+import model.Objects.CraftingMachine;
+import model.enums.Ingredients;
 
 @Embedded
 public class Tile {
@@ -14,13 +16,15 @@ public class Tile {
     private boolean isTilled;
     private Objectss object;
     private boolean isInsideBuilding;
+    private CraftingMachine machine=null;
 
     public int distance = 0;
     public double energy = 0;
     public int turns = 0;
     public Tile prev = null;
+    private Ingredients ingredients;
 
-    public Tile(){}
+
 
     public Tile(Objects objectOnCell, Position coordinate) {
         this.objectOnCell = objectOnCell;
@@ -32,6 +36,14 @@ public class Tile {
 
     public void setObject(Objectss object) {
         this.object = object;
+    }
+
+    public void setIngredients(Ingredients ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public Ingredients getIngredients() {
+        return ingredients;
     }
 
     public Objectss getObject() {
@@ -85,5 +97,13 @@ public class Tile {
     @Override
     public Tile clone() {
         return new Tile(objectOnCell, coordinate);
+    }
+
+    public CraftingMachine getMachine() {
+        return machine;
+    }
+
+    public void setMachine(CraftingMachine machine) {
+        this.machine = machine;
     }
 }

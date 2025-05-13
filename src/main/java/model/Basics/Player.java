@@ -28,7 +28,6 @@ public class Player {
     private Inventory refrigerator;
     private int trashCan=0;
     private ArrayList<Recipe> recipes=new ArrayList<>();
-    private boolean isDiedYesterday;
     private Tool inHandTool=null;
     private Map<model.NPC.NPC, Integer> friendships;
     private Position position;

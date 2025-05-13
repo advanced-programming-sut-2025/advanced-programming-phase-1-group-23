@@ -21,13 +21,15 @@ public class Inventory {
     private HashMap<Ingredients, Integer> ingredients=new HashMap<>();
     private HashMap<ForAgingSeeds, Integer> seeds=new HashMap<>();
     private String level="initial";
-    private int capacity=12;
+    private int capacity=0;
 
     public Inventory() {
     }
 
     public int getCapacity() {
-        return capacity;
+        if (level.equals("initial"))return 12+capacity;
+        else if(level.equals("huge"))return 24+capacity;
+        else return 100000;
     }
 
     public String getLevel() {
@@ -52,5 +54,13 @@ public class Inventory {
 
     public void setSeeds(HashMap<ForAgingSeeds, Integer> seeds) {
         this.seeds = seeds;
+    }
+
+    public HashMap<CraftingMachine, Integer> getMachines() {
+        return machines;
+    }
+
+    public void setMachines(HashMap<CraftingMachine, Integer> machines) {
+        this.machines = machines;
     }
 }
