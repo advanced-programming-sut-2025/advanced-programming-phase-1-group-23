@@ -6,17 +6,70 @@ import model.Basics.App;
 import model.Basics.Game;
 import model.enums.Ingredients;
 
+import static java.lang.Integer.parseInt;
+
 public class FriendshipController extends ControllersController {
-    public Result friendship(String command) {
-        return null;
+    public Result friendship(Command request) {
+        StringBuilder response = new StringBuilder();
+        Game game = App.getLoggedInUser().getCurrentGame();
+        Player player = game.getCurrentPlayer();
+        int j = game.getPlayers().indexOf(player);
+        for(int i = 0; i < game.getPlayers().size(); i++)
+            if(game.getPlayers().get(i).getUser().getUsername() != player.getUser().getUsername()) {
+                response.append(game.getPlayers().get(i).getUser.gsetUsername()).append(" ");
+                response.append(game.getFriendMatrix().get(i).get(j).getFriendShipLevel()).append("\n");
+            }
+        return new Result(true, response.toString());
     }
 
-    public Result talk(String command) {
+    public Result talk(Command request) {
+        String username = request.body.get("username");
+        String message = request.body.get("message");
+        Result isValid = checkBasics(username, 0);
+        if(!isValid.isSuccess())
+            return isValid;
+        Game game = App.getLoggedInUser().getCurrentGame();
+        Player player = game.getCurrentPlayer();
+        Player friend = getPlayerByUsername(username);
+        int i = game.getPlayers().indexOf(player);
+        int j = game.getPlayers().indexOf(friend);
 
+        if(!game.getFriendMatrix().get(i).get(j).isHaveTalked()) {
+            game.getFriendMatrix().get(i).get(j).setHaveTalked(true);
+            game.getFriendMatrix().get(j).get(i).setHaveTalked(true);
+            game.getFriendMatrix().get(i).get(j).changeXP(20);
+            game.getFriendMatrix().get(j).get(i).changeXP(20);
+        }
+        friend.getInbox().add(player.getUser().getUsername() + ": " + message);
+        return new Result(true, "message sent!");
     }
 
-    public Result talkHistory(String command) {
-        return null;
+    public Result showInbox(Player player) {
+        StringBuilder response = new StringBuilder();
+        Game game = App.getLoggedInUser().getCurrentGame();
+        for(String talk : player.getInbox()) {
+            response.append(talk).append("\n");
+            String[] words = talk.split(":");
+            Player friend = getPlayerByUsername(words[0]);
+            if(friend == null)
+                continue;
+            int i = game.getPlayers().indexOf(friend);
+            String message = words[1].trim();
+            player.getTalkHistory().get(i).add(message);
+        }
+        return new Result(true, response.toString());
+    }
+
+    public Result talkHistory(Command request) {
+        StringBuilder response = new StringBuilder();
+        String username = request.body.get("username");
+        Game game = App.getLoggedInUser().getCurrentGame();
+        Player player = game.getCurrentPlayer();
+        Player friend = getPlayerByUsername(username);
+        int i = game.getPlayers().indexOf(friend);
+        for(String message : player.getTalkHistory().get(i))
+            response.append(message).append("\n");
+        return new Result(true, response.toString());
     }
 
     public Result gift(String command) {
@@ -104,7 +157,7 @@ public class FriendshipController extends ControllersController {
 
     public Result cheatSetFriendship(Command request) {
         String username = request.body.get("username");
-        int XP = request.body.get("xp");
+        int XP = parseInt(request.body.get("xp"));
         Game game = App.getLoggedInUser().getCurrentGame();
         Player player = game.getCurrentPlayer();
         Player friend = getPlayerByUsername(username);
@@ -125,6 +178,8 @@ public class FriendshipController extends ControllersController {
         Player friend = getPlayerByUsername(username);
         if(friend == null)
             return new Result(false, "Player not found.");
+        if(friend == player)
+            return new Result(false, "Na ki gofte khodshifte am?!");
         if(!player.getPosition().isNextTo(friend.getPosition()))
             return new Result(false, "You two are so far!");
         int i = game.getPlayers().indexOf(player);

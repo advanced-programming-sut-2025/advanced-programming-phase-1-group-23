@@ -1,4 +1,5 @@
 package model.enums;
+import model.enums.IngredientsTypes;
 
 public enum Ingredients {
     WOOD("wood", , 10, 0),
@@ -13,8 +14,36 @@ public enum Ingredients {
     WOOL("wool", , 340, 0),
     RABBIT_PIE("rabbit pie", , 565, 0),
     TRUFFLE("truffle", , 625, 0),
-    SUGAR("sugar", , 0, 0),
-    WHEAT_FLOUR("wheat flour", ),
+
+    RICE("rice", 200, 0),
+    SUGAR("sugar", 100, 0),
+    WHEAT_FLOUR("wheat flour", 100, 0),
+    OIL("oil", 200, 0),
+    VINEGAR("vinegar", 200, 0),
+
+    SpeedGro("speed gro", 100, 0),
+    BasicRetainingSoil("basic retaining soil", 100, 0),
+    QualityRetainingSoil("quality retaining soil", 150, 0),
+    DeluxeRetainingSoil("deluxeRetainingSoil", 150, 0),
+
+    Bouquet("bouquet", 1000, 0),
+    WeddingRing("wedding ring", 10000, 0),
+
+    JOJA_COLA("joja cola", 75, 0),
+
+    BEER("beer", IngredientsTypes.edible, 400, 0),
+    SALAD("salad", IngredientsTypes.edible, 220, 0),
+    BREAD("bread", IngredientsTypes.edible, 120, 0),
+    SPAGHETTI("spaghetti", IngredientsTypes.edible, 240, 0),
+    PIZZA("pizza", IngredientsTypes.edible, 600, 0),
+    COFFEE("coffee", IngredientsTypes.edible, 300, 0),
+    TROUT_SOUP("trout soup", IngredientsTypes.edible, 250, 0),
+
+    COOPER_ORE("cooper ore", 75, 0),
+    IRON_ORE("iron ore", 150, 0),
+    GOLD_ORE("gold ore", 400, 0),
+    IRIDIUM_ORE("iridium ore", 0, 0),
+    COAL("coal", 150, 0),
 
     BLUE_JAZZ("blue jazz", , 50, 45),
     CARROT("carrot", , 35, 75),

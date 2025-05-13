@@ -38,6 +38,8 @@ public class Player {
     private boolean isFainted;
     private Shop currentShop;
     private int currentFarm;
+    private final ArrayList<ArrayList<String>> talkHistory;
+    private final ArrayList<String> inbox;
 
 
     public Player(User user) {
@@ -52,6 +54,10 @@ public class Player {
         this.isFainted = false;
         this.recipes=initializeRecipes;
         this.currentShop = null;
+        this.talkHistory = new ArrayList<>();
+        for(int i = 0; i < 4; i++)
+            this.talkHistory.add(new ArrayList<>());
+        this.inbox = new ArrayList<>();
     }
 
 
@@ -207,6 +213,14 @@ public class Player {
 
     public void setFainted(boolean fainted) {
         isFainted = fainted;
+    }
+
+    public ArrayList<ArrayList<String>> getTalkHistory() {
+        return talkHistory;
+    }
+
+    public ArrayList<String> getInbox() {
+        return inbox;
     }
 
     public void upgradeTrashCan(){

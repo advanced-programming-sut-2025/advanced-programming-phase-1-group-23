@@ -12,11 +12,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import dev.morphia.annotations.Embedded;
+import src.main.java.model.Objects.ShippingBin;
 
 @Embedded
 public class Farm {
     private ArrayList<Tile> cells;
     private ArrayList<Building> buildings;
+    private ArrayList<ShippingBin> shippingBins;
     private int num;
     private static int lastNum;
 
@@ -31,6 +33,7 @@ public class Farm {
     public Farm(ArrayList<Tile> cells, ArrayList<Building> buildings) {
         this.cells = cells;
         this.buildings = buildings;
+        this.shippingBins = new ArrayList<>();
     }
 
     public void showFarm(int x, int y, int size) {
@@ -110,6 +113,10 @@ public class Farm {
 
     public ArrayList<Building> getBuildings() {
         return buildings;
+    }
+
+    public ArrayList<ShippingBin> getShippingBins() {
+        return shippingBins;
     }
 
     public static Farm makeFarm(int lakeModifier) {

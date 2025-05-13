@@ -12,9 +12,6 @@ public class ShopRecipe extends ShopItem {
         this.type = type;
     }
 
-    public ShopRecipe() {
-    }
-
     public Recipe getType() {
         return type;
     }

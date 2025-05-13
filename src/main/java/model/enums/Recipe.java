@@ -6,7 +6,7 @@ public enum Recipe {
 
     FriedEgg("Fried egg", true, Map.of(Ingredients.EGG, 1), 50, 35, Ingredients.FRIED_EGG),
     BakedFish("Baked Fish", true, Map.of(Ingredients.SARDINE, 1, Ingredients.SALMON, 1, Ingredients.WHEAT_FLOUR, 1), 75, 100, Ingredients.BAKED_FISH),
-    Salad("Salad", true, Map.of(Ingredients.LEEK, 1, Ingredients.DANDELION, 1), 113, 110, Ingredients.SALAD),
+    Salad("Salad", true, Map.of(Ingredients.LEEK, 1, Ingredients.DANDELION, 1), 113, 110, model.enums.Ingredients.SALAD),
     Olmelet("Olmelet", true, Map.of(Ingredients.EGG, 1, Ingredients.MILK, 1), 100, 125, Ingredients.OMELET),
     PumpkinPie("pumpkin pie", true, Map.of(Ingredients.PUMPKIN, 1, Ingredients.WHEAT_FLOUR, 1, Ingredients.MILK, 1, Ingredients.SUGAR, 1), 225, 385, Ingredients.PUMPKIN_PIE),
     Spaghetti("spaghetti", true, Map.of(Ingredients.WHEAT_FLOUR, 1, Ingredients.TOMATO, 1), 75, 120, Ingredients.SPAGHETTI),
