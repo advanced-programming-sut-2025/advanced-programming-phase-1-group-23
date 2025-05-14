@@ -4,7 +4,6 @@ import model.Naturals.Crop;
 import model.Naturals.Mineral;
 import model.Naturals.Objectss;
 import model.Naturals.Tree;
-
 import dev.morphia.annotations.Embedded;
 import model.Objects.CraftingMachine;
 import model.enums.Ingredients;
@@ -24,7 +23,7 @@ public class Tile {
     public Tile prev = null;
     private Ingredients ingredients;
 
-
+    public Tile(){}
 
     public Tile(Objects objectOnCell, Position coordinate) {
         this.objectOnCell = objectOnCell;
@@ -33,17 +32,56 @@ public class Tile {
         this.isInsideBuilding = false;
     }
 
+    public CraftingMachine getMachine() {
+        return machine;
+    }
 
-    public void setObject(Objectss object) {
-        this.object = object;
+    public void setMachine(CraftingMachine machine) {
+        this.machine = machine;
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
+    }
+
+    public double getEnergy() {
+        return energy;
+    }
+
+    public void setEnergy(double energy) {
+        this.energy = energy;
+    }
+
+    public int getTurns() {
+        return turns;
+    }
+
+    public void setTurns(int turns) {
+        this.turns = turns;
+    }
+
+    public Tile getPrev() {
+        return prev;
+    }
+
+    public void setPrev(Tile prev) {
+        this.prev = prev;
+    }
+
+    public Ingredients getIngredients() {
+        return ingredients;
     }
 
     public void setIngredients(Ingredients ingredients) {
         this.ingredients = ingredients;
     }
 
-    public Ingredients getIngredients() {
-        return ingredients;
+    public void setObject(Objectss object) {
+        this.object = object;
     }
 
     public Objectss getObject() {
@@ -97,13 +135,5 @@ public class Tile {
     @Override
     public Tile clone() {
         return new Tile(objectOnCell, coordinate);
-    }
-
-    public CraftingMachine getMachine() {
-        return machine;
-    }
-
-    public void setMachine(CraftingMachine machine) {
-        this.machine = machine;
     }
 }
