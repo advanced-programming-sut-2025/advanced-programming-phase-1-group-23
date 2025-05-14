@@ -10,6 +10,7 @@ import model.enums.Recipe;
 import model.enums.ToolLevel;
 import model.enums.ToolType;
 import model.Objects.Shop;
+import src.main.java.model.Objects.ShippingBin;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -40,6 +41,8 @@ public class Player {
     private int currentFarm;
     private final ArrayList<ArrayList<String>> talkHistory;
     private final ArrayList<String> inbox;
+    private final ArrayList<ArrayList<String>> giftHistory;
+    private final ArrayList<String> receivedGifts;
 
 
     public Player(User user) {
@@ -58,6 +61,10 @@ public class Player {
         for(int i = 0; i < 4; i++)
             this.talkHistory.add(new ArrayList<>());
         this.inbox = new ArrayList<>();
+        this.giftHistory = new ArrayList<>();
+        for(int i = 0; i < 4; i++)
+            this.giftHistory.add(new ArrayList<>());
+        this.receivedGifts = new ArrayList<>();
     }
 
 
@@ -227,6 +234,14 @@ public class Player {
         return inbox;
     }
 
+    public ArrayList<ArrayList<String>> getGiftHistory() {
+        return giftHistory;
+    }
+
+    public ArrayList<String> getReceivedGifts() {
+        return receivedGifts;
+    }
+
     public void upgradeTrashCan(){
         if (this.trashCan==0)this.trashCan=15;
         else if (this.trashCan==15)this.trashCan=30;
@@ -288,5 +303,12 @@ public class Player {
 
     public void setCurrentFarm(int currentFarm) {
         this.currentFarm = currentFarm;
+    }
+
+    public void GoodNight() {
+        for(ShippingBin shippingBin : this.getFarm().getShippingBins()) {
+            this.setMoney(money + shippingBin.getTotalMoney());
+            shippingBin.setTotalMoney(0);
+        }
     }
 }

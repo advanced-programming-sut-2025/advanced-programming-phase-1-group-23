@@ -3,15 +3,21 @@ import model.Basics.Result;
 import model.Command;
 import model.Basics.Player;
 import model.Basics.App;
+import model.enums.IngredientsTypes;
 import model.enums.ToolLevel;
 import model.Objects.Tool;
 import model.enums.ToolType;
 import src.main.java.model.Objects.*;
+import model.enums.Ingredients;
+import model.Maps.Tile;
+
+import java.util.Random;
 
 import static java.lang.Integer.parseInt;
+import static java.lang.Math.floor;
 
 public class ShoppingController {
-    public Result showAllProducts() {
+    public static Result showAllProducts(Command request) {
         Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         StringBuilder response = new StringBuilder();
         if(player.getCurrentShop() == null)
@@ -54,7 +60,7 @@ public class ShoppingController {
         return new Result(true, response.toString());
     }
 
-    public Result showAllAvailableProducts(Command request) {
+    public static Result showAllAvailableProducts(Command request) {
         Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         StringBuilder response = new StringBuilder();
         if(player.getCurrentShop() == null)
@@ -99,7 +105,7 @@ public class ShoppingController {
         return new Result(true, response.toString());
     }
 
-    public Result Purchase(Command request) {
+    public static Result Purchase(Command request) {
         String itemName = request.body.get("name");
         int amount = parseInt(request.body.get("amount"));
         Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
@@ -191,11 +197,44 @@ public class ShoppingController {
         return new Result(false, "No item found.");
     }
 
-    public Result Sell(Command request) {
-
+    public static Result Sell(Command request) {
+        String itemName = request.body.get("name");
+        int amount = parseInt(request.body.get("amount"));
+        Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
+        Tile tile = null;
+        ShippingBin shippingBin = null;
+        for(int i = -1; i <= 1; i++)
+            for(int j = -1; j <= 1; j++) {
+                tile = player.getFarm().findCellByCoordinate(player.getPosition().getX() + i, player.getPosition().getY() + j);
+                if(tile.getObject() instanceof ShippingBin bin)
+                    shippingBin = bin;
+            }
+        if(shippingBin == null)
+            return new Result(false, "You must be next to a shipping bin.");
+        Random random = new Random();
+        for(Ingredients ingredients : Ingredients.values())
+            if(ingredients.getName().equals(itemName)) {
+                if(ingredients.getType() == IngredientsTypes.junk || ingredients.getType() == IngredientsTypes.ore)
+                    return new Result(false, "You can't sell these objects.");
+                Integer number = player.getInventory().getIngredients().get(ingredients);
+                if(number == null)
+                    return new Result(false, "You don't have any of this item.");
+                if(number < amount)
+                    return new Result(false, "Item amount not enough in your inventory.");
+                if(amount == 0)
+                    amount = number;
+                double quality = random.nextDouble(1, 2);
+                shippingBin.addTotalMoney((int)floor(amount * ingredients.getPrice() * quality));
+                if(number == amount)
+                    player.getInventory().getIngredients().remove(ingredients);
+                else
+                    player.getInventory().getIngredients().put(ingredients, number - amount);
+                return new Result(true, "Item sold successfully.");
+            }
+        return new Result(false, "You can't sell these objects.");
     }
 
-    public Result cheatAddMoney(Command request) {
+    public static Result cheatAddMoney(Command request) {
         int amount = parseInt(request.body.get("amount"));
         Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         player.setMoney(player.getMoney() + amount);

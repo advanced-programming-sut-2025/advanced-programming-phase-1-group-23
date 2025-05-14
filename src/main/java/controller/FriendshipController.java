@@ -5,6 +5,7 @@ import model.Basics.Result;
 import model.Basics.App;
 import model.Basics.Game;
 import model.enums.Ingredients;
+import model.enums.IngredientsTypes;
 
 import static java.lang.Integer.parseInt;
 
@@ -47,6 +48,7 @@ public class FriendshipController extends ControllersController {
     public Result showInbox(Player player) {
         StringBuilder response = new StringBuilder();
         Game game = App.getLoggedInUser().getCurrentGame();
+        int j = game.getPlayers().indexOf(player);
         for(String talk : player.getInbox()) {
             response.append(talk).append("\n");
             String[] words = talk.split(":");
@@ -55,7 +57,8 @@ public class FriendshipController extends ControllersController {
                 continue;
             int i = game.getPlayers().indexOf(friend);
             String message = words[1].trim();
-            player.getTalkHistory().get(i).add(message);
+            player.getTalkHistory().get(i).add(words[0] + ": " +message);
+            friend.getTalkHistory().get(j).add("You: " + message);
         }
         return new Result(true, response.toString());
     }
@@ -72,12 +75,43 @@ public class FriendshipController extends ControllersController {
         return new Result(true, response.toString());
     }
 
-    public Result gift(String command) {
-        return null;
+    public Result gift(Command request) {
+        String username = request.body.get("username");
+        String itemName = request.body.get("name");
+        Result isValid = checkBasics(username, 1);
+        if(!isValid.isSuccess())
+            return isValid;
+        Game game = App.getLoggedInUser().getCurrentGame();
+        Player player = game.getCurrentPlayer();
+        Player friend = getPlayerByUsername(username);
+        int i = game.getPlayers().indexOf(player);
+        int j = game.getPlayers().indexOf(friend);
+
+        Ingredients gift = null;
+        for(Ingredients ingredients : player.getInventory().getIngredients().keySet())
+            if(ingredients.getName().equals(itemName))
+                gift = ingredients;
+        if(gift == null)
+            return new Result(false, "You don't have the gift in your inventory.");
+        if(gift.getType() == IngredientsTypes.junk || gift.getType() == IngredientsTypes.ore)
+            return new Result(false, "You can't give " + gift.getName() + " to " + username);
+        game.getFriendMatrix().get(i).get(j).setHaveGifted(true);
+        game.getFriendMatrix().get(j).get(i).setHaveGifted(true);
+
+        Integer amount = player.getInventory().getIngredients().get(gift);
+        player.getInventory().getIngredients().put(gift, amount - 1);
+        amount = friend.getInventory().getIngredients().get(gift);
+        if(amount == null)
+            amount = 1;
+        else
+            amount++;
+        friend.getInventory().getIngredients().put(gift, amount);
+        friend.getReceivedGifts().add(player.getUser().getUsername() + ": " + gift.getName());
+        return new Result(true, "Gift sent successfully!");
     }
 
-    public Result listOfGifts(String command) {
-        return null;
+    public Result showReceivedGifts(String command) {
+
     }
 
     public Result giftHistory(String command) {

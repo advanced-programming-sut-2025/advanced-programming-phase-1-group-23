@@ -15,20 +15,23 @@ import model.enums.Ingredients;
 import model.enums.ToolType;
 import model.enums.Weather;
 import src.main.java.model.Objects.Barn;
-import src.main.java.model.Objects.FishType;
+import src.main.java.model.Objects.Fish;
 import src.main.java.model.Objects.ShippingBin;
 import src.main.java.model.enums.BarnType;
+import src.main.java.model.enums.SeasonFish;
 import src.main.java.model.enums.ShopName;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static java.lang.Integer.parseInt;
+import static java.lang.Integer.signum;
 import static java.lang.Math.floor;
 import static java.lang.Math.toRadians;
+import static model.enums.Season.*;
+import static model.enums.Weather.*;
 
 public class RanchingController {
-    public Result BuildBarn(Command request) {
+    public static Result BuildBarn(Command request) {
         Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         if(player.getCurrentShop() == null || player.getCurrentShop().getName() != ShopName.CarpenterShop)
             return new Result(false, "You must go to carpenter shop first.");
@@ -101,7 +104,7 @@ public class RanchingController {
         return new Result(true, "Barn added successfully!");
     }
 
-    public Result BuyAnimal(Command request) {
+    public static Result BuyAnimal(Command request) {
         Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         if(player.getCurrentShop() == null || player.getCurrentShop().getName() != ShopName.MarnieRanch)
             return new Result(false, "You must go to Marnie Ranch first.");
@@ -154,7 +157,7 @@ public class RanchingController {
         return new Result(false, "No suitable barn found.");
     }
 
-    public Result NuzPet(Command request) {
+    public static Result NuzPet(Command request) {
         String name = request.body.get("name");
         Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         Animal pet = getAnimalByName(name);
@@ -169,7 +172,7 @@ public class RanchingController {
         return new Result(true, "Done successfully!");
     }
 
-    public Result ShowAnimalsInfo() {
+    public static Result ShowAnimalsInfo(Command request) {
         StringBuilder response = new StringBuilder();
         Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         for(Building building : player.getFarm().getBuildings())
@@ -191,7 +194,7 @@ public class RanchingController {
         return new Result(true, response.toString());
     }
 
-    public Result ShepherdAnimals(Command request) {
+    public static Result ShepherdAnimals(Command request) {
         String name = request.body.get("name");
         int x = parseInt(request.body.get("x"));
         int y = parseInt(request.body.get("y"));
@@ -222,7 +225,7 @@ public class RanchingController {
         }
         else {
             Game game = App.getLoggedInUser().getCurrentGame();
-            if(game.getWeatherToday() != Weather.SUNNY)
+            if(game.getWeatherToday() != SUNNY)
                 return new Result(false, "Animals can't go out because of the weather conditions.");
             if(destination.getObject() != null)
                 return new Result(false, "Destination occupied.");
@@ -239,7 +242,7 @@ public class RanchingController {
         return new Result(true, "Done successfully!");
     }
 
-    public Result FeedHay(Command request) {
+    public static Result FeedHay(Command request) {
         String name = request.body.get("name");
         Animal animal = getAnimalByName(name);
         if(animal == null)
@@ -255,7 +258,7 @@ public class RanchingController {
         return new Result(true, name + " has been fed now!");
     }
 
-    public Result ShowProducts() {
+    public static Result ShowProducts(Command request) {
         StringBuilder response = new StringBuilder();
         Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         for(Building building : player.getFarm().getBuildings())
@@ -270,7 +273,7 @@ public class RanchingController {
         return new Result(true, response.toString());
     }
 
-    public Result CollectProduct(Command request) {
+    public static Result CollectProduct(Command request) {
         Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         String name = request.body.get("name");
         Animal animal = getAnimalByName(name);
@@ -291,7 +294,7 @@ public class RanchingController {
         return new Result(true, "Product collected successfully!");
     }
 
-    public Result SellAnimal(Command request) {
+    public static Result SellAnimal(Command request) {
         String name = request.body.get("name");
         Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         Animal animal = getAnimalByName(name);
@@ -309,18 +312,71 @@ public class RanchingController {
         return new Result(true, "Sold successfully!");
     }
 
-    public Result Fishing() {
+    public static Result GoFishing(Command request) {
         Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
-        boolean hasFishingRod = false;
+        Tool fishingRod = null;
+        //In hand tool?
         for(Tool tool : player.getInventory().getTools().keySet())
             if(tool.getToolType() == ToolType.FishingRod)
-                hasFishingRod = true;
-        if(!hasFishingRod)
+                fishingRod = tool;
+        if(fishingRod == null)
             return new Result(false, "You must have a fishing rod to go fishing.");
-        List<FishType>
+        boolean isKenareAbb = false;
+        for(int i = -1; i <= 1; i++)
+            for(int j = -1; j <= 1; j++) {
+                Tile tile = player.getFarm().findCellByCoordinate(player.getPosition().getX() + i, player.getPosition().getY() + j);
+                if(tile == null || tile.getObjectOnCell().type.equals("water"))
+                    isKenareAbb = true;
+            }
+        if(!isKenareAbb)
+            return new Result(false, "You must be near a water source to start fishing.");
+        double weatherInfluence;
+        switch (App.getLoggedInUser().getCurrentGame().getWeatherToday()) {
+            case SUNNY -> weatherInfluence = 1.5;
+            case RAIN -> weatherInfluence = 1.2;
+            case STORM -> weatherInfluence = 0.5;
+            default -> weatherInfluence = 1;
+        }
+        Random random = new Random();
+        double chanceInfluence = random.nextDouble(0, 1);
+        int numberOfFish = (int)floor(chanceInfluence * weatherInfluence * (player.returnFishingLevel() + 2));
+        if(numberOfFish > 6)
+            numberOfFish = 6;
+        double poleInfluence = 0;
+        switch (fishingRod.getToolLevel()) {
+            case Learning -> poleInfluence = 0.1;
+            case Bambou -> poleInfluence = 0.5;
+            case FiberGlass -> poleInfluence = 0.9;
+            case Iridium -> poleInfluence = 1.2;
+        }
+        double qualityUseless = chanceInfluence * (player.returnFishingLevel() + 2) * poleInfluence / (7 - weatherInfluence);
+        StringBuilder response = new StringBuilder();
+        response.append("Well done! ").append(numberOfFish).append(" fish of ").append(floor(qualityUseless)).append(" quality!\n");
+        int bound = 4;
+        if(player.returnFishingLevel() == 4)
+            bound++;
+        List<Fish> fishList;
+        switch(App.getLoggedInUser().getCurrentGame().getSeason()) {
+            case SPRING -> fishList = SeasonFish.Spring.getSeasonFish();
+            case SUMMER -> fishList = SeasonFish.Summer.getSeasonFish();
+            case AUTUMN -> fishList = SeasonFish.Autumn.getSeasonFish();
+            default -> fishList = SeasonFish.Winter.getSeasonFish();
+        }
+        for(int i = 0; i < numberOfFish; i++) {
+            int index = random.nextInt(bound);
+            Fish fish = fishList.get(index);
+            Integer quantity = player.getInventory().getIngredients().get(fish.getType());
+            if(quantity == null)
+                quantity = 1;
+            else
+                quantity++;
+            player.getInventory().getIngredients().put(fish.getType(), quantity);
+            response.append(fish.getType().getName()).append("\n");
+        }
+        return new Result(true, response.toString());
     }
 
-    public Result CheatSetFriendship(Command request) {
+    public static Result CheatSetFriendship(Command request) {
         String name = request.body.get("name");
         int amount = parseInt(request.body.get("amount"));
         Animal animal = getAnimalByName(name);

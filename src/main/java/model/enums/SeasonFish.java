@@ -1,42 +1,43 @@
 package src.main.java.model.enums;
 
-import src.main.java.model.Objects.FishType;
+import model.enums.Ingredients;
+import src.main.java.model.Objects.Fish;
 
 import java.util.List;
 
 public enum SeasonFish {
     Spring(
-            new FishType("Flounder", 100),
-            new FishType("LionFish", 100),
-            new FishType("Herring", 30),
-            new FishType("Ghostfish", 45),
-            new FishType("Legend", 5000)),
+            new Fish(Ingredients.Flounder),
+            new Fish(Ingredients.LionFish),
+            new Fish(Ingredients.Herring),
+            new Fish(Ingredients.GhostFish),
+            new Fish(Ingredients.Legend)),
     Summer(
-            new FishType("Tilapia", 75),
-            new FishType("Dorado", 100),
-            new FishType("Sunfish", 30),
-            new FishType("Rainbow Trout", 65),
-            new FishType("Crimsonfish", 1500)),
+            new Fish(Ingredients.Tilapia),
+            new Fish(Ingredients.Dorado),
+            new Fish(Ingredients.SunFish),
+            new Fish(Ingredients.RainbowTrout),
+            new Fish(Ingredients.CrimsonFish)),
     Autumn(
-            new FishType("Salmon", 75),
-            new FishType("Sardine", 40),
-            new FishType("Shad", 60),
-            new FishType("Blue Discus", 120),
-            new FishType("Angler", 900)),
+            new Fish(Ingredients.Salmon),
+            new Fish(Ingredients.Sardine),
+            new Fish(Ingredients.Shad),
+            new Fish(Ingredients.BlueDiscus),
+            new Fish(Ingredients.Angler)),
     Winter(
-            new FishType("Midnight Carp", 150),
-            new FishType("Squid", 80),
-            new FishType("Tuna", 100),
-            new FishType("Perch", 55),
-            new FishType("Glacierfish", 1000));
+            new Fish(Ingredients.MidnightCarp),
+            new Fish(Ingredients.Squid),
+            new Fish(Ingredients.Tuna),
+            new Fish(Ingredients.Perch),
+            new Fish(Ingredients.GlacierFish));
 
-    private final List<FishType> seasonFish;
+    private final List<Fish> seasonFish;
 
-    SeasonFish(FishType... items) {
+    SeasonFish(Fish... items) {
         this.seasonFish = List.of(items);
     }
 
-    public List<FishType> getSeasonFish() {
+    public List<Fish> getSeasonFish() {
         return seasonFish;
     }
 }

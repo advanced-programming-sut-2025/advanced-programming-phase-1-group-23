@@ -1,24 +1,17 @@
 package src.main.java.model.Objects;
 import dev.morphia.annotations.Embedded;
 
+import model.enums.Ingredients;
+
 @Embedded
 public class Fish {
-    private final FishType type;
-    private final int quality;
+    private final Ingredients type;
 
-    public Fish(FishType type, int quality) {
+    public Fish(Ingredients type) {
         this.type = type;
-        this.quality = quality;
     }
 
-    public Fish() {
-    }
-
-    public FishType getType() {
+    public Ingredients getType() {
         return type;
-    }
-
-    public int getQuality() {
-        return quality;
     }
 }
