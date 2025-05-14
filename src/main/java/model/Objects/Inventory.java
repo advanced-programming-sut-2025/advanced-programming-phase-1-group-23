@@ -55,12 +55,4 @@ public class Inventory {
     public void setSeeds(HashMap<ForAgingSeeds, Integer> seeds) {
         this.seeds = seeds;
     }
-
-    public HashMap<CraftingMachine, Integer> getMachines() {
-        return machines;
-    }
-
-    public void setMachines(HashMap<CraftingMachine, Integer> machines) {
-        this.machines = machines;
-    }
 }
