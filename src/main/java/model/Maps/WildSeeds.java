@@ -1,11 +1,11 @@
 package model.Maps;
-
 import dev.morphia.annotations.Embedded;
+import model.enums.CropName;
 
 @Embedded
 public class WildSeeds extends Objects{
 
-    public WildSeeds(){
-        super(true,"seeds","yellow");
+    public WildSeeds(CropName crop) {
+        super(true,"purple","seeds");
     }
 }
