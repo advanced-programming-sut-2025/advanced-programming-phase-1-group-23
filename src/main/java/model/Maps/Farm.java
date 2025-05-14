@@ -144,24 +144,45 @@ public class Farm {
         else
             addTwoLakes(farmCells);
 
-        addRandomItems(farmCells);
+        for (Tile cell : farmCells) {
+            int randomNumber = (int) (Math.random() * 5);
+
+            if (cell.getObjectOnCell().type.equals(".") && randomNumber == 3) {
+                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                cell.setObjectOnCell(new Plant(TreeName.AppleTree));
+            } else if (cell.getObjectOnCell().type.equals(".") && randomNumber == 2) {
+                cell.setObjectOnCell(new Stone(Ingredients.STONE, "gray", "stone"));
+            } else if (cell.getObjectOnCell().type.equals(".") && randomNumber == 1) {
+                cell.setObjectOnCell(randomForagingCrop());
+            } else if (cell.getObjectOnCell().type.equals("Mine") && (randomNumber == 4 || randomNumber == 3) && isMineCell(cell)) {
+                cell.setObjectOnCell(randomForagingMineral());
+            }
+        }
+
+
         return new Farm(farmCells, farmBuildings);
     }
 
-    private static void addRandomItems(ArrayList<Tile> farmCells) {
-        for (Tile cell : farmCells) {
-            int randomNumber = (int) (Math.random() * 8);
-            if (cell.getObjectOnCell().type.equals("empty") && randomNumber == 3) {
-                cell.setObjectOnCell(new Plant());
-            } else if (cell.getObjectOnCell().type.equals("empty") && randomNumber == 2) {
-                cell.setObjectOnCell(new Stone());
-            } else if (cell.getObjectOnCell().type.equals("empty") && randomNumber == 1) {
-                cell.setObjectOnCell(new FodderCrop());
-            } else if (cell.getObjectOnCell().type.equals("empty") && randomNumber == 4) {
-                cell.setObjectOnCell(new WildSeeds());
+    private static WildSeeds randomForagingCrop() {
+        CropName[] allValues = CropName.values();
+        ArrayList<CropName> validValues = new ArrayList<>();
+
+        for (int i = 0; i < allValues.length; i++) {
+            if (allValues[i].getSeason().length > 1 || allValues[i].getSeason()[0] == App.getLoggedInUser().getCurrentGame().getSeason()) {
+                validValues.add(allValues[i]);
             }
         }
+
+        int randomNumber = (int) (Math.random() * validValues.size());
+        return new WildSeeds(validValues.get(randomNumber));
     }
+
+    private static FodderCrop randomForagingMineral() {
+        Ingredients[] values = Ingredients.values();
+        int randomNumber = (int) (Math.random() * values.length);
+        return new FodderCrop();
+    }
+
 
     private static void addOneLake(ArrayList<Tile> farmCells) {
         for (int j = 37; j < 46; j++) {
@@ -213,7 +234,7 @@ public class Farm {
                 cottageCells.add(cell);
             }
         }
-        
+
         for (int i = 22; i < 29; i++) {
             for (int j = 3; j < 11; j++) {
                 Tile cell = getCellByCoordinate(i, j, farmCells);
