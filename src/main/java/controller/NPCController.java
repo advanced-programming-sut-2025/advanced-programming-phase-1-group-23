@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NPCController extends ControllersController{
-        private List<model.NPC.NPC> npcs;
+        private List<model.NPC.NPC1> npcs;
 
         public NPCController() {
             this.npcs = new ArrayList<>();
@@ -16,7 +16,7 @@ public class NPCController extends ControllersController{
         }
 
 
-        public List<model.NPC.NPC> getAllNPCs() {
+        public List<model.NPC.NPC1> getAllNPCs() {
             return npcs;
         }
 

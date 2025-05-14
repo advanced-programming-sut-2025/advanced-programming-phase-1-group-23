@@ -189,7 +189,7 @@ public enum Ingredients {
     CrimsonFish("Crimsonfish", IngredientsTypes.fish, 1500, 0),
     Salmon("Salmon", IngredientsTypes.fish, 75, 0),
     Sardine("Sardine", IngredientsTypes.fish, 40, 0),
-    Shad("Shad",, IngredientsTypes.fish 60, 0),
+    Shad("Shad", IngredientsTypes.fish, 60, 0),
     BlueDiscus("Blue Discus", IngredientsTypes.fish, 120, 0),
     Angler("Angler", IngredientsTypes.fish, 900, 0),
     MidnightCarp("Midnight Carp", IngredientsTypes.fish, 150, 0),

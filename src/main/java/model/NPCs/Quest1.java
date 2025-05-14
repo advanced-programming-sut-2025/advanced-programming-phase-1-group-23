@@ -2,13 +2,13 @@ package model.NPC;
 import dev.morphia.annotations.Embedded;
 
 @Embedded
-public class Quest {
+public class Quest1 {
     private String description;
     private String requiredItem;
     private String reward;
     private boolean isCompleted;
 
-    public Quest(String description, String requiredItem, String reward, boolean isCompleted) {
+    public Quest1(String description, String requiredItem, String reward, boolean isCompleted) {
         this.description = description;
         this.requiredItem = requiredItem;
         this.reward = reward;

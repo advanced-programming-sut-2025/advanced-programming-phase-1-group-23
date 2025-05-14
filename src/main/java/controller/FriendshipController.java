@@ -110,16 +110,55 @@ public class FriendshipController extends ControllersController {
         return new Result(true, "Gift sent successfully!");
     }
 
-    public Result showReceivedGifts(String command) {
-
+    public Result showReceivedGifts(Command request) {
+        Game game = App.getLoggedInUser().getCurrentGame();
+        Player player = game.getCurrentPlayer();
+        StringBuilder response = new StringBuilder();
+        for(int i = 0; i < player.getReceivedGifts().size(); i++) {
+            response.append((i + 1)).append("- ");
+            response.append(player.getReceivedGifts().get(i)).append("\n");
+        }
+        return new Result(true, response.toString());
     }
 
-    public Result giftHistory(String command) {
-        return null;
+    public Result giftRate(Command request) {
+        int index = parseInt(request.body.get("index")) - 1;
+        int rate = parseInt(request.body.get("rate"));
+        Game game = App.getLoggedInUser().getCurrentGame();
+        Player player = game.getCurrentPlayer();
+        if(player.getReceivedGifts().size() <= index)
+            return new Result(false, "Invalid Index.");
+        if(rate < 1 || rate > 5)
+            return new Result(false, "Invalid rate.");
+        String gift = player.getReceivedGifts().get(index);
+        String[] words = gift.split(":");
+        Player friend = getPlayerByUsername(words[0]);
+        if(friend == null)
+            return new Result(false, "This error is never gonna occur!");
+        int i = game.getPlayers().indexOf(player);
+        int j = game.getPlayers().indexOf(friend);
+        game.getFriendMatrix().get(i).get(j).changeXP((rate - 3) * 30 + 15);
+        game.getFriendMatrix().get(j).get(i).changeXP((rate - 3) * 30 + 15);
+
+        gift = words[1].trim();
+        player.getGiftHistory().get(j).add("received: " + gift);
+        friend.getGiftHistory().get(i).add("sent: " + gift);
+        player.getReceivedGifts().remove(index);
+        return new Result(true, "Gift rated successfully!");
     }
 
-    public Result giftRate(String command) {
-        return null;
+    public Result giftHistory(Command request) {
+        String username = request.body.get("username");
+        Game game = App.getLoggedInUser().getCurrentGame();
+        Player player = game.getCurrentPlayer();
+        Player friend = getPlayerByUsername(username);
+        if(friend == null)
+            return new Result(false, "Incorrect username.");
+        int j = game.getPlayers().indexOf(friend);
+        StringBuilder response = new StringBuilder();
+        for(String gift : player.getGiftHistory().get(j))
+            response.append(gift).append("\n");
+        return new Result(true, response.toString());
     }
 
     public Result hug(Command request) {
@@ -173,19 +212,55 @@ public class FriendshipController extends ControllersController {
         return new Result(true, "You are now level 3 friends.");
     }
 
-    public Result marriageRequest(String command) {
-        return null;
+    public Result marriageRequest(Command request) {
+        String username = request.body.get("username");
+        Result isValid = checkBasics(username, 3);
+        if(!isValid.isSuccess())
+            return isValid;
+        Game game = App.getLoggedInUser().getCurrentGame();
+        Player player = game.getCurrentPlayer();
+        Player friend = getPlayerByUsername(username);
+        if(player.getUser().getGender().equals("women") || friend.getUser().getGender().equals("other"))
+            return new Result(false, "chi begam vala.");
+        if(!player.getInventory().getIngredients().containsKey(Ingredients.WeddingRing))
+            return new Result(false, "boro gerdoo bazi kon!");
+        friend.getMarriageRequests().add(player.getUser().getUsername());
+        return new Result(true, "Request sent successfully.");
     }
 
-    public Result marriageRequestHistory(String command) {
-        return null;
+    public Result showMarriageRequests(Command request) {
+        Game game = App.getLoggedInUser().getCurrentGame();
+        Player player = game.getCurrentPlayer();
+        StringBuilder response = new StringBuilder();
+        for(String string : player.getMarriageRequests())
+            response.append(string).append("\n");
+        return new Result(true, response.toString());
     }
 
-    public Result marriageAccept(String command) {
-        return null;
+    public Result marriageResponse(Command request) {
+        String response = request.body.get("response");
+        String username = request.body.get("username");
+        Game game = App.getLoggedInUser().getCurrentGame();
+        Player player = game.getCurrentPlayer();
+        Player friend = getPlayerByUsername(username);
+        int i = game.getPlayers().indexOf(player);
+        int j = game.getPlayers().indexOf(friend);
+
+        if(response.equals("reject")) {
+            int xp = game.getFriendMatrix().get(i).get(j).getXP();
+            game.getFriendMatrix().get(i).get(j).changeXP(-xp);
+            game.getFriendMatrix().get(j).get(i).changeXP(-xp);
+            player.getMarriageRequests().remove(username);
+            return new Result(true, "Request rejected.");
+        }
+        int xp = game.getFriendMatrix().get(i).get(j).getXP();
+        game.getFriendMatrix().get(i).get(j).changeXP(1000-xp);
+        game.getFriendMatrix().get(j).get(i).changeXP(1000-xp);
+        player.getMarriageRequests().clear();
+        return new Result(true, "Bada bada mobarak bada!");
     }
 
-    public Result marriageReject(String command) {
+    public Result trade(Command request) {
         return null;
     }
 
