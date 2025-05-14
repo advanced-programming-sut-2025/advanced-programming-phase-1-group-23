@@ -176,6 +176,8 @@ public class GameController extends ControllersController {
         }
 
        // TODO : Set and check money and inventory
+         // Money > 1000
+         // inventory(WOOD) > 500
 
         for (int i = 23; i < 28; i++) {
             for (int j = 4; j < 10; j++) {
