@@ -22,7 +22,7 @@ public class UserRepo {
 
     public static User findUserById(String id) {
         if (id == null || !ObjectId.isValid(id)) {
-            return null; // یا throw new IllegalArgumentException("Invalid id");
+            return null;
         }
         User user = db.find(User.class).filter(Filters.eq("id", new ObjectId(id))).first();
         return user;
