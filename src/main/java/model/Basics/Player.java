@@ -27,7 +27,7 @@ public class Player {
     private Inventory inventory;
     private Inventory refrigerator;
     private int trashCan=0;
-    private ArrayList<Recipe> recipes=new ArrayList<>();
+    private ArrayList<Recipe> recipes;
     private Tool inHandTool=null;
     private Map<model.NPC.NPC, Integer> friendships;
     private Position position;
@@ -179,6 +179,10 @@ public class Player {
 
     public void setMoney(int money) {
         this.money = money;
+    }
+
+    public int getTrashCan() {
+        return trashCan;
     }
 
     private static ArrayList<Recipe> initializeRecipes() {

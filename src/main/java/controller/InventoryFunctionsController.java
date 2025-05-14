@@ -1,5 +1,6 @@
 package controller;
 
+import dev.morphia.aggregation.expressions.impls.SingleValuedExpression;
 import model.Basics.App;
 import model.Basics.Game;
 import model.Basics.Player;
@@ -202,9 +203,6 @@ public class InventoryFunctionsController extends ControllersController {
                 case WateringCan -> {
                     return useWateringCan(position, tile);
                 }
-                case TrashCan -> {
-                    return useTrashCan(position, tile);
-                }
                 case FishingRod -> {
                     return useFishingRod(position, tile);
                 }
@@ -356,7 +354,28 @@ public class InventoryFunctionsController extends ControllersController {
         return new Resualt(false, "Watering Can cannot be used on this tile");
     }
 
-    public Resualt useTrashCan(Position position, Tile tile) {
+    public Resualt useTrashCan(Position position, Tile tile, Command command) {
+        String trash= command.body.get("Item");
+        Player player=App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
+        String n= (command.body.get("n"));
+        Ingredients ingredient=null;
+        Inventory inventory=player.getInventory();
+        //find item
+        for (Ingredients ingredients:inventory.getIngredients().keySet()){
+            if (ingredients.getName().equals(trash)){
+                ingredient =ingredients;
+                break;
+            }
+        }if (ingredient==null)return new Resualt(false , "You don't have the item in your inventory");
+        if (n==null) {
+            player.setMoney(player.getMoney()+(player.getTrashCan()*inventory.getIngredients().get(ingredient)*ingredient.getPrice()/100));
+            inventory.getIngredients().remove(ingredient);
+            inventory.setCapacity(inventory.getCapacity()+1);
+            return new Resualt(true,"Item removed completely.");
+        }else inventory.getIngredients().put(ingredient, (inventory.getIngredients().get(ingredient)-Integer.parseInt(n)));
+        player.setMoney(player.getMoney()+(player.getTrashCan()*ingredient.getPrice()*Integer.parseInt(n)/100));
+        return new Resualt(true,"item removed.");
+
     }
 
     public Resualt useFishingRod(Position position, Tile tile) {
