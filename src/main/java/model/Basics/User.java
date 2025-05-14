@@ -165,12 +165,10 @@ public class User {
         this.id = id;
     }
 
-    public Game getCurrentGame() {
-        if(currentGame == null) return null;
-        if(currentGame.getId() == null) return currentGame;
-        PlayGame t = currentGame.getGameThread();
-        currentGame = populateGame();
-        currentGame.setGameThread(t);
+   public Game getCurrentGame() {
+        if (currentGame == null && gameId != null) {
+            currentGame = GameRepo.findGameById(gameId.toString(), true);
+        }
         return currentGame;
     }
 
