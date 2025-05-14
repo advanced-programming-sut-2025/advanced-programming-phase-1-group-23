@@ -2,78 +2,91 @@ package controller;
 
 import model.Basics.App;
 import model.Basics.Game;
-import model.Basics.Result;
+import model.Basics.Player;
 import model.Command;
+import model.Maps.NothingInTile;
+import model.Maps.Tile;
+import model.Maps.Water;
+import model.Objects.Tool;
 import model.Repo.GameRepo;
+import model.Maps.Farm;
+import model.Objects.Inventory;
 import model.Resualt;
+import model.enums.Ingredients;
 import model.enums.Weather;
 
 import java.time.DateTimeException;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class GameController extends ControllersController {
     public static Resualt handleTimeQuery(Command request) {
         Resualt response = new Resualt();
         response.setAccept(true);
-    
+
         try {
             String timeString = App.getLoggedInUser()
-                                 .getCurrentGame()
-                                 .getDate()
-                                 .toLocalTime()
-                                 .toString();
+                    .getCurrentGame()
+                    .getDate()
+                    .toLocalTime()
+                    .toString();
             response.setAnswer(timeString);
         } catch (NullPointerException e) {
             response.setAccept(false);
             response.setAnswer("Error: Could not determine current time");
         }
-    
+
         return response;
     }
 
     public static Resualt handleDateQuery(Command request) {
         Resualt response = new Resualt();
-    
+
         try {
             String dateString = App.getLoggedInUser()
-                                 .getCurrentGame()
-                                 .getDate()
-                                 .toLocalDate()
-                                 .toString();
+                    .getCurrentGame()
+                    .getDate()
+                    .toLocalDate()
+                    .toString();
             response.setAccept(true);
             response.setAnswer(dateString);
         } catch (NullPointerException e) {
             response.setAccept(false);
             response.setAnswer("Error: Could not determine current date");
         }
-    
+
         return response;
     }
 
-    public static Result handleDatetimeQuery(Command request) {
+    public static Resualt handleDatetimeQuery(Command request) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd  HH:mm:ss");
             String formattedDate = App.getLoggedInUser()
-                                    .getCurrentGame()
-                                    .getDate()
-                                    .format(formatter);
-        
-            return new Result(true, formattedDate);
+                    .getCurrentGame()
+                    .getDate()
+                    .format(formatter);
+
+            return new Resualt(true, formattedDate);
         } catch (NullPointerException | DateTimeException e) {
-            return new Result(false, "Error: Could not format datetime");
+            return new Resualt(false, "Error: Could not format datetime");
         }
     }
 
     public static Resualt handleDayOfWeekQuery(Command request) {
-        Resualt response = new Resualt();
-        response.setAccept(true);
-        LocalDateTime currentDateTime = App.getLoggedInUser().getCurrentGame().getDate();
-        int currentDay = currentDateTime.getDayOfMonth();
-        int dayOfWeek = (currentDay - 1) % 7;
-        response.setAnswer(DayOfWeek.values()[dayOfWeek].toString().toLowerCase());
-        return response;
+        try {
+            LocalDateTime currentDateTime = App.getLoggedInUser()
+                    .getCurrentGame()
+                    .getDate();
+            String dayName = currentDateTime.getDayOfWeek()
+                    .toString()
+                    .toLowerCase();
+
+            return new Resualt(true, dayName);
+        } catch (NullPointerException e) {
+            return new Resualt(false, "Error: Could not determine day of week");
+        }
     }
 
     public static Resualt handleCheatAdvanceTime(Command request) {
@@ -127,6 +140,7 @@ public class GameController extends ControllersController {
         return new Resualt(true, App.getLoggedInUser().getCurrentGame().getSeason().toString());
     }
 
+    //New Jasmin
     public static Resualt handleCheatThor(Command request) {
         int targetX = Integer.parseInt(request.body.get("x"));
         int targetY = Integer.parseInt(request.body.get("y"));
@@ -162,8 +176,8 @@ public class GameController extends ControllersController {
         }
         return new Resualt(true, "Tomorrow's weather set successfully.");
     }
-
-     public static Resualt handleGreenhouseBuilding(Command request) {
+    
+    public static Resualt handleGreenhouseBuilding(Command request) {
         Game game = App.getLoggedInUser().getCurrentGame();
         Player player = game.getCurrentPlayer();
         Farm farm = player.getFarm();
@@ -176,9 +190,9 @@ public class GameController extends ControllersController {
         }
 
        // TODO : Set and check money and inventory
-         // Money > 1000
-         // inventory(WOOD) > 500
 
+
+        //Greenhouse runs from x : [22, 28] & y : [3, 10]
         for (int i = 23; i < 28; i++) {
             for (int j = 4; j < 10; j++) {
                 Tile cell = Farm.getCellByCoordinate(i, j, farm.getCells());
@@ -195,6 +209,29 @@ public class GameController extends ControllersController {
         GameRepo.saveGame(game);
 
         return new Resualt(true, "Greenhouse built successfully.");
+    }
+
+
+    private static int[] getXAndYIncrement(String direction) {
+        if (direction.compareToIgnoreCase("up") == 0) {
+            return new int[]{0, -1};
+        } else if (direction.compareToIgnoreCase("down") == 0) {
+            return new int[]{0, 1};
+        } else if (direction.compareToIgnoreCase("right") == 0) {
+            return new int[]{1, 0};
+        } else if (direction.compareToIgnoreCase("left") == 0) {
+            return new int[]{-1, 0};
+        } else if (direction.compareToIgnoreCase("up_right") == 0) {
+            return new int[]{1, -1};
+        } else if (direction.compareToIgnoreCase("up_left") == 0) {
+            return new int[]{-1, -1};
+        } else if (direction.compareToIgnoreCase("down_right") == 0) {
+            return new int[]{1, 1};
+        } else if (direction.compareToIgnoreCase("down_left") == 0) {
+            return new int[]{-1, 1};
+        } else {
+            return new int[]{10000, 10000};
+        }
     }
 
 }
