@@ -17,9 +17,15 @@ public class GameMenu implements AppMenu {
         Resualt response = null;
 
         if (App.getLoggedInUser().getCurrentGame() == null
-                || !App.getLoggedInUser().getCurrentGame().isGameOngoing()) {
-            // TODO:first handel turns
-            if (GameMenuCommands.GAME_NEW.matches(input)) {
+                || !App.getLoggedInUser().getCurrentGame().isGameOngoing() || (rapet < 4)) {
+            if (TurnController.isWaitingForChoosingMap) {
+                rapet++;
+                if (GameMenuCommands.GAME_MAP.matches(input)) {
+                    response = getGameMapResponse(input);
+                } else {
+                    response = new Resualt(false, "SORRY sorry!");
+                }
+            } else if (GameMenuCommands.GAME_NEW.matches(input)) {
                 response = getNewGameResponse(input);
             } else if (GameMenuCommands.LOAD_GAME.matches(input)) {
                 response = getLoadGameResponse(input);
@@ -38,12 +44,15 @@ public class GameMenu implements AppMenu {
             } else if (GameMenuCommands.EXIT_GAME.matches(input)) {
                 response = getExitGameResponse(input);
             }
-//            else if (GameMenuCommands.NEXT_TURN.matches(input)) {
-//                response = getNextTurnResponse(input);
-//            }
-//            else if (GameMenuCommands.FORCE_DELETE_GAME.matches(input)) {
-//                response = getForceDeleteGameResponse(input);
-//            }
+            else if(GameMenuCommands.SHOW_MENU.matches(input)) {
+                response = getShowMenuResponse(input);
+            }
+           else if (GameMenuCommands.NEXT_TURN.matches(input)) {
+               response = getNextTurnResponse(input);
+           }
+           else if (GameMenuCommands.FORCE_DELETE_GAME.matches(input)) {
+               response = getForceDeleteGameResponse(input);
+           }
             else if (GameMenuCommands.TIME.matches(input)) {
                 response = getTimeResponse(input);
             } else if (GameMenuCommands.DATE.matches(input)) {
@@ -74,7 +83,15 @@ public class GameMenu implements AppMenu {
                 response = getForceDeleteGameResponse(input);
             } else if (GameMenuCommands.HELP_READING_MAP.matches(input)) {
                 response = getMapHelpResponse(input);
-            } else if (GameMenuCommands.SHOWPLANETINFO.matches(input)) {
+            }
+            else if (GameMenuCommands.WALK_HOME.matches(input)) {
+                response = walkHome(input);
+            } else if(GameMenuCommands.GO_TO_VILLAGE.matches(input)) {
+                response = goToVillage(input);
+            } else if(GameMenuCommands.WALK_ADD_COORDS.matches(input)) {
+                response = getWalkAddCoordsResponse(input);
+            }
+            else if (GameMenuCommands.SHOWPLANETINFO.matches(input)) {
                 response = getShowPlanetInfoResponse(input);
             } else {
                 response = new Resualt(false, "SORRY sorry!");
@@ -249,6 +266,31 @@ public class GameMenu implements AppMenu {
         request.body.put("users", GameMenuCommands.GAME_NEW.getGroup(input, "users"));
         response = TurnController.handleNewGame(request);
         return response;
+    }
+
+    private static  Resualt walkHome(String input) {
+        Resualt response;
+        Command request = new Command(input);
+        response = MapController.walkHome(request);
+        return response;
+    }
+
+    private static  Resualt goToVillage(String input) {
+        Resualt response;
+        Command request = new Command(input);
+        response = MapController.goToVillage(request);
+        return response;
+    }
+
+    private static Resualt getWalkAddCoordsResponse(String input) {
+        Command request = new Command(input);
+        request.body.put("x", GameMenuCommands.WALK_ADD_COORDS.getGroup(input, "x"));
+        request.body.put("y", GameMenuCommands.WALK_ADD_COORDS.getGroup(input, "y"));
+        return MapController.handleAddCoords(request);
+    }
+
+    private static Resualt getShowMenuResponse(String input) {
+        return GameController.handleShowMenu(new Command(input));
     }
 
 
