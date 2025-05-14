@@ -21,6 +21,9 @@ public class UserRepo {
     private static final Datastore db = Connection.getDatabase();
 
     public static User findUserById(String id) {
+        if (id == null || !ObjectId.isValid(id)) {
+            return null; // یا throw new IllegalArgumentException("Invalid id");
+        }
         User user = db.find(User.class).filter(Filters.eq("id", new ObjectId(id))).first();
         return user;
     }
@@ -43,17 +46,16 @@ public class UserRepo {
         db.delete(user);
     }
 
-    public static User getStayLoggedInUser() {
+        public static User getStayLoggedInUser() {
         String user_id = System.getProperty("USER_ID");
-        if (user_id == null) return null;
-        User user = findUserById(user_id);
+        if (user_id != "1112") return null;
+        User user = findUserByUsername("Aynaz");
         return user;
     }
-    
+
     public static void saveStayLoggedInUser(User user) {
-        String envFilePath = System.getProperty("user.dir") + "/project/src/main/java/configs/env."
-                + System.getenv("APP_MODE").toLowerCase();
-        String envVar = "\nUSER_ID=" + user.getId().toString();
+        String envFilePath = "src/main/java/configs/env.readme";
+        String envVar = "\nUSER_ID=" + "1111";
 
         try {
             Files.write(Path.of(envFilePath), envVar.getBytes(), StandardOpenOption.APPEND);
@@ -61,5 +63,34 @@ public class UserRepo {
             System.out.println("Error updating .env file: " + e.getMessage());
         }
     }
-    
+
+    //New
+    public static void removeStayLoggedInUser() {
+        String envFilePath = "D:/AP/ProjectPhase1";
+        if (!envFilePath.contains("project")) {
+            envFilePath += "/project";
+        }
+        if (System.getenv("APP_MODE").equals("TEST")) {
+            envFilePath += "/src/main/java/configs/env."
+                    + System.getenv("APP_MODE").toLowerCase();
+        } else {
+            envFilePath += "/src/main/java/configs/env."
+                    + System.getenv("APP_MODE").toLowerCase();
+        }
+        String variableToRemove = "USER_ID";
+
+        try {
+            List<String> lines = Files.readAllLines(Paths.get(envFilePath));
+
+            List<String> updatedLines = lines.stream()
+                    .filter(line -> !line.startsWith(variableToRemove + "="))
+                    .collect(Collectors.toList());
+
+            Files.write(Paths.get(envFilePath), updatedLines, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
+
+        } catch (IOException e) {
+            System.out.println("Error updating .env file: " + e.getMessage());
+        }
+    }
+
 }
