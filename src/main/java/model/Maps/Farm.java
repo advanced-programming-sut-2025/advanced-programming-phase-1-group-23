@@ -36,9 +36,16 @@ public class Farm {
         this.shippingBins = new ArrayList<>();
     }
 
-    public void showFarm(int x, int y, int size) {
-        int playerX = App.getLoggedInUser().getCurrentGame().getCurrentPlayer().getPosition().getX();
-        int playerY = App.getLoggedInUser().getCurrentGame().getCurrentPlayer().getPosition().getY();
+  public void showFarm(int x, int y, int size, Game game) {
+        Player owner = game.getCurrentPlayer();
+        int ownerX = -1;
+        int ownerY = -1;
+        int partnerX = -1;
+        int partnerY = -1;
+        if (owner.getCurrentFarm(game) == this && !owner.isInVillage()) {
+            ownerX = owner.getPosition().getX();
+            ownerY = owner.getPosition().getY();
+        }
 
         for (Tile cell : cells) {
             Position coordinate = cell.getCoordinate();
@@ -47,7 +54,9 @@ public class Farm {
             int yOfCell = coordinate.getY();
 
             if (Math.abs(x - xOfCell) <= size / 2 && Math.abs(y - yOfCell) <= size / 2) {
-                if (xOfCell == playerX && yOfCell == playerY)
+                if (xOfCell == ownerX && yOfCell == ownerY)
+                    System.out.print("\u001B[34m " + "O" + "\033[0m");
+                else if (xOfCell == partnerX && yOfCell == partnerY)
                     System.out.print("\u001B[34m " + "P" + "\033[0m");
                 else if (cell.getObjectOnCell().color.equals("blue"))
                     System.out.print("\u001B[34m " + cell.getObjectOnCell().string() + "\033[0m");
@@ -61,6 +70,12 @@ public class Farm {
                     System.out.print("\u001B[90m " + cell.getObjectOnCell().string() + "\033[0m");
                 else if (cell.getObjectOnCell().color.equals("gray"))
                     System.out.print("\u001B[37m " + cell.getObjectOnCell().string() + "\033[0m");
+                else if (cell.getObjectOnCell().color.equals("purple"))
+                    System.out.print("\u001B[35m " + cell.getObjectOnCell().string() + "\033[0m");
+                else if (cell.getObjectOnCell().color.equals("cyan"))
+                    System.out.print("\u001B[36m " + cell.getObjectOnCell().string() + "\033[0m");
+                else if (cell.getObjectOnCell().color.equals("bright purple"))
+                    System.out.print("\u001B[95m " + cell.getObjectOnCell().string() + "\033[0m");
                 if (xOfCell - x == size / 2) {
                     System.out.print("\n");
                 }
