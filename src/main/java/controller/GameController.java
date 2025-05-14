@@ -128,8 +128,17 @@ public class GameController extends ControllersController {
     }
 
     public static Resualt handleCheatThor(Command request) {
-        return null;
-        //TODO:I DONT KNOW CRYYYYYYYYYYYYYYYYYY
+        int targetX = Integer.parseInt(request.body.get("x"));
+        int targetY = Integer.parseInt(request.body.get("y"));
+
+        if (targetX >= 75 || targetY >= 50 || targetX < 0 || targetY < 0) {
+            return new Resualt(false, "Coordinates out of bounds.");
+        }
+
+        Game currentGame = App.getLoggedInUser().getCurrentGame();
+        currentGame.getCurrentPlayer().getCurrentFarm(currentGame).strikeLightning(targetX, targetY, currentGame.getDate());
+        GameRepo.saveGame(currentGame);
+        return new Resualt(true, "Lightning summoned at target coordinates.");
     }
 
     public static Resualt handleWeatherQuery(Command request) {
@@ -152,6 +161,38 @@ public class GameController extends ControllersController {
             GameRepo.saveGame(game);
         }
         return new Resualt(true, "Tomorrow's weather set successfully.");
+    }
+
+     public static Resualt handleGreenhouseBuilding(Command request) {
+        Game game = App.getLoggedInUser().getCurrentGame();
+        Player player = game.getCurrentPlayer();
+        Farm farm = player.getFarm();
+        Inventory backpack = player.getInventory();
+
+        Tile testCell = Farm.getCellByCoordinate(25, 4, farm.getCells());
+
+        if (testCell.getObjectOnCell() instanceof Water) {
+            return new Resualt(false, "Greenhouse already built.");
+        }
+
+       // TODO : Set and check money and inventory
+
+        for (int i = 23; i < 28; i++) {
+            for (int j = 4; j < 10; j++) {
+                Tile cell = Farm.getCellByCoordinate(i, j, farm.getCells());
+                cell.setObjectOnCell(new NothingInTile());
+            }
+        }
+
+        Tile cell = Farm.getCellByCoordinate(25, 10, farm.getCells());
+        cell.setObjectOnCell(new NothingInTile());
+
+        Tile cell1 = Farm.getCellByCoordinate(25, 4, farm.getCells());
+        cell1.setObjectOnCell(new Water());
+
+        GameRepo.saveGame(game);
+
+        return new Resualt(true, "Greenhouse built successfully.");
     }
 
 }
