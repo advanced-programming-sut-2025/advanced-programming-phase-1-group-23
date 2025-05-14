@@ -92,12 +92,12 @@ public class Authorization {
         String username = parts[0];
         String domainPart = parts[1];
 
-        if (username.isEmpty() || username.startsWith(".") || username.endsWith("."))
+        if (username.isEmpty() || username.startsWith(".") || username.endsWith(".") || username.startsWith("-"))
             return false;
         if (!username.matches("[a-zA-Z0-9._-]+")) return false;
         if (username.contains("..")) return false;
 
-        if (domainPart.isEmpty() || domainPart.startsWith(".") || domainPart.endsWith("."))
+        if (domainPart.isEmpty() || domainPart.startsWith(".") || domainPart.endsWith(".") || domainPart.endsWith("-"))
             return false;
 
         String[] domainParts = domainPart.split("\\.");
