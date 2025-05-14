@@ -6,6 +6,6 @@ import dev.morphia.annotations.Embedded;
 public class NothingInTile extends Objects {
 
     public NothingInTile() {
-        super(true,"empty","gray");
+        super(true,"yellow",".");
     }
 }
