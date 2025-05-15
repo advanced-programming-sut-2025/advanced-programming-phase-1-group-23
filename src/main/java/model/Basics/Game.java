@@ -5,10 +5,14 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Transient;
 import model.Maps.Farm;
 import model.Maps.Maps;
+import model.Maps.Position;
 import model.enums.Season;
 import model.enums.Weather;
 import org.bson.types.ObjectId;
+import src.main.java.model.NPC.NPC;
 import src.main.java.model.Objects.FriendInteraction;
+import src.main.java.model.enums.NPCinformation;
+import model.enums.Ingredients;
 import view.PlayGame;
 
 import java.time.LocalDateTime;
@@ -29,10 +33,12 @@ public class Game {
     private Season season;
     private ObjectId objectId;
     private ArrayList<ArrayList<FriendInteraction>> friendMatrix;
+    private final ArrayList<NPC> npcs;
 
     @Transient
     private PlayGame gameThread;
     public boolean hasTurnCycleFinished;
+    private Farm farm;
 
     public void advanceTime() {
         date = date.plusHours(1);
@@ -98,6 +104,42 @@ public class Game {
         for(int i = 0; i < players.size(); i++)
             for(int j = 0; j < players.size(); j++)
                 this.friendMatrix.get(i).add(new FriendInteraction());
+        this.npcs = new ArrayList<>();
+        initializeNPCs();
+        //TODO : add npcs & shops
+    }
+
+    private void initializeNPCs() {
+        ArrayList<Ingredients> favorites = new ArrayList<>();
+        favorites.add(Ingredients.WOOL);
+        favorites.add(Ingredients.PUMPKIN_PIE);
+        favorites.add(Ingredients.PIZZA);
+        this.npcs.add(new NPC("Sebastian", NPCinformation.Sebastian.getInformation(), favorites, new Position(0, 0)));
+        favorites.clear();
+
+        favorites.add(Ingredients.STONE);
+        favorites.add(Ingredients.IRIDIUM_ORE);
+        favorites.add(Ingredients.COFFEE);
+        this.npcs.add(new NPC("Abigail", NPCinformation.Abigail.getInformation(), favorites, new Position(0, 0)));
+        favorites.clear();
+
+        favorites.add(Ingredients.COFFEE);
+        favorites.add(Ingredients.Cheese);
+        favorites.add(Ingredients.Wine);
+        this.npcs.add(new NPC("Harvey", NPCinformation.Harvey.getInformation(), favorites, new Position(0, 0)));
+        favorites.clear();
+
+        favorites.add(Ingredients.SALAD);
+        favorites.add(Ingredients.GRAPE);
+        favorites.add(Ingredients.Wine);
+        this.npcs.add(new NPC("Lea", NPCinformation.Lea.getInformation(), favorites, new Position(0, 0)));
+        favorites.clear();
+
+        favorites.add(Ingredients.SPAGHETTI);
+        favorites.add(Ingredients.WOOD);
+        favorites.add(Ingredients.IRON);
+        this.npcs.add(new NPC("Sebastian", NPCinformation.Sebastian.getInformation(), favorites, new Position(0, 0)));
+        favorites.clear();
     }
 
     public ArrayList<Player> getPlayers() {
@@ -126,6 +168,10 @@ public class Game {
 
     public ArrayList<ArrayList<FriendInteraction>> getFriendMatrix() {
         return friendMatrix;
+    }
+
+    public ArrayList<NPC> getNpcs() {
+        return npcs;
     }
 
     public LocalDateTime getDate() {
@@ -226,7 +272,83 @@ public class Game {
         return hasTurnCycleFinished;
     }
 
+    
+
     public void setHasTurnCycleFinished(boolean hasTurnCycleFinished) {
         this.hasTurnCycleFinished = hasTurnCycleFinished;
+    }
+
+     public void newDayBackgroundChecks() {
+
+        for (Player player : players) {
+            if (player.isFainted()) {
+                player.setFainted(false);
+               // player.setEnergy(player.getMaxEnergy() * 0.75);
+            } else {
+              //  player.setEnergy(player.getMaxEnergy());
+            }
+            player.setUsedEnergyInTurn(0);
+        }
+
+      //  handleRefreshForaging();
+
+        weatherToday = weatherTomorrow;
+
+        determineAndSetWeatherTomorrow();
+
+     //   checkForCropNextStage();
+
+     //   resetAllCropsWater();
+
+     //   handleCropDeath();
+
+        if (weatherToday == Weather.RAIN || weatherToday == Weather.STORM) {
+          //  waterAllCrops();
+        }
+
+       // handleCrowAttack();
+
+      //  resetAllAnimalDailyVariables();
+
+//        reInitializeStoreProductsCount();
+//        reInitializeNpc();
+//        addPlayersMoney(this);
+
+        if (weatherToday == Weather.STORM) {
+           // strikeLightningOnStormyDay();
+        }
+
+       // npcGiveReward(this);
+
+      //  handleArtisanUse();
+    }
+
+    private void determineAndSetWeatherTomorrow() {
+        int randomNumber;
+        do {
+            randomNumber = (int) (Math.random() * 4);
+        } while (!Weather.values()[randomNumber]
+                .isWeatherPossible(App.getLoggedInUser().getCurrentGame().getSeason()));
+        weatherTomorrow = Weather.values()[randomNumber];
+    }
+
+    private void strikeLightningOnStormyDay() {
+        User user = App.getLoggedInUser();
+        Game game = user.getCurrentGame();
+        for (Player player : players) {
+            for (int i = 0; i < 3; i++) {
+                int targetX = (int) (Math.random() * 75);
+                int targetY = (int) (Math.random() * 50);
+                player.getFarm().strikeLightning(targetX, targetY, game.getDate());
+            }
+        }
+    }
+
+    public Farm getFarm() {
+        return farm;
+    }
+
+    public void setFarm(Farm farm) {
+        this.farm = farm;
     }
 }

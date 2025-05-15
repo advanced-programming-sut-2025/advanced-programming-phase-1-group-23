@@ -1,7 +1,5 @@
 package model.Objects;
 
-import model.NPC.NPC;
-import src.main.java.model.Objects.ShopBarn;
 import src.main.java.model.Objects.ShopItem;
 import model.Maps.Tile;
 
@@ -15,25 +13,19 @@ import model.Maps.Building;
 @Embedded
 public class Shop extends Building{
     private final ShopName name;
-    private final NPC owner;
     private final ArrayList<ShopItem> items;
     private final ArrayList<ShopItem> seasonItems;
     //TODO : Add work time
 
-    public Shop(ArrayList<Tile> tiles, ShopName name, NPC owner, ArrayList<ShopItem> items, ArrayList<ShopItem> seasonItems) {
+    public Shop(ArrayList<Tile> tiles, ShopName name) {
         super(tiles);
         this.name = name;
-        this.owner = owner;
-        this.items = items;
-        this.seasonItems = seasonItems;
+        this.items = new ArrayList<>();
+        this.seasonItems = new ArrayList<>();
     }
 
     public ShopName getName() {
         return name;
-    }
-
-    public NPC getOwner() {
-        return owner;
     }
 
     public ArrayList<ShopItem> getItems() {

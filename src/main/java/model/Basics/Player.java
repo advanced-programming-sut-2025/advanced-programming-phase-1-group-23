@@ -1,7 +1,7 @@
 package model.Basics;
 
-import dev.morphia.annotations.Embedded;
-import dev.morphia.annotations.Transient;
+//import dev.morphia.annotations.Embedded;
+//import dev.morphia.annotations.Transient;
 import model.Maps.Farm;
 import model.Maps.Position;
 import model.Objects.Inventory;
@@ -15,9 +15,9 @@ import src.main.java.model.Objects.ShippingBin;
 import java.util.ArrayList;
 import java.util.Map;
 
-@Embedded
+//@Embedded
 public class Player {
-    @Transient
+//    @Transient
     private User user;
     private Farm farm;
     private int farmingSkill=0;
@@ -31,7 +31,6 @@ public class Player {
     private int trashCan=0;
     private ArrayList<Recipe> recipes;
     private Tool inHandTool=null;
-    private Map<model.NPC.NPC, Integer> friendships;
     private Position position;
     private String id;
     private double maximumEnergy;
@@ -44,6 +43,7 @@ public class Player {
     private final ArrayList<String> inbox;
     private final ArrayList<ArrayList<String>> giftHistory;
     private final ArrayList<String> receivedGifts;
+    private final ArrayList<String> marriageRequests;
 
 
     public Player(User user) {
@@ -66,6 +66,7 @@ public class Player {
         for(int i = 0; i < 4; i++)
             this.giftHistory.add(new ArrayList<>());
         this.receivedGifts = new ArrayList<>();
+        this.marriageRequests = new ArrayList<>();
     }
 
 
@@ -166,14 +167,6 @@ public class Player {
         return recipes;
     }
 
-    public Map<model.NPC.NPC, Integer> getFriendships() {
-        return friendships;
-    }
-
-    public void setFriendships(Map<model.NPC.NPC, Integer> friendships) {
-        this.friendships = friendships;
-    }
-
     public String getId() {
         return id;
     }
@@ -242,6 +235,10 @@ public class Player {
 
     public ArrayList<String> getReceivedGifts() {
         return receivedGifts;
+    }
+
+    public ArrayList<String> getMarriageRequests() {
+        return marriageRequests;
     }
 
     public void upgradeTrashCan(){

@@ -11,7 +11,6 @@ import model.Command;
 import model.Maps.Farm;
 import model.Maps.Position;
 import model.Maps.Tile;
-import model.NPC.DialogueCondition;
 import model.Naturals.Crop;
 import model.Naturals.Tree;
 import model.Objects.Inventory;

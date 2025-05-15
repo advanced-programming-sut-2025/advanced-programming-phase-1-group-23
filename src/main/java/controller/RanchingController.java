@@ -289,7 +289,7 @@ public class RanchingController {
         else
             amount++;
         animal.collectProduct();
-        animal.set
+        animal.resetLastProduce();
         player.getInventory().getIngredients().put(animal.getProduct(), amount);
         return new Result(true, "Product collected successfully!");
     }

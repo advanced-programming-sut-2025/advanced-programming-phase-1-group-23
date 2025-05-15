@@ -12,8 +12,8 @@ public class ShopAnimal extends ShopItem {
         this.type = type;
     }
 
-    public ShopAniaml() {
-    }
+//    public ShopAniaml() {
+//    }
 
     public AnimalType getType() {
         return type;

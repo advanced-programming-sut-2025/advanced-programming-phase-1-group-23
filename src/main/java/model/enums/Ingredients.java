@@ -189,7 +189,7 @@ public enum Ingredients {
     CrimsonFish("Crimsonfish", IngredientsTypes.fish, 1500, 0),
     Salmon("Salmon", IngredientsTypes.fish, 75, 0),
     Sardine("Sardine", IngredientsTypes.fish, 40, 0),
-    Shad("Shad",, IngredientsTypes.fish 60, 0),
+    Shad("Shad", IngredientsTypes.fish, 60, 0),
     BlueDiscus("Blue Discus", IngredientsTypes.fish, 120, 0),
     Angler("Angler", IngredientsTypes.fish, 900, 0),
     MidnightCarp("Midnight Carp", IngredientsTypes.fish, 150, 0),
@@ -205,7 +205,7 @@ public enum Ingredients {
     MIDNIGHT_CARP, FRIED_EGG, BAKED_FISH, SALAD, OMELET, PUMPKIN_PIE, SPAGHETTI,
     PIZZA, TORTILLA, MAKI_ROLL, TRIPLE_SHOT_ESPRESSO, COOKIE, PANCAKES, FRUIT_SALAD,
     RED_PLATE, SALMON_DINNER, VEGETABLE_MEDLEY, FARMERS_LUNCH,
-    SURVIVAL_BURGER, SEA_DISH, SEAFORM_PUDDING, MINERS_TREAT;
+    SURVIVAL_BURGER, SEA_DISH, SEAFORM_PUDDING, MINERS_TREAT,;
 
     private final String name;
     private final IngredientsTypes type;
