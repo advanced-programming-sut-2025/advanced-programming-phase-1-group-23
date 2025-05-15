@@ -38,6 +38,7 @@ public class Game {
     @Transient
     private PlayGame gameThread;
     public boolean hasTurnCycleFinished;
+    private Farm farm;
 
     public void advanceTime() {
         date = date.plusHours(1);
@@ -341,5 +342,13 @@ public class Game {
                 player.getFarm().strikeLightning(targetX, targetY, game.getDate());
             }
         }
+    }
+
+    public Farm getFarm() {
+        return farm;
+    }
+
+    public void setFarm(Farm farm) {
+        this.farm = farm;
     }
 }
