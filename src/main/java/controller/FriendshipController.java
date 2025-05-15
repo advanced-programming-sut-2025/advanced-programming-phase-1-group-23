@@ -4,9 +4,13 @@ import model.Basics.Player;
 import model.Basics.Result;
 import model.Basics.App;
 import model.Basics.Game;
+import model.Resualt;
 import model.enums.Ingredients;
 import model.enums.IngredientsTypes;
+import src.main.java.model.NPC.Pair;
+import src.main.java.model.Objects.Trade;
 
+import static java.lang.Integer.decode;
 import static java.lang.Integer.parseInt;
 
 public class FriendshipController extends ControllersController {
@@ -261,6 +265,90 @@ public class FriendshipController extends ControllersController {
     }
 
     public Result trade(Command request) {
+        String username = request.body.get("username");
+        String type = request.body.get("type");
+        String itemName = request.body.get("itemName");
+        int amount = parseInt(request.body.get("amount"));
+        String targetItemName = request.body.get("targetItem");
+        int targetAmount = parseInt(request.body.get("targetAmount"));
+        int price = parseInt(request.body.get("price"));
+        Game game = App.getLoggedInUser().getCurrentGame();
+        Player player = game.getCurrentPlayer();
+        Player friend = getPlayerByUsername(username);
+        if(friend == null)
+            return new Result(false, "No player found.");
+        if(!targetItemName.equals("hich") && price != 0)
+            return new Result(false, "You can't choose both types.");
+        if(amount <= 0)
+            return new Result(false, "Invalid amount");
+        Ingredients item = null;
+        Ingredients targetItem = null;
+        for(Ingredients ingredients : Ingredients.values())
+            if(ingredients.getName().equals(itemName))
+                item = ingredients;
+        if(item == null)
+            return new Result(false, "Invalid item.");
+        if(targetItemName.equals("hich") && price > player.getMoney())
+            return new Result(false, "Not enough money");
+        if(!targetItemName.equals("hich")) {
+            for(Ingredients ingredients : player.getInventory().getIngredients().keySet())
+                if(ingredients.getName().equals(targetItemName))
+                    targetItem = ingredients;
+            if(targetItem == null)
+                return new Result(false, "No item found.");
+            if(player.getInventory().getIngredients().get(targetItem) < targetAmount)
+                return new Result(false, "Not enough items.");
+        }
+        friend.getTradeList().add(new Trade(player.getUser().getUsername(), username, type, new Pair(item, amount), new Pair(targetItem, targetAmount), price));
+        return new Result(true, "Trade request sent successfully.");
+    }
+
+    public Resualt tradeList(Command request) {
+        Game game = App.getLoggedInUser().getCurrentGame();
+        Player player = game.getCurrentPlayer();
+        StringBuilder response = new StringBuilder();
+        for(int i = 0; i < player.getTradeList().size(); i++) {
+            Trade trade = player.getTradeList().get(i);
+            response.append(i + 1).append("- ").append(trade.getFirstPlayer()).append(": ");
+            response.append(trade.getRequest().getIngredient().getName()).append(" ").append(trade.getRequest().getNumber()).append(", ");
+            if(trade.getOffer().getIngredient() != null)
+                response.append(trade.getOffer().getIngredient().getName()).append(" ").append(trade.getOffer().getNumber()).append("\n");
+            else
+                response.append(trade.getPrice()).append("\n");
+        }
+        return new Resualt(true, response.toString());
+    }
+
+    public Resualt tradeResponse(Command request) {
+        String response = request.body.get("response");
+        int index = parseInt(request.body.get("index")) - 1;
+        Game game = App.getLoggedInUser().getCurrentGame();
+        Player player = game.getCurrentPlayer();
+        if(player.getTradeList().size() <= index)
+            return new Resualt(false, "Invalid index.");
+        if(!response.equals("accept") && !response.equals("reject"))
+            return new Resualt(false, "Invalid response");
+        Trade trade = player.getTradeList().get(index);
+        Player friend = getPlayerByUsername(trade.getFirstPlayer());
+        if(friend == null)
+            return new Resualt(false, "This error is never gonna occur.");
+        int i = game.getPlayers().indexOf(player);
+        int j = game.getPlayers().indexOf(friend);
+        if(response.equals("reject")) {
+            game.getFriendMatrix().get(i).get(j).changeXP(-30);
+            game.getFriendMatrix().get(j).get(i).changeXP(-30);
+            player.getTradeList().remove(trade);
+            return new Resualt(true, "Rejected successfully.");
+        }
+        if(trade.getRequest().getIngredient() != null) {
+            Ingredients item = trade.getRequest().getIngredient();
+            Integer amount = trade.getRequest().getNumber();
+            Integer number = player.getInventory().getIngredients().get(item);
+            if (number == null || number < amount)
+                return new Resualt(false, "Not enough items.");
+            getItem(player, trade.getRequest());
+            addItem(friend, trade.getRequest());
+        }
         return null;
     }
 
@@ -304,4 +392,24 @@ public class FriendshipController extends ControllersController {
                 return player;
         return null;
     }
+
+    private void getItem(Player player, Pair pair) {
+        Ingredients item = pair.getIngredient();
+        Integer amount = pair.getNumber();
+        int number = player.getInventory().getIngredients().get(item);
+        if(number == amount)
+            player.getInventory().getIngredients().remove(item);
+        else
+            player.getInventory().getIngredients().put(item, number - amount);
+    }
+
+    private void addItem(Player player, Pair pair) {
+        Ingredients item = pair.getIngredient();
+        Integer amount = pair.getNumber();
+        Integer number = player.getInventory().getIngredients().get(item);
+        if(number == null)
+            number = 0;
+        player.getInventory().getIngredients().put(item, number + amount);
+    }
+
 }

@@ -2,6 +2,7 @@ package model.Basics;
 
 //import dev.morphia.annotations.Embedded;
 //import dev.morphia.annotations.Transient;
+import model.Basics.User;
 import model.Maps.Farm;
 import model.Maps.Position;
 import model.Objects.Inventory;
@@ -11,6 +12,7 @@ import model.enums.ToolLevel;
 import model.enums.ToolType;
 import model.Objects.Shop;
 import src.main.java.model.Objects.ShippingBin;
+import src.main.java.model.Objects.Trade;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -44,6 +46,8 @@ public class Player {
     private final ArrayList<ArrayList<String>> giftHistory;
     private final ArrayList<String> receivedGifts;
     private final ArrayList<String> marriageRequests;
+    private final ArrayList<Trade> tradeList;
+    private final ArrayList<Trade> tradeHistory;
 
 
     public Player(User user) {
@@ -67,6 +71,8 @@ public class Player {
             this.giftHistory.add(new ArrayList<>());
         this.receivedGifts = new ArrayList<>();
         this.marriageRequests = new ArrayList<>();
+        this.tradeList = new ArrayList<>();
+        this.tradeHistory = new ArrayList<>();
     }
 
 
@@ -239,6 +245,14 @@ public class Player {
 
     public ArrayList<String> getMarriageRequests() {
         return marriageRequests;
+    }
+
+    public ArrayList<Trade> getTradeList() {
+        return tradeList;
+    }
+
+    public ArrayList<Trade> getTradeHistory() {
+        return tradeHistory;
     }
 
     public void upgradeTrashCan(){
