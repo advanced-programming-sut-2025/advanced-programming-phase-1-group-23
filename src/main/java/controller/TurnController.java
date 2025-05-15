@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 public class TurnController extends ControllersController {
     public static boolean isWaitingForChoosingMap = false;
+    public static String newUser = "Shayan1";
 
 //    public static Resualt handleNewGame(Command request) {
 //        String[] usernames = parseUsernames(request);
@@ -75,7 +76,7 @@ public class TurnController extends ControllersController {
             if (user.equals(App.getLoggedInUser())) {
                 return new Resualt(false, "You can't add yourself.");
             }
-            if (user.getCurrentGame() != null) {
+            if (user.getCurrentGame() != null || username.equals(newUser)) {
                 return new Resualt(false, "Player " + username + " is already in a game");
             }
             Player player = new Player(user);
