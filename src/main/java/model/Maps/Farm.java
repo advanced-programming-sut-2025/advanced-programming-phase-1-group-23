@@ -331,4 +331,81 @@ public class Farm {
         }
         System.out.println("Lightning has struck coordinates: " + targetX + ", " + targetY);
     }
+
+    //new Jasmin
+    // private static void addShop(ArrayList<Building> farmBuildings, ArrayList<Tile> farmCells){
+    //     ArrayList<Tile> shopAnimal = new ArrayList<>();
+    //     ArrayList<Tile> shopBarn = new ArrayList<>();
+    //     ArrayList<Tile> shopIngredient = new ArrayList<>();
+    //     ArrayList<Tile> shopItem = new ArrayList<>();
+    //     ArrayList<Tile> shopRecipe = new ArrayList<>();
+    //     ArrayList<Tile> shopSeed = new ArrayList<>();
+    //     ArrayList<Tile> shopTool = new ArrayList<>();
+
+    //     for (int i = 1; i < 6; i++) {
+    //         for (int j = 1; j < 6; j++) {
+    //             Tile cell = getCellByCoordinate(i, j, farmCells);
+    //             cell.setObjectOnCell(new BuildingsForPaint(false, "ShopAnimal"));
+    //             shopAnimal.add(cell);
+    //         }
+    //     }
+
+    //     for (int i = 9; i < 14; i++) {
+    //         for (int j = 9; j < 14; j++) {
+    //             Tile cell = getCellByCoordinate(i, j, farmCells);
+    //             cell.setObjectOnCell(new BuildingsForPaint(false, "ShopBarn"));
+    //             shopBarn.add(cell);
+    //         }
+    //     }
+
+    //     for (int i = 16; i < 21; i++) {
+    //         for (int j = 16; j < 21; j++) {
+    //             Tile cell = getCellByCoordinate(i, j, farmCells);
+    //             cell.setObjectOnCell(new BuildingsForPaint(false, "ShopIngredient"));
+    //             shopIngredient.add(cell);
+    //         }
+    //     }
+
+    //     for (int i = 25; i < 30; i++) {
+    //         for (int j = 25; j < 30; j++) {
+    //             Tile cell = getCellByCoordinate(i, j, farmCells);
+    //             cell.setObjectOnCell(new BuildingsForPaint(false, "ShopItem"));
+    //             shopItem.add(cell);
+    //         }
+    //     }
+
+    //     for (int i = 35; i < 40; i++) {
+    //         for (int j = 35; j < 43; j++) {
+    //             Tile cell = getCellByCoordinate(i, j, farmCells);
+    //             cell.setObjectOnCell(new BuildingsForPaint(false, "ShopRecipe"));
+    //             shopRecipe.add(cell);
+    //         }
+    //     }
+
+    //     for (int i = 45; i < 50; i++) {
+    //         for (int j = 35; j < 42; j++) {
+    //             Tile cell = getCellByCoordinate(i, j, farmCells);
+    //             cell.setObjectOnCell(new BuildingsForPaint(false, "ShopSeed"));
+    //             shopSeed.add(cell);
+    //         }
+    //     }
+
+    //     for (int i = 45; i < 50; i++) {
+    //         for (int j = 43; j < 48; j++) {
+    //             Tile cell = getCellByCoordinate(i, j, farmCells);
+    //             cell.setObjectOnCell(new BuildingsForPaint(false, "ShopTool"));
+    //             shopTool.add(cell);
+    //         }
+    //     }
+
+    //     farmBuildings.add(new Shop(shopAnimal,));
+        
+    // }
+
+    // public static Farm makeNPCFarm() {
+    //     ArrayList<Tile> farmCells = new ArrayList<>();
+    //     ArrayList<Building> farmBuildings = new ArrayList<>();
+
+    //     makeEmptyCells(farmCells);
+    // }
 }
