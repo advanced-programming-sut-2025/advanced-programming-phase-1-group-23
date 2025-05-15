@@ -1,34 +1,43 @@
 package model.Maps;
 
-import javax.swing.text.TabableView;
+
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
-import dev.morphia.annotations.Embedded;
-
-@Embedded
 public class GoTrack {
-    public static ArrayList<Tile> cells;
+    public static ArrayList<Cell> cells = new ArrayList<>();
     private static final int[][] DIRECTIONS = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
 
-    public GoTrack (){
+    private static ArrayList<Cell> cellToTile(ArrayList<Tile> c) {
+        ArrayList<Cell> arr = new ArrayList<>();
+        for (Tile cell : c) {
+            arr.add(new Cell(cell));
+        }
+        return arr;
     }
- 
-    public static void pathBFS(Tile src, Tile dest, ArrayList<Tile> arr) {
-        cells = arr;
-        boolean[][] visited = new boolean[9][10];
-        PriorityQueue<Tile> queue = new PriorityQueue<>(new CellComparator());
+
+    public static Cell pathBFS(Cell src, Cell dest, ArrayList<Tile> arr) {
+        for (Tile c : arr) {
+            cells.add(new Cell(c));
+        }
+        boolean[][] visited = new boolean[75][50];
+        Queue<Cell> queue = new PriorityQueue<>(new TileComparator());
         queue.add(src);
         visited[src.getCoordinate().getX()][src.getCoordinate().getY()] = true;
         while (!queue.isEmpty()) {
-            Tile curr = queue.poll();
+            Cell curr = queue.poll();
+            if (curr.equals(dest)) {
+                dest = curr;
+                break;
+            }
             for (int[] dir : DIRECTIONS) {
                 int newX = curr.getCoordinate().getX() + dir[0];
                 int newY = curr.getCoordinate().getY() + dir[1];
-                if (newX >= 0 && newX < 9 && newY >= 0 && newY < 10 && !visited[newX][newY]) {
-                    Tile neighbour = findCell(newX, newY);
+                if (newX >= 0 && newX < 75 && newY >= 0 && newY < 50 && !visited[newX][newY]) {
+                    Cell neighbour = findCell(newX, newY);
                     if (!neighbour.getObjectOnCell().canWalk) {
                         continue;
                     }
@@ -41,37 +50,24 @@ public class GoTrack {
                     } else {
                         neighbour.turns = neighbour.prev.turns + 1;
                     }
-                    for (int[] dir2 : DIRECTIONS) {
-                        int i = newX + dir2[0];
-                        int j = newY + dir2[1];
-                        Tile d = findCell(i, j);
-                        if (d != null && i == dest.getCoordinate().getX() && j == dest.getCoordinate().getY()) {
-                            d.prev = neighbour;
-                            if (!(neighbour.diffXPrev() == d.diffXPrev() && neighbour.diffYPrev() == d.diffYPrev())) {
-                                neighbour.turns += 1;
-                            }
-                        }
-                    }
                     neighbour.energy = (neighbour.distance + 10 * neighbour.turns);
                     visited[neighbour.getCoordinate().getX()][neighbour.getCoordinate().getY()] = true;
-                    if ((newX == 0 && newY == 3) || (newX == 1 && newY == 3)) {
-                        int x = 5;
-                    }
                     queue.add(neighbour);
                 }
             }
         }
+        return dest;
     }
 
-    public static class CellComparator implements Comparator<Tile> {
+    public static class TileComparator implements Comparator<Cell> {
         @Override
-        public int compare(Tile c1, Tile c2) {
-            return Double.compare(c1.energy, c2.energy);
+        public int compare(Cell c1, Cell c2) {
+            return Double.compare(c1.energy, c2.energy); // Lower cost = higher priority
         }
     }
 
-    public static Tile findCell(int x, int y) {
-        for (Tile cell : cells) {
+    public static Cell findCell(int x, int y) {
+        for (Cell cell : cells) {
             if (cell.getCoordinate().getX() == x && cell.getCoordinate().getY() == y) {
                 return cell;
             }

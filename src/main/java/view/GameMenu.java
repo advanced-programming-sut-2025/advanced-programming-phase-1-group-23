@@ -11,6 +11,8 @@ import model.enums.GameMenuCommands;
 import java.util.Scanner;
 
 public class GameMenu implements AppMenu {
+    public int rapet = 0;
+    
     public void check(Scanner scanner) {
         String input = scanner.nextLine().trim();
 
@@ -93,7 +95,10 @@ public class GameMenu implements AppMenu {
             }
             else if (GameMenuCommands.SHOWPLANETINFO.matches(input)) {
                 response = getShowPlanetInfoResponse(input);
-            } else {
+            } else if (GameMenuCommands.GREEN_HOUSE_BUILD.matches(input)) {
+                response = getGreenhouseBuildResponse(input);
+            }
+            else {
                 response = new Resualt(false, "SORRY sorry!");
                 ;
             }
@@ -291,6 +296,13 @@ public class GameMenu implements AppMenu {
 
     private static Resualt getShowMenuResponse(String input) {
         return GameController.handleShowMenu(new Command(input));
+    }
+
+     private static Resualt getGreenhouseBuildResponse(String input) {
+        Resualt response;
+        Command request = new Command(input);
+        response = GameController.handleGreenhouseBuilding(request);
+        return response;
     }
 
 

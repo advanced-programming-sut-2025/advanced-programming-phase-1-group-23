@@ -34,7 +34,6 @@ public class MapController {
         User user = App.getLoggedInUser();
         Game game = user.getCurrentGame();
         Player player = game.getCurrentPlayer();
-        //Player partner = game.getPartner(player);
         Farm playerFarm = player.getFarm();
         player.setInVillage(false);
         Position coordinate = getEmptyCoordinate(player, playerFarm.getCells());
@@ -69,81 +68,62 @@ public class MapController {
     }
 
     public static Resualt handleWalking(Command request) {
-        try {
-            int x = Integer.parseInt(request.body.get("x"));
-            int y = Integer.parseInt(request.body.get("y"));
-
-            Game game = App.getLoggedInUser().getCurrentGame();
-            Player player = game.getCurrentPlayer();
-
-            Tile currentTile = player.getFarm().findCellByCoordinate(
-                    player.getPosition().getX(),
-                    player.getPosition().getY()
-            );
-
-            Tile destination = player.getFarm().findCellByCoordinate(x, y).clone();
-
-            if (destination == null || !destination.getObjectOnCell().canWalk) {
-                return new Resualt(false, "Oops! That's a 'no-walking' zone. Try somewhere else!");
-            }
-
-            GoTrack.pathBFS(currentTile, destination, player.getFarm().getCells());
-            double energyCost = destination.energy / 20;
-
-            String energyMessage = String.format(
-                    "⚡ Energy Report ⚡\n" +
-                            "Current energy: %.1f\n" +
-                            "Trip cost: %.1f\n" +
-                            "Should we embark on this adventure? (Y/N): ",
-                    player.getEnergy(), energyCost
-            );
-
-            System.out.println(energyMessage);
-            String answer = AppView.scanner.nextLine();
-
-            if (!answer.equalsIgnoreCase("Y")) {
-                player.getFarm().initialCells();
-                return new Resualt(false, "Wise choice! Sometimes staying put is the real power move.");
-            }
-
-            List<Tile> path = new ArrayList<>();
-            Tile step = destination;
-            while (step != null) {
-                path.add(step);
-                step = step.prev;
-            }
-            Collections.reverse(path);
-
-            for (Tile tile : path) {
-                double stepCost = tile.energy / 20;
-
-                if (player.getEnergy() < stepCost) {
-                    player.setFainted(true);
-                    player.setEnergy(player.getEnergy() - stepCost);
-                    player.getFarm().initialCells();
-                    GameRepo.saveGame(game);
-                    return new Resualt(false, "Zzz... You pushed too hard and took a nap!");
-                }
-
-                if (player.getEnergyUsed() + stepCost > 50) {
-                    player.getFarm().initialCells();
-                    GameRepo.saveGame(game);
-                    return new Resualt(false, "Whoa there, energizer bunny! That's too much for one day.");
-                }
-
-                player.setPosition(tile.getCoordinate());
-                player.setEnergy(player.getEnergy() - stepCost);
-                player.setEnergyUsed(player.getEnergyUsed() + stepCost);
-            }
-
-            player.getFarm().initialCells();
+        int x = Integer.parseInt(request.body.get("x"));
+        int y = Integer.parseInt(request.body.get("y"));
+        Game game = App.getLoggedInUser().getCurrentGame();
+        Player player = game.getCurrentPlayer();
+        if (player.isInVillage()) {
             GameRepo.saveGame(game);
-            return new Resualt(true, "Destination reached! You're officially a walking champion!");
-
-        } catch (NumberFormatException e) {
-            return new Resualt(false, "Those coordinates look sus... Numbers only, please!");
-        } catch (NullPointerException e) {
-            return new Resualt(false, "Something went missing! Maybe check your game state?");
+            return new Resualt(false, "can't walk in village");
+        }
+        Cell src = new Cell(player.getCurrentFarm(game).findCellByCoordinate(player.getPosition().getX(), player.getPosition().getY()));
+        if (player.getCurrentFarm(game).findCellByCoordinate(x, y) == null) {
+            return new Resualt(false, "destination is not valid");
+        }
+        Cell dest = new Cell(player.getCurrentFarm(game).findCellByCoordinate(x, y).clone());
+        if (dest == null || !dest.getObjectOnCell().canWalk) {
+            return new Resualt(false, "destination is not valid");
+        }
+        dest = GoTrack.pathBFS(src, dest, player.getCurrentFarm(game).getCells());
+        double energy = dest.energy / (double) 20;
+        String message = "⚡Your current energy is: " + player.getEnergy() + "\n" +
+                "The path energy cost is : " + energy + "\n" +
+                "Do you want to move the path? (Y/N): ";
+        System.out.println(message);
+        String answer = AppView.scanner.nextLine();
+        if (answer.compareToIgnoreCase("Y") == 0) {
+            ArrayList<Cell> path = new ArrayList<Cell>();
+            while (dest != null) {
+                if (dest.prev != null) {
+                    dest.energy -= dest.prev.energy;
+                }
+                dest.energy /= 20
+                ;
+                path.add(dest);
+                dest = dest.prev;
+            }
+            List<Cell> arr = path.reversed();
+            for (Cell c : arr) {
+                if (c.energy > player.getEnergy()) {
+                    player.setFainted(true);
+                    player.setEnergy(player.getEnergy() - c.energy);
+                    TurnController.handleNextTurn(null);
+                    GameRepo.saveGame(game);
+                    return new Resualt(false, "You have fainted");
+                }
+                if (c.energy + player.getUsedEnergyInTurn() > 50) {
+                    GameRepo.saveGame(game);
+                    return new Resualt(false, "You can not use this much energy");
+                }
+                player.setPosition(c.getCoordinate());
+                player.setEnergy(player.getEnergy() - c.energy);
+                player.setUsedEnergyInTurn(player.getUsedEnergyInTurn() + c.energy);
+            }
+            GameRepo.saveGame(game);
+            return new Resualt(true, "You successfully moved to the destination");
+        } else {
+            player.getCurrentFarm(game).initialCells();
+            return new Resualt(false, "Movement process aborted");
         }
     }
 
