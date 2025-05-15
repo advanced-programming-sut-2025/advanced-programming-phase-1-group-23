@@ -1,7 +1,7 @@
 package model.Basics;
 
-import dev.morphia.annotations.Embedded;
-import dev.morphia.annotations.Transient;
+//import dev.morphia.annotations.Embedded;
+//import dev.morphia.annotations.Transient;
 import model.Maps.Farm;
 import model.Maps.Position;
 import model.Objects.Inventory;
@@ -15,9 +15,9 @@ import src.main.java.model.Objects.ShippingBin;
 import java.util.ArrayList;
 import java.util.Map;
 
-@Embedded
+//@Embedded
 public class Player {
-    @Transient
+//    @Transient
     private User user;
     private Farm farm;
     private int farmingSkill=0;
@@ -30,7 +30,6 @@ public class Player {
     private int trashCan=0;
     private ArrayList<Recipe> recipes;
     private Tool inHandTool=null;
-    private Map<model.NPC.NPC1, Integer> friendships;
     private Position position;
     private String id;
     private double maximumEnergy;
@@ -164,14 +163,6 @@ public class Player {
 
     public ArrayList<Recipe> getRecipes() {
         return recipes;
-    }
-
-    public Map<model.NPC.NPC1, Integer> getFriendships() {
-        return friendships;
-    }
-
-    public void setFriendships(Map<model.NPC.NPC1, Integer> friendships) {
-        this.friendships = friendships;
     }
 
     public String getId() {

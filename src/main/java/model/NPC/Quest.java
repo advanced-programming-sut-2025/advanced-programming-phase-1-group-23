@@ -1,9 +1,5 @@
 package src.main.java.model.NPC;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import model.enums.Ingredients;
-
 public class Quest {
     private final Pair requirement;
     private final Pair reward;

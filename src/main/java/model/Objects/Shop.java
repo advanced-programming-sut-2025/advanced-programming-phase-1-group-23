@@ -13,25 +13,19 @@ import model.Maps.Building;
 @Embedded
 public class Shop extends Building{
     private final ShopName name;
-    private final model.NPC.NPC1 owner;
     private final ArrayList<ShopItem> items;
     private final ArrayList<ShopItem> seasonItems;
     //TODO : Add work time
 
-    public Shop(ArrayList<Tile> tiles, ShopName name, model.NPC.NPC1 owner, ArrayList<ShopItem> items, ArrayList<ShopItem> seasonItems) {
+    public Shop(ArrayList<Tile> tiles, ShopName name) {
         super(tiles);
         this.name = name;
-        this.owner = owner;
-        this.items = items;
-        this.seasonItems = seasonItems;
+        this.items = new ArrayList<>();
+        this.seasonItems = new ArrayList<>();
     }
 
     public ShopName getName() {
         return name;
-    }
-
-    public model.NPC.NPC1 getOwner() {
-        return owner;
     }
 
     public ArrayList<ShopItem> getItems() {

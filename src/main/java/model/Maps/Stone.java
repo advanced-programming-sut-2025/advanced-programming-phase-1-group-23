@@ -1,4 +1,4 @@
-\package model.Maps;
+package model.Maps;
 import dev.morphia.annotations.Embedded;
 import model.enums.Ingredients;
 

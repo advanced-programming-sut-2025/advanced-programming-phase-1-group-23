@@ -16,8 +16,6 @@ import dev.morphia.annotations.Embedded;
 public class Animal implements Objectss {
     private final AnimalType type;
     private final String name;
-//    private final int productPriceI;
-//    private final int productPriceII;
     private final int produceCycle;
     private int friendship;
     private int lastProduce;

@@ -5,7 +5,6 @@ import model.Basics.Game;
 import model.Naturals.Crop;
 import model.Naturals.Tree;
 import model.enums.CropName;
-import model.enums.PlantType;
 import model.enums.TreeName;
 
 import java.time.LocalDateTime;
