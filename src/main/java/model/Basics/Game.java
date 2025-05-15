@@ -226,7 +226,75 @@ public class Game {
         return hasTurnCycleFinished;
     }
 
+    
+
     public void setHasTurnCycleFinished(boolean hasTurnCycleFinished) {
         this.hasTurnCycleFinished = hasTurnCycleFinished;
+    }
+
+     public void newDayBackgroundChecks() {
+
+        for (Player player : players) {
+            if (player.isFainted()) {
+                player.setFainted(false);
+               // player.setEnergy(player.getMaxEnergy() * 0.75);
+            } else {
+              //  player.setEnergy(player.getMaxEnergy());
+            }
+            player.setUsedEnergyInTurn(0);
+        }
+
+      //  handleRefreshForaging();
+
+        weatherToday = weatherTomorrow;
+
+        determineAndSetWeatherTomorrow();
+
+     //   checkForCropNextStage();
+
+     //   resetAllCropsWater();
+
+     //   handleCropDeath();
+
+        if (weatherToday == Weather.RAIN || weatherToday == Weather.STORM) {
+          //  waterAllCrops();
+        }
+
+       // handleCrowAttack();
+
+      //  resetAllAnimalDailyVariables();
+
+//        reInitializeStoreProductsCount();
+//        reInitializeNpc();
+//        addPlayersMoney(this);
+
+        if (weatherToday == Weather.STORM) {
+           // strikeLightningOnStormyDay();
+        }
+
+       // npcGiveReward(this);
+
+      //  handleArtisanUse();
+    }
+
+    private void determineAndSetWeatherTomorrow() {
+        int randomNumber;
+        do {
+            randomNumber = (int) (Math.random() * 4);
+        } while (!Weather.values()[randomNumber]
+                .isWeatherPossible(App.getLoggedInUser().getCurrentGame().getSeason()));
+        weatherTomorrow = Weather.values()[randomNumber];
+    }
+
+    private void strikeLightningOnStormyDay() {
+        User user = App.getLoggedInUser();
+        Game game = user.getCurrentGame();
+        for (Player player : players) {
+            for (int i = 0; i < 3; i++) {
+                int targetX = (int) (Math.random() * 75);
+                int targetY = (int) (Math.random() * 50);
+                player.getFarm().strikeLightning(targetX, targetY, game.getDate());
+            }
+        }
     }
 }
