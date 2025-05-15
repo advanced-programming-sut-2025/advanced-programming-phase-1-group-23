@@ -130,11 +130,17 @@ public class GameController extends ControllersController {
         }
         nextDateTime = currentDateTime.plusDays(howManyDays);
         nextDateTime = nextDateTime.plusMonths(howManyMonths);
+        boolean check = (nextDateTime.getMonthValue() - currentDateTime.getMonthValue() > 0)
+                || (nextDateTime.getDayOfMonth() - currentDateTime.getDayOfMonth() > 0);
         currentGame.setDate(nextDateTime);
+        if (check) {
+            currentGame.newDayBackgroundChecks();
+        }
         currentGame.checkSeasonChange();
         GameRepo.saveGame(currentGame);
         return new Resualt(true, "Date set successfully.");
     }
+
 
     public static Resualt handleSeasonQuery(Command request) {
         return new Resualt(true, App.getLoggedInUser().getCurrentGame().getSeason().toString());
