@@ -22,7 +22,9 @@ public enum RanchingMenuCommands {
     SHOW_ALL_AVAILABLE("^show\\s+all\\s+available\\s+products$"),
     PURCHASE("^purchase\\s+(?<name>.+?)(\\s+-n\\s+(?<amount>\\d+))?$"),
     SELL("^sell\\s+(?<name>.+?)(\\s+-n\\s+(?<amount>\\d+))?$"),
-    CHEAT_ADD_MONEY("^cheat\\s+add\\s+(?<amount>\\d+)\\s+dollars$")
+    CHEAT_ADD_MONEY("^cheat\\s+add\\s+(?<amount>\\d+)\\s+dollars$"),
+
+
     ;
 
     private final String command;

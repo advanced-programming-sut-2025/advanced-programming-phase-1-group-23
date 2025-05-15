@@ -65,11 +65,8 @@ public class FarmingController extends controller.ControllersController {
             }
         }return false;
     }
-    public boolean checkForScarCrew(Tile tile) {
 
-    }
-
-    public Result plantingSeeds(Command command) {
+    public static Resualt plantingSeeds(Command command) {
         Game game = App.getLoggedInUser().getCurrentGame();
         String direction = command.body.get("direction");
         String seed = command.body.get("seed");
@@ -83,8 +80,8 @@ public class FarmingController extends controller.ControllersController {
         CropName cropName = null;
         Position position = InventoryFunctionsController.findPositionByDirection(direction, player.getPosition());
         Tile tile = InventoryFunctionsController.findTileByPosition(position, farm);
-        if (tile == null) return new Result(false, "Rafti too baghalia!");
-        if (!tile.isTilled()) return new Result(false, "tile not tilled");
+        if (tile == null) return new Resualt(false, "Rafti too baghalia!");
+        if (!tile.isTilled()) return new Resualt(false, "tile not tilled");
         for (Map.Entry<ForAgingSeeds, Integer> seeds : player.getInventory().getSeeds().entrySet()) {
             if (seeds.getKey().getSeedName().equals(seed)) {
                 seed1 = seeds.getKey();
@@ -97,13 +94,13 @@ public class FarmingController extends controller.ControllersController {
                 break;
             }
         }
-        if (cropName == null) return new Result(false, "You don't have the seed in your backPack");
+        if (cropName == null) return new Resualt(false, "You don't have the seed in your backPack");
         if (!Arrays.asList(cropName.getSeason()).contains(game.getSeason()))
-            return new Result(false, "not in the seaaon!");
-        tile.setObject(new Crop(cropName, 0, 0));
+            return new Resualt(false, "not in the seaaon!");
+        tile.setObject(new Crop(cropName));
         tile.setTilled(false);
 
-        return new Result(true, "Seed planted successfully");
+        return new Resualt(true, "Seed planted successfully");
     }
 
     private static CropName findCropBySeed(ForAgingSeeds seed) {
@@ -132,15 +129,16 @@ public class FarmingController extends controller.ControllersController {
             ForAgingSeeds[] seeds = SeasonSeeds.WinterSeed.getSeeds();
             return seeds[0].getSeedName();
         }
+        return null;
     }
 
-    public Result showPlantingInfo(Command command) {
+    public static Resualt showPlantingInfo(Command command) {
         Game game = App.getLoggedInUser().getCurrentGame();
         int x = Integer.parseInt(command.body.get("x"));
         int y = Integer.parseInt(command.body.get("y"));
         Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         Farm farm = player.getFarm();
-        Tile tile = findTileByxy(x, y, player.getFarm());
+        Tile tile = findTileByxy(x, y, farm);
         StringBuilder details = new StringBuilder();
         if (tile.getObject() instanceof Tree tree) {
             details.append(tree.getTreeName().getName()).append("\n");
@@ -157,7 +155,7 @@ public class FarmingController extends controller.ControllersController {
             details.append("Stage: ").append(calculateStage(crop.getCropName().getStages(), crop.getDaysPassedSincePlanting())).append("\n");
 
         }
-        return new Result(true, details.toString());
+        return new Resualt(true, details.toString());
 
     }
 
@@ -170,15 +168,15 @@ public class FarmingController extends controller.ControllersController {
         return null;
     }
 
-    public Result seeWater(Command command) {
+    public static Resualt seeWater() {
         Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         Inventory inventory = player.getInventory();
         for (Tool tool : player.getInventory().getTools().keySet()) {
             if (tool.getToolType().toString().equals("WateringCan")) {
-                return new Result(true, "IrrigationCapacity: " + tool.getIrrigationCapacity());
+                return new Resualt(true, "IrrigationCapacity: " + tool.getIrrigationCapacity());
             }
         }
-        return new Result(false, "You don't have a watering can");
+        return new Resualt(false, "You don't have a watering can");
     }
 
     public static int calculateStage(int[] stages, int daysPassedPlanting) {

@@ -7,7 +7,7 @@ public class CraftingMachine implements Objectss {
     private final Ingredients type;
     private int processingHourTime=0;
     private boolean isWorking= false;
-    private Ingredients product=null
+    private Ingredients product=null;
 
     public CraftingMachine(Ingredients type) {
         this.type = type;

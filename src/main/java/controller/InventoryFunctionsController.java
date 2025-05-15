@@ -1,6 +1,8 @@
 package controller;
 
+import com.google.gson.internal.JsonReaderInternalAccess;
 import dev.morphia.aggregation.expressions.impls.SingleValuedExpression;
+import kotlin.text.UStringsKt;
 import model.Basics.App;
 import model.Basics.Game;
 import model.Basics.Player;
@@ -23,7 +25,7 @@ import java.util.PropertyPermission;
 
 public class InventoryFunctionsController extends ControllersController {
 
-    public Result showAllInInventory(){
+    public static Resualt showAllInInventory(){
         Inventory inventory=App.getLoggedInUser().getCurrentGame().getCurrentPlayer().getInventory();
         StringBuilder allTools = new StringBuilder();
         allTools.append("Tools: ").append("\n");
@@ -38,58 +40,48 @@ public class InventoryFunctionsController extends ControllersController {
         for (ForAgingSeeds seed: inventory.getSeeds().keySet()){
             allTools.append(seed.getSeedName()).append(": ").append(inventory.getSeeds().get(seed));
         }
-        return new Result(true, allTools.toString());
+        return new Resualt(true, allTools.toString());
 
     }
-    public Result toolEquip(String toolName) {
-        Game game = App.loggedInUser.getCurrentGame();
+    public static Resualt toolEquip(Command command) {
+        String toolName=command.body.get("toolName");
+        Game game = App.getLoggedInUser().getCurrentGame();
         Player player = game.getCurrentPlayer();
         for (Tool tool : player.getInventory().getTools().keySet()) {
             if (tool.getToolType().toString().equals(toolName)) {
                 player.setInHandTool(tool);
-                return new Result(true, "Now the power is in your hands!");
+                return new Resualt(true, "Now the power is in your hands!: "+player.getInHandTool());
             }
         }
-        return new Result(false, "You don't have the tool in the backPack");
+        return new Resualt(false, "You don't have the tool in the backPack");
     }
 
 
-    public Result showInHandTool() {
-        Game game = App.loggedInUser.getCurrentGame();
+    public static Resualt showInHandTool() {
+        Game game = App.getLoggedInUser().getCurrentGame();
         Player player = game.getCurrentPlayer();
         for (ToolType toolType : ToolType.values()) {
             if (player.getInHandTool().getToolType().equals(toolType)) {
-                return new Result(true, toolType.toString());
+                return new Resualt(true, toolType.toString());
             }
         }
-        return new Result(false, "You don't have a tool in hand right now");
+        return new Resualt(false, "You don't have a tool in hand right now");
 
     }
 
-    public Result showAllTools() {
-        Game game = App.loggedInUser.getCurrentGame();
+    public static Resualt showAllTools() {
+        Game game = App.getLoggedInUser().getCurrentGame();
         Player player = game.getCurrentPlayer();
         StringBuilder allTools = new StringBuilder();
         for (Tool tool : player.getInventory().getTools().keySet()) {
             allTools.append(tool.getToolType()).append(", ").append(tool.getToolLevel()).append("\n");
         }
-        return new Result(true, allTools.toString());
-    }
-
-    public Result inventoryTrashing(String command) {
-        return null;
-    }
-
-    public Result toolEquipmentCategory(String command) {
-        return null;
-    }
-
-    public Result toolQuery(String command) {
-        return null;
+        return new Resualt(true, allTools.toString());
     }
 
 
-    public Result toolUpgrade(String command) {
+
+    public static Resualt toolUpgrade(Command command) {
 
         //TODO check if the player is in the blackSmith shop;
         Game game = App.getLoggedInUser().getCurrentGame();
@@ -100,29 +92,29 @@ public class InventoryFunctionsController extends ControllersController {
                 switch (tool.getToolLevel()) {
                     case Initial -> {
                         tool.setToolLevel(ToolLevel.Cooper);
-                        return new Result(true, "Tool upgraded to Cooper");
+                        return new Resualt(true, "Tool upgraded to Cooper");
                     }
                     case Cooper -> {
                         tool.setToolLevel(ToolLevel.Iron);
-                        return new Result(true, "Tool Upgraded to Iron");
+                        return new Resualt(true, "Tool Upgraded to Iron");
                     }
                     case Iron -> {
                         tool.setToolLevel(ToolLevel.Gold);
-                        return new Result(true, "Tool upgraded to Gold");
+                        return new Resualt(true, "Tool upgraded to Gold");
                     }
                     case Gold -> {
                         tool.setToolLevel(ToolLevel.Iridium);
-                        return new Result(true, "Tool upgraded to Iridium");
+                        return new Resualt(true, "Tool upgraded to Iridium");
                     }
                     case Iridium, Learning, Bambou, FiberGlass -> {
-                        return new Result(false, "Tool can't be upgraded anymore");
+                        return new Resualt(false, "Tool can't be upgraded anymore");
                     }
 
                 }
             }
 
         }
-        return new Result(false, "The inHandTool can't be upgraded");
+        return new Resualt(false, "The inHandTool can't be upgraded");
 
     }
 
@@ -169,17 +161,19 @@ public class InventoryFunctionsController extends ControllersController {
         }
     }
 
-    public Resualt useTool(Command request) {
+    public static Resualt useTool(Command request) {
         String direction = request.body.get("direction");
         Game game = App.getLoggedInUser().getCurrentGame();
         Player player = game.getCurrentPlayer();
         Tool tool = player.getInHandTool();
         Position position = findPositionByDirection(direction, player.getPosition());
         Tile tile = findTileByPosition(position, player.getFarm());
+
         if (tile == null) return new Resualt(false, "You are going out of the map!");
         if (tool != null) {
+            if (player.getEnergy()<tool.getUseCost()) return new Resualt(false,"you don't have enough energy.");
             player.setEnergyUsed(player.getEnergyUsed() + tool.getUseCost());
-            player.setEnergy(player.getEnergy() + tool.getUseCost());
+            player.setEnergy(player.getEnergy() - tool.getUseCost());
 
             switch (tool.getToolType()) {
                 case Axe -> {
@@ -203,9 +197,6 @@ public class InventoryFunctionsController extends ControllersController {
                 case WateringCan -> {
                     return useWateringCan(position, tile);
                 }
-                case FishingRod -> {
-                    return useFishingRod(position, tile);
-                }
 
             }
         }
@@ -221,7 +212,7 @@ public class InventoryFunctionsController extends ControllersController {
         return null;
     }
 
-    public Resualt useAxe(Position position, Tile tile) {
+    public static Resualt useAxe(Position position, Tile tile) {
         Inventory inventory = App.getLoggedInUser().getCurrentGame().getCurrentPlayer().getInventory();
         if (tile.getObject() instanceof Tree) {
             tile.setObject(null);
@@ -239,12 +230,15 @@ public class InventoryFunctionsController extends ControllersController {
                 inventory.getIngredients().put(Ingredients.WOOD, 1);
             }
             return new Resualt(true, "You have obtained some wood!");
+        }else if (tile.getIngredients().equals(Ingredients.WOOD)){
+            tile.setIngredients(null);
+            return new Resualt(true,"The branch on the ground was destroyed.");
         }
         return new Resualt(false, "Axe cannot be used on this tile");
 
     }
 
-    public Resualt useHoe(Position position, Tile tile) {
+    public static Resualt useHoe(Position position, Tile tile) {
         if (tile.getObject() == null) {
             tile.setTilled(true);
             return new Resualt(true, "You have Plowed the ground");
@@ -252,19 +246,21 @@ public class InventoryFunctionsController extends ControllersController {
         return new Resualt(false, "Go tend to your own garden!");
     }
 
-    public Resualt usePickaxe(Position position, Tile tile) {
+    public static Resualt usePickaxe(Position position, Tile tile) {
         tile.setTilled(false);
         Inventory inventory = App.getLoggedInUser().getCurrentGame().getCurrentPlayer().getInventory();
         Player player=App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
 
         if (tile.getIngredients().getType().equals(IngredientsTypes.mineral) || tile.getIngredients().getType().equals(IngredientsTypes.craftedObjects)) {
+            tile.setIngredients(null);
             if (inventory.getIngredients().containsKey(tile.getIngredients())) {
                 inventory.getIngredients().put(tile.getIngredients(), inventory.getIngredients().get(tile.getIngredients()) + 2);
             } else if (inventory.getCapacity() > 0) {
                 inventory.setCapacity(inventory.getCapacity() - 1);
                 inventory.getIngredients().put(tile.getIngredients(), 2);
             }
-            if (player.getForagingSkill()>=2)inventory.getIngredients().put(tile.getIngredients(), inventory.getIngredients().get(tile.getIngredients())+1);
+            player.setMiningSkill(player.getMiningSkill()+10);
+            if (player.returnMiningLevel()>=2)inventory.getIngredients().put(tile.getIngredients(), inventory.getIngredients().get(tile.getIngredients())+1);
             return new Resualt(true, "You successfully picked up objects");
         }
         return new Resualt(false, "there is nothing here to pickUp");
@@ -272,12 +268,14 @@ public class InventoryFunctionsController extends ControllersController {
 
     }
 
-    public Resualt useScissors(Position position, Tile tile) {
+    public static Resualt useScissors(Position position, Tile tile) {
     }
 
-    public Resualt useScythe(Position position, Tile tile) {
+    public static Resualt useScythe(Position position, Tile tile) {
         Inventory inventory = App.getLoggedInUser().getCurrentGame().getCurrentPlayer().getInventory();
+        Player player=App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         if (tile.getObject() instanceof Tree tree) {
+            tile.setObject(null);
             if (tree.getDaysPassedSincePlanting() > tree.getTreeName().getTotalHarvestTime() && tree.getDaysPassedSinceHarvesting() >= tree.getTreeName().getFruitingCycle()) {
                 tree.setDaysPassedSinceHarvesting(0);
                 int exist = 0;
@@ -293,7 +291,7 @@ public class InventoryFunctionsController extends ControllersController {
                     inventory.setCapacity(inventory.getCapacity() - 1);
                     inventory.getIngredients().put(tree.getTreeName().getFruitType(), 1);
                 }
-
+                player.setFarmingSkill(player.getFarmingSkill()+5);//TODO: set skill in ranching;
             }
             return new Resualt(true, "You've successfully harvested the tree");
         } else if (tile.getObject() instanceof Crop crop) {
@@ -312,6 +310,7 @@ public class InventoryFunctionsController extends ControllersController {
                     inventory.setCapacity(inventory.getCapacity() - 1);
                     inventory.getIngredients().put(crop.getCropName().getIngredients(), 1);
                 }
+                player.setFarmingSkill(player.getFarmingSkill()+5);
 
             }
             if (crop.getCropName().isOneTime()) tile.setObject(null);
@@ -320,10 +319,10 @@ public class InventoryFunctionsController extends ControllersController {
         return new Resualt(false, "You can't harvest anything here.");
     }
 
-    public Resualt useMilkingCan(Position position, Tile tile) {
+    public static Resualt useMilkingCan(Position position, Tile tile) {
     }
 
-    public Resualt useWateringCan(Position position, Tile tile) {
+    public static Resualt useWateringCan(Position position, Tile tile) {
         Tool tool = App.getLoggedInUser().getCurrentGame().getCurrentPlayer().getInHandTool();
         if (tile.getObjectOnCell().type.equals("water")) {
             switch (tool.getToolLevel()) {
@@ -335,7 +334,7 @@ public class InventoryFunctionsController extends ControllersController {
             }
 
             return new Resualt(true, "Now you have your watering can full of water");
-        } else if (App.loggedInUser.getCurrentGame().getWeatherToday().equals(Weather.RAIN)) {
+        } else if (App.getLoggedInUser().getCurrentGame().getWeatherToday().equals(Weather.RAIN)) {
             return new Resualt(false, "You don't need to irrigate crops while raining");
 
         } else if (tile.getObject() instanceof Tree tree) {
@@ -354,7 +353,7 @@ public class InventoryFunctionsController extends ControllersController {
         return new Resualt(false, "Watering Can cannot be used on this tile");
     }
 
-    public Resualt useTrashCan(Position position, Tile tile, Command command) {
+    public static Resualt useTrashCan( Command command) {
         String trash= command.body.get("Item");
         Player player=App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         String n= (command.body.get("n"));
@@ -378,9 +377,27 @@ public class InventoryFunctionsController extends ControllersController {
 
     }
 
-    public Resualt useFishingRod(Position position, Tile tile) {
+    public static Resualt showEnergy(Command command){
+        Player player=App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
+        if(player.getUnlimitedEnergy())return new Resualt(true,"Energy unlimited");
+        return new Resualt(true,"Energy: "+player.getEnergy());
+    }//TODO: set energy in the morning
+    //TODO :max per turn for energy
+
+    public static Resualt unlimitedEnergyCheat(Command command){
+        Player player= App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
+        player.setEnergy(100000);
+        player.setUnlimitedEnergy(true);
+        return new Resualt(true,"energy is unlimited now.");
     }
 
+    public static Resualt setEnergyCheat(Command command){
+        String n=command.body.get("value");
+
+        Player player= App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
+        player.setEnergy(Integer.parseInt(n));
+        return new Resualt(true,"energy is "+player.getEnergy()+"now.");
+    }
 
     public Result craftQuery(String command) {
         return null;

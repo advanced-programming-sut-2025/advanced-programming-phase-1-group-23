@@ -5,6 +5,7 @@ import model.Basics.Player;
 import model.Basics.Result;
 import model.Command;
 import model.Objects.Inventory;
+import model.Resualt;
 import model.enums.Ingredients;
 import model.enums.Recipe;
 import org.h2.command.CommandContainer;
@@ -12,7 +13,7 @@ import org.h2.command.CommandContainer;
 import java.util.Map;
 
 public class CookingController extends ControllersController {
-    public Result getFromRefrigerator(Command command) {
+    public static Resualt getFromRefrigerator(Command command) {
         Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         Inventory inventory = player.getInventory();
         Inventory refrigerator = player.getRefrigerator();
@@ -22,7 +23,7 @@ public class CookingController extends ControllersController {
             if (item1.getName().equals(itemName))
                 item = item1;
         }
-        if (item == null) return new Result(false, "Item doesn't exist");
+        if (item == null) return new Resualt(false, "Item doesn't exist");
         int exist = 0;
         for (Map.Entry<Ingredients, Integer> need : refrigerator.getIngredients().entrySet()) {
             if (need.getKey().equals(item)) {
@@ -30,18 +31,18 @@ public class CookingController extends ControllersController {
                 break;
             }
         }
-        if (exist == 0) return new Result(false, "You don't have the item in the refrigerator");
+        if (exist == 0) return new Resualt(false, "You don't have the item in the refrigerator");
         if (inventory.getCapacity() > 0) {
             inventory.setCapacity(inventory.getCapacity() - 1);
             inventory.getIngredients().put(item, refrigerator.getIngredients().get(item));
             refrigerator.setCapacity(refrigerator.getCapacity()+1);
             refrigerator.getIngredients().remove(item);
-            return new Result(true, "Item successfully added to inventory");
+            return new Resualt(true, "Item successfully added to inventory");
         }
-        return new Result(false, "Inventory is full");
+        return new Resualt(false, "Inventory is full");
     }
 
-    public Result eatDeliciousFood(Command command) {
+    public static Resualt eatDeliciousFood(Command command) {
         Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         Inventory inventory = player.getInventory();
         String itemName = command.body.get("foodName");
@@ -50,7 +51,7 @@ public class CookingController extends ControllersController {
             if (item1.getName().equals(itemName))
                 food = item1;
         }
-        if (food==null)return new Result(false, "Goshnegi housh o havaseto borde Haaa!!!");
+        if (food==null)return new Resualt(false, "Goshnegi housh o havaseto borde Haaa!!!");
         int exist = 0;
         for (Map.Entry<Ingredients, Integer> need : inventory.getIngredients().entrySet()) {
             if (need.getKey().equals(food)) {
@@ -58,17 +59,17 @@ public class CookingController extends ControllersController {
                 break;
             }
         }
-        if (exist == 0) return new Result(false, "You don't have the food in the inventory");
+        if (exist == 0) return new Resualt(false, "You don't have the food in the inventory");
         inventory.getIngredients().put(food, inventory.getIngredients().get(food)-1);
         if (inventory.getIngredients().get(food)==0){
             inventory.getIngredients().remove(food);
             inventory.setCapacity(inventory.getCapacity()+1);
         }
         player.setEnergy(player.getEnergy()+food.getEnergy());
-        return new Result(true, "Bon appetit!");
+        return new Resualt(true, "Bon appetit!");
     }
 
-    public Result putInRefrigerator(Command command) {
+    public static Resualt putInRefrigerator(Command command) {
 
         Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         Inventory inventory = player.getInventory();
@@ -79,7 +80,7 @@ public class CookingController extends ControllersController {
             if (item1.getName().equals(itemName))
                 item = item1;
         }
-        if (item == null) return new Result(false, "Item doesn't exist");
+        if (item == null) return new Resualt(false, "Item doesn't exist");
         int exist = 0;
         for (Map.Entry<Ingredients, Integer> need : inventory.getIngredients().entrySet()) {
             if (need.getKey().equals(item)) {
@@ -87,20 +88,20 @@ public class CookingController extends ControllersController {
                 break;
             }
         }
-        if (exist == 0) return new Result(false, "You don't have the item in the inventory");
+        if (exist == 0) return new Resualt(false, "You don't have the item in the inventory");
 
         if (refrigerator.getCapacity() > 0) {
             refrigerator.setCapacity(refrigerator.getCapacity() - 1);
             refrigerator.getIngredients().put(item, inventory.getIngredients().get(item));
             inventory.getIngredients().remove(item);
             inventory.setCapacity(inventory.getCapacity()+1);
-            return new Result(true, "Item successfully added to refrigerator");
+            return new Resualt(true, "Item successfully added to refrigerator");
         }
-        return new Result(false, "Refrigerator is full");
+        return new Resualt(false, "Refrigerator is full");
 
     }
 
-    public Result showCookingRecipes() {
+    public static Resualt showCookingRecipes() {
         Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         StringBuilder recipes = new StringBuilder();
         for (Recipe recipe : player.getRecipes()) {
@@ -110,11 +111,11 @@ public class CookingController extends ControllersController {
             }
         }
 
-        if (!recipes.isEmpty()) return new Result(true, recipes.toString());
-        return new Result(false, "You haven't learned any cooking recipes yet!");
+        if (!recipes.isEmpty()) return new Resualt(true, recipes.toString());
+        return new Resualt(false, "You haven't learned any cooking recipes yet!");
     }
 
-    public Result showCraftingRecipes() {
+    public static Resualt showCraftingRecipes() {
         Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         StringBuilder recipes = new StringBuilder();
         for (Recipe recipe : player.getRecipes()) {
@@ -124,11 +125,11 @@ public class CookingController extends ControllersController {
             }
         }
 
-        if (!recipes.isEmpty()) return new Result(true, recipes.toString());
-        return new Result(false, "You haven't learned any crafting recipes yet!");
+        if (!recipes.isEmpty()) return new Resualt(true, recipes.toString());
+        return new Resualt(false, "You haven't learned any crafting recipes yet!");
     }
 
-    public Result cookFood(Command command) {
+    public static Resualt cookFood(Command command) {
         String foodRecipe = command.body.get("recipeName");
         Recipe recipe = null;
         for (Recipe recipe1 : Recipe.values()) {
@@ -137,13 +138,13 @@ public class CookingController extends ControllersController {
         }
         Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         if (!player.getRecipes().contains(recipe) || recipe == null) {
-            return new Result(false, "You don't know the recipe.");
+            return new Resualt(false, "You don't know the recipe.");
         }
         for (Map.Entry<Ingredients, Integer> provided : recipe.getIngredients().entrySet()) {
             for (Map.Entry<Ingredients, Integer> needed : player.getInventory().getIngredients().entrySet()) {
                 if (needed.getKey() == provided.getKey()) {
                     if (needed.getValue() < provided.getValue()) {
-                        return new Result(false, "You don't have enough ingredients");
+                        return new Resualt(false, "You don't have enough ingredients");
                     }
                 }
 
@@ -151,16 +152,16 @@ public class CookingController extends ControllersController {
             for (Map.Entry<Ingredients, Integer> needed : player.getRefrigerator().getIngredients().entrySet()) {
                 if (needed.getKey() == provided.getKey()) {
                     if (needed.getValue() < provided.getValue()) {
-                        return new Result(false, "You don't have enough ingredients");
+                        return new Resualt(false, "You don't have enough ingredients");
                     }
                 }
 
             }
         }
-        if (player.getInventory().getCapacity() <= 0) return new Result(false, "Your inventory is full!");
+        if (player.getInventory().getCapacity() <= 0) return new Resualt(false, "Your inventory is full!");
         if (player.getEnergy() <= 3) {
             player.setFainted(true);
-            return new Result(false, "Na ki gofte bandeye shekamam");
+            return new Resualt(false, "Na ki gofte bandeye shekamam");
         }
         // Now we can Start cooking
         for (Map.Entry<Ingredients, Integer> provided : recipe.getIngredients().entrySet()) {
@@ -184,10 +185,10 @@ public class CookingController extends ControllersController {
             player.getInventory().setCapacity(player.getInventory().getCapacity() - 1);
             player.getInventory().getIngredients().put(recipe.getFoodMade(), 1);
         }
-        return new Result(true, "New food was cooked!");
+        return new Resualt(true, "New food was cooked!");
     }
 
-    public Result startCraft(Command command) {
+    public static Resualt startCraft(Command command) {
         String craftRecipe = command.body.get("recipeName");
         Recipe recipe = null;
         for (Recipe recipe1 : Recipe.values()) {
@@ -196,22 +197,22 @@ public class CookingController extends ControllersController {
         }
         Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         if (!player.getRecipes().contains(recipe) || recipe == null) {
-            return new Result(false, "You don't know this recipe.");
+            return new Resualt(false, "You don't know this recipe.");
         }
         for (Map.Entry<Ingredients, Integer> provided : recipe.getIngredients().entrySet()) {
             for (Map.Entry<Ingredients, Integer> needed : player.getInventory().getIngredients().entrySet()) {
                 if (needed.getKey() == provided.getKey()) {
                     if (needed.getValue() < provided.getValue()) {
-                        return new Result(false, "You don't have enough ingredients");
+                        return new Resualt(false, "You don't have enough ingredients");
                     }
                 }
 
             }
         }
-        if (player.getInventory().getCapacity() <= 0) return new Result(false, "Your inventory is full!");
+        if (player.getInventory().getCapacity() <= 0) return new Resualt(false, "Your inventory is full!");
         if (player.getEnergy() <= 2) {
             player.setFainted(true);
-            return new Result(false, "You don't have enough energy to craft this.");
+            return new Resualt(false, "You don't have enough energy to craft this.");
         }
         // Now we can Start crafting
         for (Map.Entry<Ingredients, Integer> provided : recipe.getIngredients().entrySet()) {
@@ -229,8 +230,11 @@ public class CookingController extends ControllersController {
             player.getInventory().setCapacity(player.getInventory().getCapacity() - 1);
             player.getInventory().getIngredients().put(recipe.getFoodMade(), 1);
         }
-        return new Result(true, "New crafting was crafted!");
+        return new Resualt(true, "New crafting was crafted!");
     }
+    public static Resualt putItem(Command command){return null;};
+
+    public static Resualt CheatAddInventory(Command command){return  null;}
 
     //TODO bye recipes;
 }

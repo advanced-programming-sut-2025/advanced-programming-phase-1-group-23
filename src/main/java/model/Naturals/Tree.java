@@ -16,13 +16,10 @@ public class Tree implements Objectss{
     private boolean retainingSoilFertility=false;
     private int daysPassedSinceHarvesting=1000;
 
-    public Tree(TreeName treeName, boolean cut) {
+    public Tree(TreeName treeName) {
         this.treeName = treeName;
-        this.cut = cut;
     }
-    
-    public Tree(){
-    }
+
     
     public TreeName getTreeName() {
         return treeName;

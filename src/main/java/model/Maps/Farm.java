@@ -5,10 +5,12 @@ import model.Basics.Game;
 import model.Naturals.Crop;
 import model.Naturals.Tree;
 import model.enums.CropName;
+import model.enums.Ingredients;
 import model.enums.PlantType;
 import model.enums.TreeName;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import dev.morphia.annotations.Embedded;
@@ -150,10 +152,13 @@ public class Farm {
             if (cell.getObjectOnCell().type.equals(".") && randomNumber == 3) {
                 DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 cell.setObjectOnCell(new Plant(TreeName.AppleTree));
+                cell.setObject(new Tree(TreeName.ApricotTree));
             } else if (cell.getObjectOnCell().type.equals(".") && randomNumber == 2) {
                 cell.setObjectOnCell(new Stone(Ingredients.STONE, "gray", "stone"));
+                cell.setIngredients(Ingredients.QUARTZ);
             } else if (cell.getObjectOnCell().type.equals(".") && randomNumber == 1) {
                 cell.setObjectOnCell(randomForagingCrop());
+                cell.setObject(new Crop());
             } else if (cell.getObjectOnCell().type.equals("Mine") && (randomNumber == 4 || randomNumber == 3) && isMineCell(cell)) {
                 cell.setObjectOnCell(randomForagingMineral());
             }

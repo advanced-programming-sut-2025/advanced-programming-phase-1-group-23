@@ -8,6 +8,7 @@ import model.Maps.Position;
 import model.Maps.Tile;
 import model.Objects.CraftingMachine;
 import model.Objects.Inventory;
+import model.Resualt;
 import model.enums.Ingredients;
 import model.enums.IngredientsTypes;
 
@@ -17,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CraftsmanshipController extends ControllersController {
-    public Result useCraftingMachine(Command command) {
+    public static Resualt useCraftingMachine(Command command) {
         String machineName = command.body.get("itemName");
         Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         CraftingMachine machine = null;
@@ -25,13 +26,13 @@ public class CraftsmanshipController extends ControllersController {
             if (tile.getMachine().getType().getName().equals(machineName)) {
                 int a = calculateDistance(player.getPosition(), tile.getCoordinate());
                 if (a > 1) {
-                    return new Result(false, "not next to the machine.");
+                    return new Resualt(false, "not next to the machine.");
                 }
                 machine = tile.getMachine();
                 break;
             }
         }
-        if (machine == null) return new Result(false, "You don't have this machine");
+        if (machine == null) return new Resualt(false, "You don't have this machine");
         switch (machine.getType()) {
             case BEE_HOUSE -> {
                 return useBeeHouse(command, machine);
@@ -70,7 +71,7 @@ public class CraftsmanshipController extends ControllersController {
         return new Result(false, "This object can not be used!");
     }
 
-    public Result getCraftingMachineProduct(Command command) {
+    public static Resualt getCraftingMachineProduct(Command command) {
         String machineName = command.body.get("itemName");
         Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         CraftingMachine machine = null;
@@ -78,13 +79,13 @@ public class CraftsmanshipController extends ControllersController {
             if (tile.getMachine().getType().getName().equals(machineName)) {
                 int a = calculateDistance(player.getPosition(), tile.getCoordinate());
                 if (a > 1) {
-                    return new Result(false, "not next to the machine.");
+                    return new Resualt(false, "not next to the machine.");
                 }
                 machine = tile.getMachine();
                 break;
             }
         }
-        if (machine == null) return new Result(false, "You don't have this machine");
+        if (machine == null) return new Resualt(false, "You don't have this machine");
         switch (machine.getType()) {
             case BEE_HOUSE -> {
                 return getBeeHouse(command, machine);
@@ -120,7 +121,7 @@ public class CraftsmanshipController extends ControllersController {
                 return getFurnace(command, machine);
             }
         }
-        return new Result(false, "This object can not be used!");
+        return new Resualt(false, "This object can not be used!");
     }
 
     //TODO: increase processingHours function
@@ -128,26 +129,26 @@ public class CraftsmanshipController extends ControllersController {
     //TODO: getting product from machine function
 
 
-    public Result useBeeHouse(Command command, CraftingMachine machine) {
+    public Resualt useBeeHouse(Command command, CraftingMachine machine) {
         String general = command.body.get("string");
         List<String> list = new ArrayList<>(Arrays.asList(general.split(" ")));
-        if (list.size() > 1) return new Result(false, "Wrong input.");
+        if (list.size() > 1) return new Resualt(false, "Wrong input.");
         machine.setWorking(true);
         machine.setProduct(Ingredients.HONEY);
-        return new Result(true, "Started making Honey");
+        return new Resualt(true, "Started making Honey");
 
     }
 
-    public int calculateDistance(Position start, Position end) {
+    public static int calculateDistance(Position start, Position end) {
         return (Math.abs(start.getX() - end.getX()) + Math.abs(start.getY() - end.getY()));
     }
 
-    public Result useCheesePress(Command command, CraftingMachine machine) {
+    public Resualt useCheesePress(Command command, CraftingMachine machine) {
         Inventory inventory = App.getLoggedInUser().getCurrentGame().getCurrentPlayer().getInventory();
         String general = command.body.get("string");
         List<String> list = new ArrayList<>(Arrays.asList(general.split(" ")));
         for (String s : list) {
-            if (!(s.equals("Milk") || s.equals("GoatMilk"))) return new Result(false, "Wrong input.");
+            if (!(s.equals("Milk") || s.equals("GoatMilk"))) return new Resualt(false, "Wrong input.");
         }
         if (list.getFirst().equals("Milk") && inventory.getIngredients().get(Ingredients.MILK) > 1) {
             if (inventory.getIngredients().get(Ingredients.MILK) == 1) {
@@ -157,7 +158,7 @@ public class CraftsmanshipController extends ControllersController {
                 inventory.getIngredients().put(Ingredients.MILK, inventory.getIngredients().get(Ingredients.MILK) - 1);
             machine.setWorking(true);
             machine.setProduct(Ingredients.Cheese);
-        } else if (list.getFirst().equals("Milk")) return new Result(false, "not enough ingredients");
+        } else if (list.getFirst().equals("Milk")) return new Resualt(false, "not enough ingredients");
 
         if (list.getFirst().equals("GoatMilk") && inventory.getIngredients().get(Ingredients.GOAT_MILK) > 1) {
             if (inventory.getIngredients().get(Ingredients.GOAT_MILK) == 1) {
@@ -167,15 +168,15 @@ public class CraftsmanshipController extends ControllersController {
                 inventory.getIngredients().put(Ingredients.GOAT_MILK, inventory.getIngredients().get(Ingredients.GOAT_MILK) - 1);
             machine.setWorking(true);
             machine.setProduct(Ingredients.GoatCheese);
-        }else if (list.getFirst().equals("GoatMilk")) return new Result(false, "not enough ingredients");
-        return new Result(true, "Started making Cheese");
+        }else if (list.getFirst().equals("GoatMilk")) return new Resualt(false, "not enough ingredients");
+        return new Resualt(true, "Started making Cheese");
     }
 
-    public Result useKeg(Command command, CraftingMachine machine) {
+    public Resualt useKeg(Command command, CraftingMachine machine) {
         Inventory inventory = App.getLoggedInUser().getCurrentGame().getCurrentPlayer().getInventory();
         String general = command.body.get("string");
         List<String> list = new ArrayList<>(Arrays.asList(general.split(" ")));
-        if (list.size()>2)return new Result(false,"Wrong input.");
+        if (list.size()>2)return new Resualt(false,"Wrong input.");
         Ingredients ingredient=null;
         for (Ingredients ingredients1: Ingredients.values()){
             if (ingredients1.getName().equals(list.getFirst()))ingredient=ingredients1;
@@ -188,7 +189,7 @@ public class CraftsmanshipController extends ControllersController {
                 inventory.getIngredients().put(Ingredients.WHEAT, inventory.getIngredients().get(Ingredients.WHEAT) - 1);
             machine.setWorking(true);
             machine.setProduct(Ingredients.Beer);
-            return new Result(true, "Started making.");
+            return new Resualt(true, "Started making.");
         }else if (ingredient.equals(Ingredients.RICE) && inventory.getIngredients().get(ingredient) >= 1){
             if (inventory.getIngredients().get(Ingredients.RICE) == 1) {
                 inventory.getIngredients().remove(Ingredients.RICE);
@@ -197,7 +198,7 @@ public class CraftsmanshipController extends ControllersController {
                 inventory.getIngredients().put(Ingredients.RICE, inventory.getIngredients().get(Ingredients.RICE) - 1);
             machine.setWorking(true);
             machine.setProduct(Ingredients.VINEGAR);
-            return new Result(true, "Started making.");
+            return new Resualt(true, "Started making.");
         }else if (ingredient.equals(Ingredients.COFFEE_BEAN) && inventory.getIngredients().get(ingredient) >= 5){
             if (inventory.getIngredients().get(Ingredients.COFFEE_BEAN) == 5) {
                 inventory.getIngredients().remove(Ingredients.COFFEE_BEAN);
@@ -206,7 +207,7 @@ public class CraftsmanshipController extends ControllersController {
                 inventory.getIngredients().put(Ingredients.COFFEE_BEAN, inventory.getIngredients().get(Ingredients.COFFEE_BEAN) - 5);
             machine.setWorking(true);
             machine.setProduct(Ingredients.COFFEE);
-            return new Result(true, "Started making.");
+            return new Resualt(true, "Started making.");
         }else if (ingredient.getType().equals(IngredientsTypes.vegetable) && inventory.getIngredients().get(ingredient) >= 1){
             if (inventory.getIngredients().get(ingredient) == 1) {
                 inventory.getIngredients().remove(ingredient);
@@ -215,7 +216,7 @@ public class CraftsmanshipController extends ControllersController {
                 inventory.getIngredients().put(ingredient, inventory.getIngredients().get(ingredient) - 1);
             machine.setWorking(true);
             machine.setProduct(Ingredients.Juice);
-            return new Result(true, "Started making.");
+            return new Resualt(true, "Started making.");
         }else if (ingredient.equals(Ingredients.HONEY) && inventory.getIngredients().get(ingredient) >= 1){
             if (inventory.getIngredients().get(ingredient) == 1) {
                 inventory.getIngredients().remove(ingredient);
@@ -224,7 +225,7 @@ public class CraftsmanshipController extends ControllersController {
                 inventory.getIngredients().put(ingredient, inventory.getIngredients().get(ingredient) - 1);
             machine.setWorking(true);
             machine.setProduct(Ingredients.Maed);
-            return new Result(true, "Started making.");
+            return new Resualt(true, "Started making.");
         }else if (ingredient.equals(Ingredients.HOPS) && inventory.getIngredients().get(ingredient) >= 1){
             if (inventory.getIngredients().get(ingredient) == 1) {
                 inventory.getIngredients().remove(ingredient);
@@ -233,7 +234,7 @@ public class CraftsmanshipController extends ControllersController {
                 inventory.getIngredients().put(Ingredients.WHEAT, inventory.getIngredients().get(Ingredients.WHEAT) - 1);
             machine.setWorking(true);
             machine.setProduct(Ingredients.PaleAle);
-            return new Result(true, "Started making.");
+            return new Resualt(true, "Started making.");
         }else if (ingredient.getType().equals(IngredientsTypes.fruit) && inventory.getIngredients().get(ingredient) >= 1){
             if (inventory.getIngredients().get(ingredient) == 1) {
                 inventory.getIngredients().remove(ingredient);
@@ -242,16 +243,16 @@ public class CraftsmanshipController extends ControllersController {
                 inventory.getIngredients().put(ingredient, inventory.getIngredients().get(ingredient) - 1);
             machine.setWorking(true);
             machine.setProduct(Ingredients.Wine);
-            return new Result(true, "Started making.");
+            return new Resualt(true, "Started making.");
         }
-        return new Result(false, "Not enough ingredients.");
+        return new Resualt(false, "Not enough ingredients.");
     }
 
-    public Result useDehydrator(Command command, CraftingMachine machine) {
+    public Resualt useDehydrator(Command command, CraftingMachine machine) {
         Inventory inventory = App.getLoggedInUser().getCurrentGame().getCurrentPlayer().getInventory();
         String general = command.body.get("string");
         List<String> list = new ArrayList<>(Arrays.asList(general.split(" ")));
-        if (list.size()>2)return new Result(false,"Wrong input.");
+        if (list.size()>2)return new Resualt(false,"Wrong input.");
         Ingredients ingredient=null;
         for (Ingredients ingredients1: Ingredients.values()){
             if (ingredients1.getName().equals(list.getFirst()))ingredient=ingredients1;
@@ -264,7 +265,7 @@ public class CraftsmanshipController extends ControllersController {
                 inventory.getIngredients().put(ingredient, inventory.getIngredients().get(ingredient) - 5);
             machine.setWorking(true);
             machine.setProduct(Ingredients.DriedMushroom);
-            return new Result(true, "Started making.");
+            return new Resualt(true, "Started making.");
         }else if ((ingredient.getType().equals(IngredientsTypes.fruit)) && inventory.getIngredients().get(ingredient) >= 5){
             if (inventory.getIngredients().get(ingredient) == 5) {
                 inventory.getIngredients().remove(ingredient);
@@ -273,7 +274,7 @@ public class CraftsmanshipController extends ControllersController {
                 inventory.getIngredients().put(ingredient, inventory.getIngredients().get(ingredient) - 5);
             machine.setWorking(true);
             machine.setProduct(Ingredients.DriedFruit);
-            return new Result(true, "Started making.");
+            return new Resualt(true, "Started making.");
         }else if ((ingredient.equals(Ingredients.GRAPE)) && inventory.getIngredients().get(ingredient) >= 5){
             if (inventory.getIngredients().get(ingredient) == 5) {
                 inventory.getIngredients().remove(ingredient);
@@ -282,16 +283,16 @@ public class CraftsmanshipController extends ControllersController {
                 inventory.getIngredients().put(ingredient, inventory.getIngredients().get(ingredient) - 5);
             machine.setWorking(true);
             machine.setProduct(Ingredients.Raisins);
-            return new Result(true, "Started making.");
+            return new Resualt(true, "Started making.");
         }
-        return new Result(false, "Not enough ingredients");
+        return new Resualt(false, "Not enough ingredients");
     }
 
-    public Result useKlin(Command command, CraftingMachine machine) {
+    public Resualt useKlin(Command command, CraftingMachine machine) {
         Inventory inventory = App.getLoggedInUser().getCurrentGame().getCurrentPlayer().getInventory();
         String general = command.body.get("string");
         List<String> list = new ArrayList<>(Arrays.asList(general.split(" ")));
-        if (list.size()>2)return new Result(false,"Wrong input.");
+        if (list.size()>2)return new Resualt(false,"Wrong input.");
         Ingredients ingredient=null;
         for (Ingredients ingredients1: Ingredients.values()){
             if (ingredients1.getName().equals(list.getFirst()))ingredient=ingredients1;
@@ -304,15 +305,15 @@ public class CraftsmanshipController extends ControllersController {
                 inventory.getIngredients().put(ingredient, inventory.getIngredients().get(ingredient) - 10);
             machine.setWorking(true);
             machine.setProduct(Ingredients.COAL);
-            return new Result(true, "Started making.");
-        }return new Result(false,"not enough ingredients");
+            return new Resualt(true, "Started making.");
+        }return new Resualt(false,"not enough ingredients");
     }
 
-    public Result useLoom(Command command, CraftingMachine machine) {
+    public Resualt useLoom(Command command, CraftingMachine machine) {
         Inventory inventory = App.getLoggedInUser().getCurrentGame().getCurrentPlayer().getInventory();
         String general = command.body.get("string");
         List<String> list = new ArrayList<>(Arrays.asList(general.split(" ")));
-        if (list.size()>2)return new Result(false,"Wrong input.");
+        if (list.size()>2)return new Resualt(false,"Wrong input.");
         Ingredients ingredient=null;
         for (Ingredients ingredients1: Ingredients.values()){
             if (ingredients1.getName().equals(list.getFirst()))ingredient=ingredients1;
@@ -325,23 +326,23 @@ public class CraftsmanshipController extends ControllersController {
                 inventory.getIngredients().put(ingredient, inventory.getIngredients().get(ingredient) - 2);
             machine.setWorking(true);
             machine.setProduct(Ingredients.Cloth);
-            return new Result(true, "Started making.");
-        }return new Result(false,"not enough ingredients");
+            return new Resualt(true, "Started making.");
+        }return new Resualt(false,"not enough ingredients");
     }
 
-    public Result useMayonnaise(Command command, CraftingMachine machine) {
+    public Resualt useMayonnaise(Command command, CraftingMachine machine) {
     }
 
-    public Result useOilMaker(Command command, CraftingMachine machine) {
+    public Resualt useOilMaker(Command command, CraftingMachine machine) {
     }
 
-    public Result usePreserver(Command command, CraftingMachine machine) {
+    public Resualt usePreserver(Command command, CraftingMachine machine) {
     }
 
-    public Result useFishSmoker(Command command, CraftingMachine machine) {
+    public Resualt useFishSmoker(Command command, CraftingMachine machine) {
     }
 
-    public Result useFurnace(Command command, CraftingMachine machine) {
+    public Resualt useFurnace(Command command, CraftingMachine machine) {
     }
 
     public Result useCraftsmanship(String command) {

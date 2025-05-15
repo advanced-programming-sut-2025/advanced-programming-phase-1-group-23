@@ -16,10 +16,8 @@ public class Crop implements Objectss{
     private int daysPassedSinceHarvesting=1000;
 
 
-    public Crop(CropName cropName, int daysPassedSincePlanting, int daysWithoutIrrigation) {
+    public Crop(CropName cropName) {
         this.cropName = cropName;
-        this.daysPassedSincePlanting = daysPassedSincePlanting;
-        this.daysWithoutIrrigation = daysWithoutIrrigation;
     }
 
     public Crop() {

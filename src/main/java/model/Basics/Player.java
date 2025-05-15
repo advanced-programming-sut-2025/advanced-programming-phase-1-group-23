@@ -25,6 +25,7 @@ public class Player {
     private int foragingSkill=0;
     private int fishingSkill=0;
     private double energy;
+    private Boolean unlimitedEnergy=false;
     private Inventory inventory;
     private Inventory refrigerator;
     private int trashCan=0;
@@ -73,6 +74,7 @@ public class Player {
     }
 
     public double getEnergy() {
+        if (!unlimitedEnergy)return Math.min(energy,200);
         return energy;
     }
 
@@ -310,5 +312,13 @@ public class Player {
             this.setMoney(money + shippingBin.getTotalMoney());
             shippingBin.setTotalMoney(0);
         }
+    }
+
+    public Boolean getUnlimitedEnergy() {
+        return unlimitedEnergy;
+    }
+
+    public void setUnlimitedEnergy(Boolean unlimitedEnergy) {
+        this.unlimitedEnergy = unlimitedEnergy;
     }
 }
