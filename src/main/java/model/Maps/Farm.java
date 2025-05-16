@@ -5,6 +5,8 @@ import model.Basics.Game;
 import model.Naturals.Crop;
 import model.Naturals.Tree;
 import model.enums.CropName;
+import model.enums.Ingredients;
+import model.enums.IngredientsTypes;
 import model.enums.TreeName;
 
 import java.time.LocalDateTime;
@@ -61,7 +63,7 @@ public class Farm {
                     System.out.print("\u001B[34m " + cell.getObjectOnCell().string() + "\033[0m");
                 else if (cell.getObjectOnCell().color.equals("red"))
                     System.out.print("\u001B[31m " + cell.getObjectOnCell().string() + "\033[0m");
-                else if (cell.getObjectOnCell().color.equals("green"))
+                else if (cell.getObjectOnCell().color.equals("green") || cell.getObject() instanceof Tree || cell.getObject() instanceof Crop)
                     System.out.print("\u001B[32m " + cell.getObjectOnCell().string() + "\033[0m");
                 else if (cell.getObjectOnCell().color.equals("yellow"))
                     System.out.print("\u001B[33m " + cell.getObjectOnCell().string() + "\033[0m");
@@ -69,11 +71,11 @@ public class Farm {
                     System.out.print("\u001B[90m " + cell.getObjectOnCell().string() + "\033[0m");
                 else if (cell.getObjectOnCell().color.equals("gray"))
                     System.out.print("\u001B[37m " + cell.getObjectOnCell().string() + "\033[0m");
-                else if (cell.getObjectOnCell().color.equals("purple"))
+                else if (cell.getObjectOnCell().color.equals("purple") || cell.getIngredients().getType().equals(IngredientsTypes.mineral))
                     System.out.print("\u001B[35m " + cell.getObjectOnCell().string() + "\033[0m");
                 else if (cell.getObjectOnCell().color.equals("cyan"))
                     System.out.print("\u001B[36m " + cell.getObjectOnCell().string() + "\033[0m");
-                else if (cell.getObjectOnCell().color.equals("bright purple"))
+                else if (cell.getObjectOnCell().color.equals("bright purple") || cell.getIngredients()!=null)
                     System.out.print("\u001B[95m " + cell.getObjectOnCell().string() + "\033[0m");
                 if (xOfCell - x == size / 2) {
                     System.out.print("\n");
@@ -103,7 +105,7 @@ public class Farm {
                 System.out.print("\u001B[34m " + cell.getObjectOnCell().string() + "\033[0m");
             else if (cell.getObjectOnCell().color.equals("red"))
                 System.out.print("\u001B[31m " + cell.getObjectOnCell().string() + "\033[0m");
-            else if (cell.getObjectOnCell().color.equals("green"))
+            else if (cell.getObjectOnCell().color.equals("green") )
                 System.out.print("\u001B[32m " + cell.getObjectOnCell().string() + "\033[0m");
             else if (cell.getObjectOnCell().color.equals("yellow"))
                 System.out.print("\u001B[33m " + cell.getObjectOnCell().string() + "\033[0m");
@@ -149,8 +151,10 @@ public class Farm {
             if (cell.getObjectOnCell().type.equals(".") && randomNumber == 3) {
                 DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 cell.setObjectOnCell(new Plant(TreeName.AppleTree));
+                cell.setObject(new Tree(TreeName.AppleTree));
             } else if (cell.getObjectOnCell().type.equals(".") && randomNumber == 2) {
                 cell.setObjectOnCell(new Stone(Ingredients.STONE, "gray", "stone"));
+                cell.setIngredients(Ingredients.STONE);
             } else if (cell.getObjectOnCell().type.equals(".") && randomNumber == 1) {
                 cell.setObjectOnCell(randomForagingCrop());
             } else if (cell.getObjectOnCell().type.equals("Mine") && (randomNumber == 4 || randomNumber == 3) && isMineCell(cell)) {

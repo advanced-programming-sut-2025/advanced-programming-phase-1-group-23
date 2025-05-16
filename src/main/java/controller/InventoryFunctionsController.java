@@ -82,7 +82,7 @@ public class InventoryFunctionsController extends ControllersController {
 
 
     public static Resualt toolUpgrade(Command command) {
-        //TODO: final check for money
+
         Game game = App.getLoggedInUser().getCurrentGame();
         Player player = game.getCurrentPlayer();
         if (!player.getCurrentShop().getName().equals(ShopName.BlackSmith))return new Resualt(false, "You are not in blackSmith");
@@ -91,21 +91,25 @@ public class InventoryFunctionsController extends ControllersController {
             case Axe, Hoe, Pickaxe, WateringCan -> {
                 switch (tool.getToolLevel()) {
                     case Initial -> {
+                        if (player.getMoney()<2000)return new Resualt(false,"not enough money");
                         tool.setToolLevel(ToolLevel.Cooper);
                         player.setMoney(player.getMoney()-2000);
                         return new Resualt(true, "Tool upgraded to Cooper");
                     }
                     case Cooper -> {
+                        if (player.getMoney()<5000)return new Resualt(false,"not enough money");
                         tool.setToolLevel(ToolLevel.Iron);
                         player.setMoney(player.getMoney()-5000);
                         return new Resualt(true, "Tool Upgraded to Iron");
                     }
                     case Iron -> {
+                        if (player.getMoney()<10000)return new Resualt(false,"not enough money");
                         tool.setToolLevel(ToolLevel.Gold);
                         player.setMoney(player.getMoney()-10000);
                         return new Resualt(true, "Tool upgraded to Gold");
                     }
                     case Gold -> {
+                        if (player.getMoney()<25000)return new Resualt(false,"not enough money");
                         tool.setToolLevel(ToolLevel.Iridium);
                         player.setMoney(player.getMoney()-25000);
                         return new Resualt(true, "Tool upgraded to Iridium");
@@ -401,37 +405,5 @@ public class InventoryFunctionsController extends ControllersController {
         Player player= App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         player.setEnergy(Integer.parseInt(n));
         return new Resualt(true,"energy is "+player.getEnergy()+"now.");
-    }
-
-    public Result craftQuery(String command) {
-        return null;
-    }
-
-    public Result showCraftRecipes(String command) {
-        return null;
-    }
-
-    public Result craftItems(String command) {
-        return null;
-    }
-
-    public Result placeItem(String command) {
-        return null;
-    }
-
-    public Result cheatItem(String command) {
-        return null;
-    }
-
-    public Result eating(String command) {
-        return null;
-    }
-
-    public Result setBackpack(String command) {
-        return null;
-    }
-
-    public Result showBackpack(String command) {
-        return null;
     }
 }

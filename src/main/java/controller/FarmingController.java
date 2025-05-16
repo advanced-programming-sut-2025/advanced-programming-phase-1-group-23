@@ -42,6 +42,44 @@ public class FarmingController extends controller.ControllersController {
                     if (crop.getDaysWithoutIrrigation() == 2) tile.setObject(null);
                 }
             }
+
+            for (Tile tile : farm.getCells()) {
+                Random random=new Random();
+                if (tile.getObject()==null && tile.getIngredients()==null && !tile.getObjectOnCell().type.equals("Mine")) {
+                    int rand=random.nextInt(100);
+                    if (rand==5){
+                        rand=random.nextInt(2);
+                        if (rand==1){
+                            rand=random.nextInt(5);
+                            TreeName[] treeName =forAgingTree.forAgings.getTrees();
+                            TreeName treeName1 = treeName[rand];
+                            tile.setObject(new Tree(treeName1));
+                        }
+                        if (rand==0){
+                            rand=random.nextInt(23);
+                            CropName[] cropName =forAgingCrop.FOR_AGING_CROP.getCrops();
+                            CropName cropName1 = cropName[rand];
+                            tile.setObject(new Crop(cropName1));
+                        }
+                    }
+                }if (tile.getObjectOnCell().type.equals("Mine")){
+                    int rand=random.nextInt(100);
+                    if(rand==22){
+                        rand=random.nextInt(17);
+                        Ingredients[] mineral=forAgingMinerals.FOR_AGING_MINERALS.getMinerals();
+                        Ingredients mineral1=mineral[rand];
+                        tile.setIngredients(mineral1);
+                    }
+                }
+                else if (tile.getObject() instanceof Crop crop) {
+                    if (game.getWeatherToday().equals(Weather.RAIN) && !tile.isInsideBuilding())crop.setWateredToday(true);
+                    n++;
+                    if (crop.isWateredToday()) crop.setDaysPassedSincePlanting(crop.getDaysPassedSincePlanting() + 1);
+                    if (!crop.isWateredToday()) crop.increaseDaysWithoutIrrigation();
+                    crop.setWateredToday(false);
+                    if (crop.getDaysWithoutIrrigation() == 2) tile.setObject(null);
+                }
+            }
             //Raven Attack
             int i=0;
             while(i<(n/16)){
@@ -50,14 +88,19 @@ public class FarmingController extends controller.ControllersController {
                 int rand2= random.nextInt(3750);
                 Tile tile=farm.getCells().get(rand2);
                 if ((tile.getObject() instanceof Tree || tile.getObject() instanceof Crop) && rand == 1) {
-                    if (tile.getObjectOnCell().type.equals(/*golkhone*/))continue;
-                    //TODO: not fruiting tree
+                    if (tile.getObjectOnCell().type.equals("GreenHouse"))continue;
+                    if (tile.getObject() instanceof Tree tree){
+                        tree.setDaysPassedSinceHarvesting(0);
+                    }
                     else if (nearScaCrew(tile, farm))continue;
-                    tile.setObject(null);
+                    if (tile.getObject() instanceof Crop)tile.setObject(null);
                     i++;
                 }
             }
         }
+
+        //Place ForAging
+
     }
 
     public boolean nearScaCrew(Tile tile, Farm farm){
