@@ -1,0 +1,678 @@
++ cheat add item -n Jazz Seeds -c 10
+- You have cheated this item
+
++ tools equip -t Hoe
+- Now the power is in your hands!: model.Objects.Tool@   4b8729ff
+
++ tools use -d Right
+- You have Plowed the ground
+
++ plant -s Jazz Seeds -d Right
+- Seed planted successfully
+
++ showplant -l 1 0
+- Blue Jazz
+Time remaining to fruiting1
+watered Today? false
+fertilied?false
+Stage: 0
+
++ tools equip -t WateringCan
+- Now the power is in your hands!: model.Objects.Tool@68878f6d
+
++ tools use -d Right
+- You have irrigated Blue Jazz crop
+
++ cheat add item -n water fertility -c 5
+- You have cheated this item
+
++ fertilize -f water fertility -d Right
+- tile is waterFertilied now
+
++ showplant -l 1 0
+- Blue Jazz
+Time remaining to fruiting1
+watered Today? true
+fertilied?false
+Stage: 0
+
++ cheat advance date 1d
+- Date set successfully.
+
++ showplant -l 1 0
+Blue Jazz
+Time remaining to fruiting0
+watered Today? false
+fertilied?false
+Stage: 1
+
+* check another seeds
+
++ cheat advance date 3d
+- Date set successfully.
+
++ showplant -l 1 0
+- Blue Jazz
+Time remaining to fruiting0
+watered Today? false
+fertilied?false
+Stage: 1
+
++ tools equip -t Scythe
+- Now the power is in your hands!: model.Objects.Tool@461ad730
+
++ tools use -d Right
+- You've successfully harvested the crop
+
++ showplant -l 1 0
+- 
+///////////////////////////////////////////////////
++ crafting show recipes
+- Name: cherry bomb  Energy: 0
+Name: sprinkler  Energy: 0
+Name: bee house  Energy: 0
+
++ cheat add item -n copper -c 10
+- You have cheated this item
+
++ cheat add item -n coal -c 10
+- You have cheated this item
+
++ crafting craft cherry bomb
+- New crafting was crafted!
+
++ inventory show
+- Tools: 
+Pickaxe, Initial
+Axe, Initial
+Hoe, Initial
+Scythe, Initial
+WateringCan, Initial
+Items: 
+cherry bomb: 1
+coal: 9
+copper: 6
+Seeds: 
+
++ place item -n cherry bomb -d Right
+- cherry bomb was placed on the ground successfully
+
+//////////////////////////////////////////////////////
+
++ cooking show recipes
+- Name: Fried egg  Energy: 50
+Name: Baked Fish  Energy: 75
+Name: Salad  Energy: 113
+Name: miner's treat  Energy: 125
+Name: farmer's lunch  Energy: 200
+Name: vegetable medley  Energy: 165
+
++ cheat add item -n egg -c 6
+- You have cheated this item
+
++ cooking refrigerator put egg
+- Item successfully added to refrigerator
+
++ cooking prepare Fried egg
+- New food was cooked!
+
++ inventory show
+- Tools: 
+Hoe, Initial
+Scythe, Initial
+Pickaxe, Initial
+WateringCan, Initial
+Axe, Initial
+Items: 
+fried egg: 1
+Seeds: 
+
++ cooking refrigerator pick egg
+- Item successfully added to inventory
+
++ inventory show
+- Tools: 
+Hoe, Initial
+Scythe, Initial
+Pickaxe, Initial
+WateringCan, Initial
+Axe, Initial
+Items: 
+egg: 5
+fried egg: 1
+Seeds: 
+
++ cooking prepare pancakes
+- You don't know the recipe.
+
++ eat Fried egg
+- Goshnegi housh o havaseto borde Haaa!!!
+
++ eat fried egg
+- Bon appetit!
+
+////////////////////////////////////////////////////
++ go to village
+- you are in the village
+
++ walk in village -l 27, 27
+- Walked to the destination.
+
++ cheat add 10000 dollars
+- Money added successfully!
+
++ ranch buy animal -a Hen -n jojo
+- You must go to Marnie Ranch first.
+
++ walk in village -l 10, 12
+- Walked to the destination.
+
++ ranch buy animal -a Goat -n ice
+- No suitable barn found.
+
++ walk in village -l 27, 27
+- Walked to the destination.
+
++ cheat add item -n stone -c 20000
+- You have cheated this item
+
++ cheat add item -n wood -c 2000
+- You have cheated this item
+
++ ranch build -a Deluxe Coop -l 21 20
+- YNot enough money.
+
++ cheat add 500000 dollars
+- Money added successfully!
+
++ ranch build -a Deluxe Coop -l 21 20
+- Barn added successfully!
+
++ ranch build -a Coop -l 14 37
+- Barn added successfully!
+
++ ranch build -a shipping bin -l 37 12
+- Shipping bin added successfully!
+
++ walk in village -l 10, 12
+- Walked to the destination.
+
++ ranch buy animal -a Hen -n jojo
+- Animal bought successfully!
+
++ ranch buy animal -a Duck -n quack
+- Animal bought successfully!
+
++ go to village
+- you are now in the farm
+
++ cheat add item -n hay -c 100
+- You have cheated this item
+
++ ranch feed hay jojo
+- jojo has been fed now!
+
++ ranch pet -n jojo
+- You are not next to jojo
+
++ walk -l 15, 37
+- ⚡Your current energy is: 200.0
+The path energy cost is : 0.675
+Do you want to move the path? (Y/N): 
++ Y
+- You successfully moved to the destination
+
++ ranch pet -n jojo
+- Done successfully!
+
++ cheat advance date 1d
+- Date set successfully.
+
++ ranch produces
+- jojo (Hen): egg
+
++ ranch collect produce -n jojo
+- Product collected successfully!
+
++ ranch animals
+- jojo (Hen): friendship: 15, hasn't been fed yet.hasn't been nuzzed yet!
+
++ ranch shepherd animals -n jojo -l 10 4
+- Done successfully!
+
++ ranch animals
+- jojo (Hen): friendship: 23, has been fed, hasn't been nuzzed yet!
+
++ cheat advance date 2d
+- Date set successfully.
+
++ ranch animals
+- jojo (Hen): friendship: -7, hasn't been fed yet.hasn't been nuzzed yet!
+
++ cheat set friendship -n jojo 34
+- Friendship changed successfully!
+
++ ranch animals
+- jojo (Hen): friendship: 34, hasn't been fed yet.hasn't been nuzzed yet!
+
++ cheat set friendship -n quack 1000
+- Friendship changed successfully!
+
++ ranch feed hay quack
+- quack has been fed now!
+
++ cheat advance date 1d
+- Date set successfully.
+
++ ranch feed hay quack
+- quack has been fed now!
+
++ cheat advance date 1d
+
++ ranch feed hay quack
+- quack has been fed now!
+
++ ranch produces
+- quack (Duck): duck feather
+
++ ranch sell animal -n quack
+- Sold successfully!
+
+310 RanchingController
+179 Animal
+
++ walk -l 19,12
+-⚡Your current energy is: 200.0
+The path energy cost is : 0.675
+Do you want to move the path? (Y/N): 
++ Y
+- You successfully moved to the destination
+
++ fishing
+- You must have a fishing rod to go fishing.
+
++ go to village
+- you are in the village
+
++ walk in village -l 48,45
+- Walked to the destination.
+
++ show all products
+- FishingRod 25
+trout soup 250
+fish smoker 0
+
++ purchase FishingRod
+- Item bought successfully.
+
++ walk in village -l 48,38
+- Walked to the destination.
+
++ show all products
+- rice 200
+wheat flour 100
+* Potato Seeds 50
+
++ cheat advance date 28d
+- Date set successfully.
+
++ show all products
+- rice 200
+wheat flour 100
+sugar 100
+* Potato Seeds 75
+
++ purchase Melon Seeds -n 5
+- Item bought successfully.
+
++ show all available products
+- rice 200
+wheat flour 100
+sugar 100
+oil 200
+vinegar 200
+
++ ranch buy animal -a Cow -n cow
+- You must go to Marnie Ranch first.
+
++ go to village
+- you are now in the farm
+
++ walk -l 13,20
+- ⚡Your current energy is: 200.0
+The path energy cost is : 0.675
+Do you want to move the path? (Y/N): 
++ Y
+- You successfully moved to the destination
+
++ fishing
+- Well done! 2 fish of 0.0 quality!
+Dorado
+Tilapia
+
+348 RanchingController
+SeasonFish
+
++ walk -l 36, 12
+-⚡Your current energy is: 199.325
+The path energy cost is : 0.675
+Do you want to move the path? (Y/N): 
++ Y
+- You successfully moved to the destination
+
++ sell wood -n 1
+- Item sold successfully.
+
++ sell stone 
+- Item sold successfully.
+
++ sell stone -n 1
+- You don't have any of this item.
+
++ sell duck feather -n 1
+- You don't have any of this item.
+
++ go to village
+- you are in the village
+
++ walk in village -l 48,45
+- We're closed!
+
++ go to village
+- you are in the village
+
++ walk in village -l 14,25
+- Walked to the destination.
+
++ next turn
+- It is Sobhan1's turn now!
+
++ go to village
+- you are in the village
+
++ walk in village -l 14,30
+- Walked to the destination.
+
++ talk -u Aynazz -m Salam!
+- You two are so far!
+
++ walk in village -l 14,26
+- Walked to the destination.
+
++ talk -u Aynazz -m Salam!
+- message sent!
+
++ next turn
+- It is Sobhan2's turn now!
+
++ next turn
+- It is Sobhan3's turn now!
+
++ next turn
+- It is Aynazz's turn now!
+Inbox:
+Sobhan1: Salam!
+
++ talk -u Sobhan1 -m Chetori?
+- message sent!
+
++ next turn
+- It is Sobhan1's turn now!
+Inbox:
+Sanaa: Chetori?
+
++ talk history -u Aynazz
+- You: Salam!
+Aynazz: Chetori?
+
++ gift -u Aynazz -i blue jazz
+- You are not good friends enough yet.
+
++ friendships
+- Aynazz 0
+Sobhan2 0
+Sobhan3 0
+
++ add friendship -u Aynazz -x 80
+- Friendship changed successfully.
+
++ friendships
+- Aynazz 1
+Sobhan2 0
+Sobhan3 0
+
++ gift -u Aynazz -i blue jazz
+- You don't have the gift in your inventory.
+
++ cheat add item -n blue jazz -c 10
+- You have cheated this item
+
++ gift -u Aynazz -i blue jazz
+- Gift sent successfully!
+
++ add friendship -u Aynazz -x 200
+- Friendship changed successfully.
+
++ friendships
+- Aynazz 2
+Sobhan2 0
+Sobhan3 0
+
++ hug -u Aynazz
+- You have hugged each other now!
+
++ next turn
+- It is Sobhan2's turn now!
+
++ next turn
+- It is Sobhan3's turn now!
+
++ next turn
+- It is Aynazz's turn now!
+Received Gifts:
+Sobhan1: blue jazz
+
++ gift list
+- 1- Sobhan1: blue jazz
+
++ gift rate -i 1 4
+- Gift rated successfully!
+
++ gift rate -i 1 0
+- Invalid Index.
+
++ gift history -u Sobhan1
+- received: blue jazz
+
++ next turn
+- It is Sobhan1's turn now!
+
++ gift history -u Aynazz
+- sent: blue jazz
+
++ flower -u Aynazz
+You don't have a bouquet.
+
++ cheat add item -n bouquet -c 10
+- You have cheated this item
+
++ flower -u Aynazz
+- Level 2 friendship XP is not completed yet.
+
++ add friendship -u Aynazz -x 300
+- Friendship changed successfully.
+
++ friendships
+- Aynazz 2
+Sobhan2 0
+Sobhan3 0
+
++ flower -u Aynazz
+- You are now level 3 friends.
+
++ friendships
+- Aynazz 3
+Sobhan2 0
+Sobhan3 0
+
++ ask marriage -u Sobhan1
+- boro gerdoo bazi kon!
+
++ ask marriage -u Sobhan1
+- Na ki gofte khodshifte am?!
+
++ ask marriage -u Aynazz
+- chi begam vala.
+
++ next turn
+- It is Sobhan2's turn now!
+
++ next turn
+- It is Sobhan3's turn now!
+
++ next turn
+- It is Aynazz's turn now!
+
++ cheat add item -n wedding ring -c 1
+- You have cheated this item
+
++ ask marriage -u Sobhan1
+- Request sent successfully.
+
++ next turn
+- It is Sobhan1's turn now!
+Marriage Requests:
+Aynazz
+
+* respond -accept -u Aynazz
+
++ respond -reject -u Aynazz
+- Request rejected.
+
++ friendships
+- Aynazz 0
+Sobhan2 0
+Sobhan3 0
+
++ next turn
+- It is Sobhan2's turn now!
+
++ trade -u Sobhan3 -t request -i carrot -a 5 -p 70
+- Not enough money
+
++ cheat add 10000 dollars
+- Money added successfully!
+
++ trade -u Sobhan3 -t request -i carrot -a 5 -p 70
+- Trade request sent successfully.
+
++ next turn
+- It is Sobhan3's turn now!
+
++ trade list
+- 1- Sobhan2: carrot 5, 70
+
++ trade response -accept -i 1
+- Not enough items.
+
++ cheat add item -n carrot -c 10
+- You have cheated this item
+
++ trade response -accept -i 1
+- Trade accepted successfully.
+
++ trade -u Sobhan2 -t request -i Flounder -a 5 -ti cheese ta 3
+- No item found.
+
++ cheat add item -n cheese -c 10
+- You have cheated this item
+
++ trade -u Sobhan2 -t request -i Flounder -a 5 -ti cheese ta 3
+- Trade request sent successfully.
+
++ next turn
+- It is Aynazz's turn now!
+
++ next turn
+- It is Sobhan1's turn now!
+
++ next turn
+- It is Sobhan2's turn now!
+
++ cheat add item -n Flounder -c 5
+- You have cheated this item
+
++ trade response -accept -i 1
+- Trade accepted successfully.
+
++ inventory show
+- Tools: 
+Hoe, Initial
+Pickaxe, Initial
+WateringCan, Initial
+Scythe, Initial
+Axe, Initial
+Items: 
+carrot: 5
+cheese: 3
+Seeds: 
+
++ next turn
+- It is Sobhan3's turn now!
+
++ inventory show
+- Tools: 
+WateringCan, Initial
+Scythe, Initial
+Hoe, Initial
+Pickaxe, Initial
+Axe, Initial
+Items: 
+Flounder: 5
+carrot: 5
+cheese: 7
+Seeds: 
+
+
++ next turn
+- It is Aynazz's turn now!
+
++ go to village
+- you are in the village
+
++ walk in village -l 18, 31
+- Walked to the destination.
+
++ meet NPC Sebastian
+- Sebastian: The migrating swallows are coming back. have you seen the nests?!
+
++ cheat advance date 29d
+- Date set successfully.
+
++ meet NPC Sebastian
+- Sebastian: Farmer Robinson has the best peach trees this summer. How are you doing in the garden?
+
++ gift NPC Sebastian -i pizza
+- You can't give pizza to Sebastian
+
++ cheat add item -n pizza -c 10
+- You have cheated this item
+
++ gift NPC Sebastian -i pizza
+- Gift sent successfully!
+
++ friendship NPC list
+- Sebastian: 90, level 0
+Abigail: 0, level 0
+Harvey: 0, level 0
+Lea: 0, level 0
+Robin: 0, level 0
+
++ quests list Lea
+- You are so far.
+
++ quests list Sebastian
+- Quest 1: iron, 50, Status: ongoing
+
++ quests finish Sebastian -i1
+- Quest completed successfully!
