@@ -22,16 +22,19 @@ import java.util.Random;
 
 public class FarmingController extends controller.ControllersController {
     public void GoodNightFarm() {
+        Game game=App.getLoggedInUser().getCurrentGame();
         for (Farm farm : App.getLoggedInUser().getCurrentGame().getMap().getFarms()) {
             int n = 0;
             for (Tile tile : farm.getCells()) {
                 if (tile.getObject() instanceof Tree tree) {
+                    if (game.getWeatherToday().equals(Weather.RAIN) && !tile.isInsideBuilding())tree.setWateredToday(true);
                     n++;
                     if (tree.isWateredToday()) tree.setDaysPassedSincePlanting(tree.getDaysPassedSincePlanting() + 1);
                     if (!tree.isWateredToday()) tree.increaseDaysWithoutIrrigation();
                     tree.setWateredToday(false);
                     if (tree.getDaysWithoutIrrigation() == 2) tile.setObject(null);
                 } else if (tile.getObject() instanceof Crop crop) {
+                    if (game.getWeatherToday().equals(Weather.RAIN) && !tile.isInsideBuilding())crop.setWateredToday(true);
                     n++;
                     if (crop.isWateredToday()) crop.setDaysPassedSincePlanting(crop.getDaysPassedSincePlanting() + 1);
                     if (!crop.isWateredToday()) crop.increaseDaysWithoutIrrigation();
@@ -48,6 +51,7 @@ public class FarmingController extends controller.ControllersController {
                 Tile tile=farm.getCells().get(rand2);
                 if ((tile.getObject() instanceof Tree || tile.getObject() instanceof Crop) && rand == 1) {
                     if (tile.getObjectOnCell().type.equals(/*golkhone*/))continue;
+                    //TODO: not fruiting tree
                     else if (nearScaCrew(tile, farm))continue;
                     tile.setObject(null);
                     i++;
@@ -78,6 +82,7 @@ public class FarmingController extends controller.ControllersController {
         Farm farm = player.getFarm();
         ForAgingSeeds seed1 = null;
         CropName cropName = null;
+        TreeName treeName=null;
         Position position = InventoryFunctionsController.findPositionByDirection(direction, player.getPosition());
         Tile tile = InventoryFunctionsController.findTileByPosition(position, farm);
         if (tile == null) return new Resualt(false, "Rafti too baghalia!");
@@ -91,21 +96,45 @@ public class FarmingController extends controller.ControllersController {
                     inventory.setCapacity(inventory.getCapacity() + 1);
                 }
                 cropName = findCropBySeed(seed1);
+                treeName = findTreeBySeed(seed1);
                 break;
             }
         }
-        if (cropName == null) return new Resualt(false, "You don't have the seed in your backPack");
-        if (!Arrays.asList(cropName.getSeason()).contains(game.getSeason()))
-            return new Resualt(false, "not in the seaaon!");
-        tile.setObject(new Crop(cropName));
-        tile.setTilled(false);
+        if (treeName==null && cropName==null)return new Resualt(false, "You don't have the seed in your backPack");
+
+        if (cropName!=null){
+            if (!Arrays.asList(cropName.getSeason()).contains(game.getSeason()))
+                return new Resualt(false, "not in the season!");
+            tile.setObject(new Crop(cropName));
+            tile.setTilled(false);
+        }
+        if (treeName!=null){
+            if (!Arrays.asList(treeName.getSeasons()).contains(game.getSeason()))
+                return new Resualt(false, "not in the season!");
+            tile.setObject(new Tree(treeName));
+            tile.setTilled(false);
+        }
+
 
         return new Resualt(true, "Seed planted successfully");
     }
 
     private static CropName findCropBySeed(ForAgingSeeds seed) {
+        for (CropName cropName:CropName.values()){
+            if (cropName.getSource().equals(seed)){
+                return cropName;
+            }
+        }
+        return null;
+    }
 
-        //TODO find crop
+    private static TreeName findTreeBySeed(ForAgingSeeds seed) {
+        for (TreeName treeName:TreeName.values()){
+            if (treeName.getSource().equals(seed)){
+                return treeName;
+            }
+        }
+        return null;
     }
 
     public static String chooseMixedSeeds(Season season) {

@@ -68,7 +68,7 @@ public class CraftsmanshipController extends ControllersController {
                 return useFurnace(command, machine);
             }
         }
-        return new Result(false, "This object can not be used!");
+        return new Resualt(false, "This object can not be used!");
     }
 
     public static Resualt getCraftingMachineProduct(Command command) {
@@ -129,7 +129,7 @@ public class CraftsmanshipController extends ControllersController {
     //TODO: getting product from machine function
 
 
-    public Resualt useBeeHouse(Command command, CraftingMachine machine) {
+    public static Resualt useBeeHouse(Command command, CraftingMachine machine) {
         String general = command.body.get("string");
         List<String> list = new ArrayList<>(Arrays.asList(general.split(" ")));
         if (list.size() > 1) return new Resualt(false, "Wrong input.");
@@ -143,7 +143,7 @@ public class CraftsmanshipController extends ControllersController {
         return (Math.abs(start.getX() - end.getX()) + Math.abs(start.getY() - end.getY()));
     }
 
-    public Resualt useCheesePress(Command command, CraftingMachine machine) {
+    public static Resualt useCheesePress(Command command, CraftingMachine machine) {
         Inventory inventory = App.getLoggedInUser().getCurrentGame().getCurrentPlayer().getInventory();
         String general = command.body.get("string");
         List<String> list = new ArrayList<>(Arrays.asList(general.split(" ")));
@@ -172,7 +172,7 @@ public class CraftsmanshipController extends ControllersController {
         return new Resualt(true, "Started making Cheese");
     }
 
-    public Resualt useKeg(Command command, CraftingMachine machine) {
+    public static Resualt useKeg(Command command, CraftingMachine machine) {
         Inventory inventory = App.getLoggedInUser().getCurrentGame().getCurrentPlayer().getInventory();
         String general = command.body.get("string");
         List<String> list = new ArrayList<>(Arrays.asList(general.split(" ")));
@@ -248,7 +248,7 @@ public class CraftsmanshipController extends ControllersController {
         return new Resualt(false, "Not enough ingredients.");
     }
 
-    public Resualt useDehydrator(Command command, CraftingMachine machine) {
+    public static Resualt useDehydrator(Command command, CraftingMachine machine) {
         Inventory inventory = App.getLoggedInUser().getCurrentGame().getCurrentPlayer().getInventory();
         String general = command.body.get("string");
         List<String> list = new ArrayList<>(Arrays.asList(general.split(" ")));
@@ -288,7 +288,7 @@ public class CraftsmanshipController extends ControllersController {
         return new Resualt(false, "Not enough ingredients");
     }
 
-    public Resualt useKlin(Command command, CraftingMachine machine) {
+    public static Resualt useKlin(Command command, CraftingMachine machine) {
         Inventory inventory = App.getLoggedInUser().getCurrentGame().getCurrentPlayer().getInventory();
         String general = command.body.get("string");
         List<String> list = new ArrayList<>(Arrays.asList(general.split(" ")));
@@ -309,7 +309,7 @@ public class CraftsmanshipController extends ControllersController {
         }return new Resualt(false,"not enough ingredients");
     }
 
-    public Resualt useLoom(Command command, CraftingMachine machine) {
+    public static Resualt useLoom(Command command, CraftingMachine machine) {
         Inventory inventory = App.getLoggedInUser().getCurrentGame().getCurrentPlayer().getInventory();
         String general = command.body.get("string");
         List<String> list = new ArrayList<>(Arrays.asList(general.split(" ")));
@@ -330,19 +330,19 @@ public class CraftsmanshipController extends ControllersController {
         }return new Resualt(false,"not enough ingredients");
     }
 
-    public Resualt useMayonnaise(Command command, CraftingMachine machine) {
+    public static Resualt useMayonnaise(Command command, CraftingMachine machine) {
     }
 
-    public Resualt useOilMaker(Command command, CraftingMachine machine) {
+    public static Resualt useOilMaker(Command command, CraftingMachine machine) {
     }
 
-    public Resualt usePreserver(Command command, CraftingMachine machine) {
+    public static Resualt usePreserver(Command command, CraftingMachine machine) {
     }
 
-    public Resualt useFishSmoker(Command command, CraftingMachine machine) {
+    public static Resualt useFishSmoker(Command command, CraftingMachine machine) {
     }
 
-    public Resualt useFurnace(Command command, CraftingMachine machine) {
+    public static Resualt useFurnace(Command command, CraftingMachine machine) {
     }
 
     public Result useCraftsmanship(String command) {

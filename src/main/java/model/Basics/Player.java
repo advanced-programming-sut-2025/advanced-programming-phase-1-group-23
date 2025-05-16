@@ -56,7 +56,7 @@ public class Player {
         this.money = 0;
         this.energyUsed = 0;
         this.isFainted = false;
-        this.recipes=initializeRecipes;
+        this.recipes=initializeRecipes();
         this.currentShop = null;
         this.talkHistory = new ArrayList<>();
         for(int i = 0; i < 4; i++)
@@ -176,7 +176,7 @@ public class Player {
     }
 
     public int getMoney() {
-        return money;
+        return Math.max(money,0);
     }
 
     public void setMoney(int money) {
@@ -187,10 +187,11 @@ public class Player {
         return trashCan;
     }
 
-    private static ArrayList<Recipe> initializeRecipes() {
+    private ArrayList<Recipe> initializeRecipes() {
         this.recipes.add(Recipe.FriedEgg);
         this.recipes.add(Recipe.BakedFish);
         this.recipes.add(Recipe.Salad);
+        return this.recipes;
     }
 
     public double getMaximumEnergy() {

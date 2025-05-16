@@ -44,6 +44,22 @@ public enum ForAgingSeeds {
     yamSeeds("Yam Seeds", new Season[]{Season.AUTUMN}, 60),
     rareSeed("Rare Seed", new Season[]{Season.AUTUMN}, 800),
 
+    apricotSapling("apricot sapling", new Season[]{Season.SPRING},0),
+    cherrySapling("cherry sapling", new Season[]{Season.SPRING}, 0),
+    bananaSapling("banana sapling", new Season[]{Season.SUMMER}, 0),
+    mangoSapling("mango sapling", new Season[]{Season.SUMMER}, 0),
+    orangeSapling("orange sapling", new Season[]{Season.SUMMER}, 0),
+    peachSapling("peach sapling", new Season[]{Season.SUMMER}, 0),
+    appleSapling("apple sapling", new Season[]{Season.AUTUMN}, 0),
+    pomegranateSapling("pomegranate sapling", new Season[]{Season.AUTUMN}, 0),
+    acorns("acorns", new Season[]{Season.AUTUMN,Season.SPRING,Season.WINTER,Season.SUMMER}, 0),
+    mapleSeeds("maple seeds", new Season[]{Season.AUTUMN,Season.SPRING,Season.WINTER,Season.SUMMER}, 0),
+    pineCones("pine cones", new Season[]{Season.AUTUMN,Season.SPRING,Season.WINTER,Season.SUMMER}, 0),
+    mahoganySeeds("mahogany seeds", new Season[]{Season.AUTUMN,Season.SPRING,Season.WINTER,Season.SUMMER}, 0),
+    mushroomTreeSeeds("mushroom tree seeds", new Season[]{Season.AUTUMN,Season.SPRING,Season.WINTER,Season.SUMMER}, 0),
+    mysticTreeSeeds("mystic tree seeds", new Season[]{Season.AUTUMN,Season.SPRING,Season.WINTER,Season.SUMMER}, 0),
+
+
     powdermelonSeeds("Powdermelon Seeds", new Season[]{Season.WINTER}, 20),
 
     ancientSeeds("Ancient Seeds", new Season[]{Season.SPRING, Season.SUMMER, Season.AUTUMN, Season.WINTER}, 400),

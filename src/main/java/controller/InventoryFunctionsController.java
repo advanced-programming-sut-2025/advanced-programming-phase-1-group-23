@@ -18,6 +18,7 @@ import model.Objects.Tool;
 import model.Resualt;
 import model.enums.*;
 import org.h2.util.geometry.EWKBUtils;
+import src.main.java.model.enums.ShopName;
 
 import java.util.Map;
 import java.util.PropertyPermission;
@@ -81,28 +82,32 @@ public class InventoryFunctionsController extends ControllersController {
 
 
     public static Resualt toolUpgrade(Command command) {
-
-        //TODO check if the player is in the blackSmith shop;
+        //TODO: final check for money
         Game game = App.getLoggedInUser().getCurrentGame();
         Player player = game.getCurrentPlayer();
+        if (!player.getCurrentShop().getName().equals(ShopName.BlackSmith))return new Resualt(false, "You are not in blackSmith");
         Tool tool = player.getInHandTool();
         switch (tool.getToolType()) {
             case Axe, Hoe, Pickaxe, WateringCan -> {
                 switch (tool.getToolLevel()) {
                     case Initial -> {
                         tool.setToolLevel(ToolLevel.Cooper);
+                        player.setMoney(player.getMoney()-2000);
                         return new Resualt(true, "Tool upgraded to Cooper");
                     }
                     case Cooper -> {
                         tool.setToolLevel(ToolLevel.Iron);
+                        player.setMoney(player.getMoney()-5000);
                         return new Resualt(true, "Tool Upgraded to Iron");
                     }
                     case Iron -> {
                         tool.setToolLevel(ToolLevel.Gold);
+                        player.setMoney(player.getMoney()-10000);
                         return new Resualt(true, "Tool upgraded to Gold");
                     }
                     case Gold -> {
                         tool.setToolLevel(ToolLevel.Iridium);
+                        player.setMoney(player.getMoney()-25000);
                         return new Resualt(true, "Tool upgraded to Iridium");
                     }
                     case Iridium, Learning, Bambou, FiberGlass -> {
@@ -118,7 +123,6 @@ public class InventoryFunctionsController extends ControllersController {
     }
 
     public static Position findPositionByDirection(String direction, Position first) {
-        //TODO fix the directions;
         Position p = first;
         switch (direction) {
             case "Right" -> {
@@ -148,16 +152,17 @@ public class InventoryFunctionsController extends ControllersController {
                 return p;
             }
             case "DownLeft" -> {
-                p.setY(p.getY());
-                p.setX(p.getX());
+                p.setY(p.getY()-1);
+                p.setX(p.getX()-1);
                 return p;
             }
             case "DownRight" -> {
-                p.setX(p.getX());
-                p.setY(p.getY());
+                p.setX(p.getX()+1);
+                p.setY(p.getY()-1);
                 return p;
             }
         }
+        return null;
     }
 
     public static Resualt useTool(Command request) {

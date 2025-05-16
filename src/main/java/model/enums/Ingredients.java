@@ -198,14 +198,7 @@ public enum Ingredients {
     Perch("Perch", IngredientsTypes.fish, 55, 0),
     GlacierFish("Glacier Fish", IngredientsTypes.fish, 1000, 0),
 
-    CHEESE,
-    OIL, SALMON,
-    SARDINE, FIBER,
-    BREAD, HASH_BROWNS, FLOUNDER,
-    MIDNIGHT_CARP, FRIED_EGG, BAKED_FISH, SALAD, OMELET, PUMPKIN_PIE, SPAGHETTI,
-    PIZZA, TORTILLA, MAKI_ROLL, TRIPLE_SHOT_ESPRESSO, COOKIE, PANCAKES, FRUIT_SALAD,
-    RED_PLATE, SALMON_DINNER, VEGETABLE_MEDLEY, FARMERS_LUNCH,
-    SURVIVAL_BURGER, SEA_DISH, SEAFORM_PUDDING, MINERS_TREAT,;
+    ;
 
     private final String name;
     private final IngredientsTypes type;

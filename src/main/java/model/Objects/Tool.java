@@ -12,13 +12,11 @@ import dev.morphia.annotations.Embedded;
 public class Tool {
     private ToolType toolType;
     private ToolLevel toolLevel;
-    private int useCost;
     private int irrigationCapacity=0;
 
     public Tool(ToolType toolType, ToolLevel toolLevel) {
         this.toolType = toolType;
         this.toolLevel = toolLevel;
-        this.useCost = calculateUseCost();
     }
 
     public Tool() {
@@ -79,11 +77,7 @@ public class Tool {
     }
 
     public int getUseCost() {
-        return useCost=calculateUseCost();
-    }
-
-    public void setUseCost(int useCost) {
-        this.useCost = useCost;
+        return calculateUseCost();
     }
 
     public int getIrrigationCapacity() {
