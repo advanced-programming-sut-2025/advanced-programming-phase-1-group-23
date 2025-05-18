@@ -198,6 +198,9 @@ public enum Ingredients {
     Perch("Perch", IngredientsTypes.fish, 55, 0),
     GlacierFish("Glacier Fish", IngredientsTypes.fish, 1000, 0),
 
+    WaterFertility("water fertility",IngredientsTypes.junk, 200,0),
+    SpeedFertility("speed fertility",IngredientsTypes.junk, 200,0);
+
     ;
 
     private final String name;

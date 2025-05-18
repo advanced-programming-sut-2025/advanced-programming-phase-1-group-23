@@ -8,6 +8,7 @@ import model.Maps.Position;
 import model.Maps.Tile;
 import model.Objects.Inventory;
 import model.Resualt;
+import model.enums.ForAgingSeeds;
 import model.enums.Ingredients;
 import model.enums.Recipe;
 //import org.h2.command.CommandContainer;
@@ -134,6 +135,9 @@ public class CookingController extends ControllersController {
     }
 
     public static void updateRecipes(Player player) {
+        player.setMiningSkill(160);
+        player.setFarmingSkill(160);
+        player.setForagingSkill(260);
         if (player.returnMiningLevel() == 1) {
             player.getRecipes().add(Recipe.CherryBomb);
             player.getRecipes().add(Recipe.MinersTreat);
@@ -239,7 +243,7 @@ public class CookingController extends ControllersController {
         }
         Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
         updateRecipes(player);
-        if (!player.getRecipes().contains(recipe) || recipe == null) {
+        if (!player.getRecipes().contains(recipe) ) {
             return new Resualt(false, "You don't know this recipe.");
         }
         for (Map.Entry<Ingredients, Integer> provided : recipe.getIngredients().entrySet()) {
@@ -302,12 +306,16 @@ public class CookingController extends ControllersController {
         String count=command.body.get("count");
         String itemName=command.body.get("itemName");
         Ingredients item=null;
+        ForAgingSeeds seed=null;
         for (Ingredients ingredients:Ingredients.values()){
             if(ingredients.getName().equals(itemName)) item=ingredients;
+        }for (ForAgingSeeds seeds:ForAgingSeeds.values()){
+            if (seeds.getSeedName().equals(itemName)) seed=seeds;
         }
-        if (item==null)return new Resualt(false,"this item doesn't exist!");
+        if (item==null && seed==null)return new Resualt(false,"this item doesn't exist!");
+        if (seed!=null)player.getInventory().getSeeds().put(seed, 10);
         if (player.getInventory().getCapacity()<=0)return new Resualt(false, "inventory full");
-        player.getInventory().getIngredients().put(item,Integer.parseInt(count));
+        if (item!=null)player.getInventory().getIngredients().put(item,Integer.parseInt(count));
         return null;
     }
 

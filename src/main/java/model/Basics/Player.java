@@ -7,6 +7,7 @@ import model.Maps.Farm;
 import model.Maps.Position;
 import model.Objects.Inventory;
 import model.Objects.Tool;
+import model.enums.Ingredients;
 import model.enums.Recipe;
 import model.enums.ToolLevel;
 import model.enums.ToolType;
@@ -54,7 +55,7 @@ public class Player {
         this.user = user;
         this.energy = 200;
         this.inventory=initializeInventory();
-        this.refrigerator=new Inventory();
+        this.refrigerator=initilizeRef();
         this.id = user.getId();
         this.position = new Position(0,0);
         this.money = 0;
@@ -85,6 +86,11 @@ public class Player {
         return energy;
     }
 
+    private static Inventory initilizeRef(){
+        Inventory ref=new Inventory();
+        ref.getIngredients().put(Ingredients.MILK, 4);
+        return ref;
+    }
     public int getFarmingSkill() {
         return farmingSkill;
     }

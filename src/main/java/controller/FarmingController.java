@@ -10,6 +10,7 @@ import model.Maps.Position;
 import model.Maps.Tile;
 import model.Naturals.Crop;
 import model.Naturals.Tree;
+import model.Objects.CraftingMachine;
 import model.Objects.Inventory;
 import model.Objects.Tool;
 import model.Resualt;
@@ -26,10 +27,29 @@ public class FarmingController extends controller.ControllersController {
         for (Farm farm : App.getLoggedInUser().getCurrentGame().getMap().getFarms()) {
             int n = 0;
             for (Tile tile : farm.getCells()) {
+                CraftingMachine machine=null;
+                if ( (machine=tile.getMachine())!=null){
+                    if (machine.isWorking()){
+                        if (machine.getType().equals(Ingredients.BEE_HOUSE))machine.setProcessingHourTime(machine.getProcessingHourTime()+13);
+                        if (machine.getType().equals(Ingredients.CHEESE_PRESS))machine.setProcessingHourTime(machine.getProcessingHourTime()+3);
+                        if (machine.getType().equals(Ingredients.KEG))machine.setProcessingHourTime(machine.getProcessingHourTime()+14);
+                        if (machine.getType().equals(Ingredients.DEHYDRATOR))machine.setProcessingHourTime(machine.getProcessingHourTime()+14);
+                        if (machine.getType().equals(Ingredients.CHARCOAL_KLIN))machine.setProcessingHourTime(machine.getProcessingHourTime()+3);
+                        if (machine.getType().equals(Ingredients.LOOM))machine.setProcessingHourTime(machine.getProcessingHourTime()+6);
+                        if (machine.getType().equals(Ingredients.MAYONNAISE_MACHINE))machine.setProcessingHourTime(machine.getProcessingHourTime()+12);
+                        if (machine.getType().equals(Ingredients.FISH_SMOKER))machine.setProcessingHourTime(machine.getProcessingHourTime()+12);
+                        if (machine.getType().equals(Ingredients.OIL_MAKER))machine.setProcessingHourTime(machine.getProcessingHourTime()+12);
+                        if (machine.getType().equals(Ingredients.PRESERVES_JAR))machine.setProcessingHourTime(machine.getProcessingHourTime()+12);
+                        if (machine.getType().equals(Ingredients.FURNACE))machine.setProcessingHourTime(machine.getProcessingHourTime()+12);
+
+                    }
+                }
                 if (tile.getObject() instanceof Tree tree) {
-                    if (game.getWeatherToday().equals(Weather.RAIN) && !tile.isInsideBuilding())tree.setWateredToday(true);
+                    if ((game.getWeatherToday().equals(Weather.RAIN) && !tile.isInsideBuilding()) || tile.isWaterFertility())tree.setWateredToday(true);
                     n++;
-                    if (tree.isWateredToday()) tree.setDaysPassedSincePlanting(tree.getDaysPassedSincePlanting() + 1);
+                    if (tree.isWateredToday() ) tree.setDaysPassedSincePlanting(tree.getDaysPassedSincePlanting() + 1);
+                    if (tree.isWateredToday() && tile.isSpeedFertility()) tree.setDaysPassedSincePlanting(tree.getDaysPassedSincePlanting() + 1);
+
                     if (!tree.isWateredToday()) tree.increaseDaysWithoutIrrigation();
                     tree.setWateredToday(false);
                     if (tree.getDaysWithoutIrrigation() == 2) tile.setObject(null);
@@ -72,9 +92,11 @@ public class FarmingController extends controller.ControllersController {
                     }
                 }
                 else if (tile.getObject() instanceof Crop crop) {
-                    if (game.getWeatherToday().equals(Weather.RAIN) && !tile.isInsideBuilding())crop.setWateredToday(true);
+                    if ((game.getWeatherToday().equals(Weather.RAIN) && !tile.isInsideBuilding()) || tile.isWaterFertility())crop.setWateredToday(true);
                     n++;
                     if (crop.isWateredToday()) crop.setDaysPassedSincePlanting(crop.getDaysPassedSincePlanting() + 1);
+                    if (crop.isWateredToday() && tile.isSpeedFertility()) crop.setDaysPassedSincePlanting(crop.getDaysPassedSincePlanting() + 1);
+
                     if (!crop.isWateredToday()) crop.increaseDaysWithoutIrrigation();
                     crop.setWateredToday(false);
                     if (crop.getDaysWithoutIrrigation() == 2) tile.setObject(null);
@@ -105,6 +127,7 @@ public class FarmingController extends controller.ControllersController {
 
     public boolean nearScaCrew(Tile tile, Farm farm){
         for (Tile tile1: farm.getCells()){
+            if (tile.getIngredients()==null)continue; //TODO: 4343433434343434
             if (tile1.getIngredients().equals(Ingredients.SCARECROW)){
                 if (Math.abs(tile1.getCoordinate().getX()-tile.getCoordinate().getX())+Math.abs(tile1.getCoordinate().getY()-tile.getCoordinate().getY())<=8)return true;
             }if (tile1.getIngredients().equals(Ingredients.DELUXE_SCARECROW)){
@@ -150,16 +173,19 @@ public class FarmingController extends controller.ControllersController {
                 return new Resualt(false, "not in the season!");
             tile.setObject(new Crop(cropName));
             tile.setTilled(false);
+            return new Resualt(true, "Seed planted successfully");
+
         }
         if (treeName!=null){
             if (!Arrays.asList(treeName.getSeasons()).contains(game.getSeason()))
                 return new Resualt(false, "not in the season!");
             tile.setObject(new Tree(treeName));
             tile.setTilled(false);
+            return new Resualt(true, "Seed planted successfully");
+
         }
 
-
-        return new Resualt(true, "Seed planted successfully");
+        return new Resualt(true, "blub blub");
     }
 
     private static CropName findCropBySeed(ForAgingSeeds seed) {
@@ -296,11 +322,36 @@ public class FarmingController extends controller.ControllersController {
         else return new Resualt(false, "This crop doesn't exist.");
     }
 
-    public Result fertilityControl(String command) {
-        return null;
-    }
+    public static Resualt fertilityControl(Command command) {
+        String fertilizer=command.body.get("fertilizer");
+        String direction = command.body.get("direction");
+        Player player = App.getLoggedInUser().getCurrentGame().getCurrentPlayer();
+        Inventory inventory = player.getInventory();
+        Farm farm = player.getFarm();
+        Position position = InventoryFunctionsController.findPositionByDirection(direction, player.getPosition());
+        Tile tile = InventoryFunctionsController.findTileByPosition(position, farm);
+        Ingredients fert=null;
+        for (Ingredients ingredients: Ingredients.values()){
+            if (ingredients.getName().equals(fertilizer)){
+                fert=ingredients;
+                break;
+            }
+        }
+        assert fert != null;
+        if (!inventory.getIngredients().containsKey(fert) || tile.getObject()==null){
+            return new Resualt(false,"tile cannot be fertilied!");
+        }
+        if (fert.equals(Ingredients.SpeedFertility) && inventory.getIngredients().containsKey(fert)){
+            inventory.getIngredients().put(fert,inventory.getIngredients().get(fert)-1);
+            tile.setSpeedFertility(true);
+            return new Resualt(true,"tile is speedFertilied now");
+        }else if (fert.equals(Ingredients.WaterFertility) && inventory.getIngredients().containsKey(fert)){
+            inventory.getIngredients().put(fert,inventory.getIngredients().get(fert)-1);
+            tile.setWaterFertility(true);
+            return new Resualt(true,"tile is waterFertilied now");
 
-    public Result amountOfWater(String command) {
-        return null;
+        }
+        return new Resualt(false,"tile can not be fertilied");
+
     }
 }

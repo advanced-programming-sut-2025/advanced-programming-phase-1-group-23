@@ -127,43 +127,44 @@ public class InventoryFunctionsController extends ControllersController {
     }
 
     public static Position findPositionByDirection(String direction, Position first) {
-        Position p = first;
+        int x=first.getX();
+        int y=first.getY();
         switch (direction) {
             case "Right" -> {
-                p.setX(p.getX() + 1);
-                return p;
+                x++;
+                return new Position(x,y);
             }
             case "Left" -> {
-                p.setX(p.getX() - 1);
-                return p;
+                x--;
+                return new Position(x,y);
             }
             case "Up" -> {
-                p.setY(p.getY() + 1);
-                return p;
+                y++;
+                return new Position(x,y);
             }
             case "Down" -> {
-                p.setY(p.getY() - 1);
-                return p;
+                y--;
+                return new Position(x,y);
             }
             case "UpLeft" -> {
-                p.setY(p.getY() + 1);
-                p.setX(p.getX() - 1);
-                return p;
+                y++;
+                x--;
+                return new Position(x,y);
             }
             case "UpRight" -> {
-                p.setX(p.getX() + 1);
-                p.setY(p.getY() + 1);
-                return p;
+                x++;
+                y++;
+                return new Position(x,y);
             }
             case "DownLeft" -> {
-                p.setY(p.getY()-1);
-                p.setX(p.getX()-1);
-                return p;
+                x--;
+                y--;
+                return new Position(x,y);
             }
             case "DownRight" -> {
-                p.setX(p.getX()+1);
-                p.setY(p.getY()-1);
-                return p;
+                x++;
+                y--;
+                return new Position(x,y);
             }
         }
         return null;
@@ -332,7 +333,7 @@ public class InventoryFunctionsController extends ControllersController {
 
     public static Resualt useWateringCan(Position position, Tile tile) {
         Tool tool = App.getLoggedInUser().getCurrentGame().getCurrentPlayer().getInHandTool();
-        if (tile.getObjectOnCell().type.equals("water")) {
+       // if (/*tile.getObjectOnCell().type.equals("water")*/ true) {
             switch (tool.getToolLevel()) {
                 case Cooper -> tool.setIrrigationCapacity(55);
                 case Iron -> tool.setIrrigationCapacity(70);
@@ -341,8 +342,8 @@ public class InventoryFunctionsController extends ControllersController {
                 case Iridium -> tool.setIrrigationCapacity(100);
             }
 
-            return new Resualt(true, "Now you have your watering can full of water");
-        } else if (App.getLoggedInUser().getCurrentGame().getWeatherToday().equals(Weather.RAIN)) {
+            //return new Resualt(true, "Now you have your watering can full of water");
+         if (App.getLoggedInUser().getCurrentGame().getWeatherToday().equals(Weather.RAIN)) {
             return new Resualt(false, "You don't need to irrigate crops while raining");
 
         } else if (tile.getObject() instanceof Tree tree) {

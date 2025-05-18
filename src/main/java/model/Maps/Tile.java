@@ -17,6 +17,9 @@ public class Tile {
     private boolean isInsideBuilding;
     private CraftingMachine machine=null;
 
+    private boolean speedFertility=false;
+    private boolean waterFertility=false;
+
     public int distance = 0;
     public double energy = 0;
     public int turns = 0;
@@ -135,5 +138,21 @@ public class Tile {
     @Override
     public Tile clone() {
         return new Tile(objectOnCell, coordinate);
+    }
+
+    public boolean isSpeedFertility() {
+        return speedFertility;
+    }
+
+    public void setSpeedFertility(boolean speedFertility) {
+        this.speedFertility = speedFertility;
+    }
+
+    public boolean isWaterFertility() {
+        return waterFertility;
+    }
+
+    public void setWaterFertility(boolean waterFertility) {
+        this.waterFertility = waterFertility;
     }
 }

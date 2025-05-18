@@ -95,7 +95,10 @@ public class GameMenu implements AppMenu {
                 response = setCheatEnergyResponse(input);
             } else if (GameMenuCommands.showInventory.matches(input)) {
                 response = getShowInventoryResponse(input);
-            } else if (GameMenuCommands.trash.matches(input)) {
+            }else if (GameMenuCommands.toolEquip.matches(input)) {
+                response = getEquipResponse(input);
+            }
+            else if (GameMenuCommands.trash.matches(input)) {
                 response = getTrashResponse(input);
             } else if (GameMenuCommands.showInHand.matches(input)) {
                 response = getInHandResponse(input);
@@ -110,7 +113,7 @@ public class GameMenu implements AppMenu {
             }else if (GameMenuCommands.showPlants.matches(input)) {
                 response = showPlantResponse(input);
             }else if (GameMenuCommands.fertilize.matches(input)) {//TODO: make fertility func
-                response = getShowPlanetInfoResponse(input);
+                response = getFertilizeInfo(input);
             }else if (GameMenuCommands.howWater.matches(input)) {
                 response = getShowWaterResponse(input);
             }else if (GameMenuCommands.showRecipeCraft.matches(input)) {
@@ -153,6 +156,21 @@ public class GameMenu implements AppMenu {
         return response;
     }
 
+    private static Resualt getFertilizeInfo(String input){
+        Resualt response;
+        Command request=new Command(input);
+        request.body.put("fertilizer", GameMenuCommands.toolEquip.getGroup(input,"fertilizer"));
+        request.body.put("direction", GameMenuCommands.toolEquip.getGroup(input,"direction"));
+        response = FarmingController.fertilityControl(request);
+        return response;
+    }
+    private static Resualt getEquipResponse(String input) {
+        Resualt response;
+        Command request=new Command(input);
+        request.body.put("toolName", GameMenuCommands.toolEquip.getGroup(input,"toolName"));
+        response = InventoryFunctionsController.toolEquip(request);
+        return response;
+    }
     private static Resualt getEatResponse(String input) {
         Resualt response;
         Command request=new Command(input);
