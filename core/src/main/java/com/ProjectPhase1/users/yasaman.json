@@ -1,0 +1,17 @@
+{
+  "username" : "yasaman",
+  "nickname" : "yas",
+  "password" : "lala",
+  "hashedPassword" : "CDevxsNmyF6/EILTlu4mKe/THtXx5E33GIGfRZu10jJmOKRq+6HaCMhNCbkJ0k1w ?{*mj6S3M#,%}KDBa0OR`a",
+  "question" : "FAVORITE_QUSTION",
+  "answer" : "no",
+  "email" : "jasmi.kvp@gmail.com",
+  "gender" : "women",
+  "id" : null,
+  "currentGame" : null,
+  "games" : [ ],
+  "numberOfGamesPlayed" : 0,
+  "maxScore" : 0,
+  "inventory" : null,
+  "playing" : false
+}

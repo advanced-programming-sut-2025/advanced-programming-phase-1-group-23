@@ -1,0 +1,17 @@
+[ {
+  "username" : "khorshid",
+  "nickname" : "kh",
+  "password" : null,
+  "hashedPassword" : "3veEtGEgYiGP8uu5Koogx0CaRvFXc2A3DZcgzKi4JDJPim1r9tFkZR3SgJaYP3dq",
+  "question" : "FIRST_TEACHER",
+  "answer" : "yess",
+  "email" : "hhh@gmail.com",
+  "gender" : "women",
+  "id" : null,
+  "currentGame" : null,
+  "games" : [ ],
+  "numberOfGamesPlayed" : 0,
+  "maxScore" : 0,
+  "inventory" : null,
+  "playing" : false
+} ]
